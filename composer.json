@@ -1,0 +1,13 @@
+{
+    "name": "constructly/constructly-core",
+    "description": "Core plugin for Constructly SaaS construction calculators.",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Constructly\\": "src/"
+        }
+    }
+}
