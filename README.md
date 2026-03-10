@@ -1,4 +1,4 @@
-# Constructly Core
+# Brigmaster Core
 
 ## Что это
 
@@ -20,19 +20,20 @@ Backend-плагин для расчета строительных матери
 composer install
 ```
 
-Далее активируйте плагин `constructly-core` в админке WordPress.
+Далее активируйте плагин `brigmaster-core` в админке WordPress.
 
 ## Как быстро запустить 5 страниц
 
 1. Создайте 5 отдельных страниц под калькуляторы.
 2. Для каждой страницы поставьте свой shortcode:
-   - Бетон: `[constructly_concrete_estimator]`
-   - Кирпич: `[constructly_brick_estimator]`
-   - Стяжка: `[constructly_screed_estimator]`
-   - Гипсокартон: `[constructly_drywall_estimator]`
-   - Плитка: `[constructly_tile_estimator]`
+   - Бетон: `[brigmaster_concrete_estimator]`
+   - Кирпич: `[brigmaster_brick_estimator]`
+   - Стяжка: `[brigmaster_screed_estimator]`
+   - Гипсокартон: `[brigmaster_drywall_estimator]`
+   - Плитка: `[brigmaster_tile_estimator]`
 3. Используйте готовые контентные шаблоны из `docs/page-templates.md`.
 4. Добавьте внутренние ссылки между страницами калькуляторов.
+5. Используйте только `brigmaster_*` shortcode для контента.
 
 Обязательные страницы сайта (минимум):
 
@@ -56,7 +57,7 @@ composer install
 ## REST endpoint
 
 - Method: `POST`
-- URL: `/wp-json/constructly/v1/estimate`
+- URL: `/wp-json/brigmaster/v1/estimate`
 - Общие поля для всех: `calculator`, `mode`
 - `mode`: `normative | reserve | beginner`
 
@@ -95,7 +96,7 @@ composer install
 ### 1) concrete slab (success)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"concrete\",\"mode\":\"normative\",\"area\":10,\"thickness\":0.2}"
 ```
@@ -112,7 +113,7 @@ curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
 ### 1) concrete (error)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"concrete\",\"mode\":\"normative\",\"subType\":\"strip\",\"length\":10,\"width\":0.5}"
 ```
@@ -132,7 +133,7 @@ curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
 ### 2) brick (success)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"brick\",\"mode\":\"normative\",\"area\":10,\"subType\":\"bricks\"}"
 ```
@@ -149,7 +150,7 @@ curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
 ### 2) brick (error)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"brick\",\"mode\":\"normative\",\"area\":10}"
 ```
@@ -169,7 +170,7 @@ curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
 ### 3) screed (success)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"screed\",\"mode\":\"normative\",\"area\":12,\"thickness\":0.05}"
 ```
@@ -186,7 +187,7 @@ curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
 ### 3) screed (error)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"screed\",\"mode\":\"normative\",\"area\":12}"
 ```
@@ -206,7 +207,7 @@ curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
 ### 4) drywall (success)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"drywall\",\"mode\":\"normative\",\"area\":10}"
 ```
@@ -223,7 +224,7 @@ curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
 ### 4) drywall (error)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"drywall\",\"mode\":\"normative\"}"
 ```
@@ -243,7 +244,7 @@ curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
 ### 5) tile (success)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"tile\",\"mode\":\"normative\",\"area\":10,\"tileLengthCm\":30,\"tileWidthCm\":30}"
 ```
@@ -260,7 +261,7 @@ curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
 ### 5) tile (error)
 
 ```bash
-curl -X POST "http://YOUR_SITE/wp-json/constructly/v1/estimate" \
+curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
   -d "{\"calculator\":\"tile\",\"mode\":\"normative\",\"area\":10,\"tileLengthCm\":30}"
 ```

@@ -1,268 +1,268 @@
 :root {
-  --constructly-primary: #f97316;
-  --constructly-primary-hover: #ea580c;
-  --constructly-primary-active: #c2410c;
-  --constructly-text-primary: #111111;
-  --constructly-text-secondary: #374151;
-  --constructly-text-muted: #6b7280;
-  --constructly-border: #e5e7eb;
-  --constructly-bg-main: #ffffff;
-  --constructly-bg-section: #f9fafb;
-  --constructly-success: #16a34a;
-  --constructly-error: #dc2626;
+  --brigmaster-primary: #f97316;
+  --brigmaster-primary-hover: #ea580c;
+  --brigmaster-primary-active: #c2410c;
+  --brigmaster-text-primary: #111111;
+  --brigmaster-text-secondary: #374151;
+  --brigmaster-text-muted: #6b7280;
+  --brigmaster-border: #e5e7eb;
+  --brigmaster-bg-main: #ffffff;
+  --brigmaster-bg-section: #f9fafb;
+  --brigmaster-success: #16a34a;
+  --brigmaster-error: #dc2626;
 }
 
-.constructly-estimator {
+.brigmaster-estimator {
   width: 100%;
   max-width: 560px;
   padding: 28px;
-  border: 1px solid var(--constructly-border);
+  border: 1px solid var(--brigmaster-border);
   border-radius: 12px;
-  background: var(--constructly-bg-main);
+  background: var(--brigmaster-bg-main);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
-  color: var(--constructly-text-primary);
+  color: var(--brigmaster-text-primary);
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
-.constructly-estimator__title {
+.brigmaster-estimator__title {
   margin: 0 0 16px;
   font-size: 28px;
   line-height: 36px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--constructly-text-primary);
+  color: var(--brigmaster-text-primary);
 }
 
-.constructly-estimator__field {
+.brigmaster-estimator__field {
   margin-bottom: 16px;
 }
 
-.constructly-estimator__field-group--hidden {
+.brigmaster-estimator__field-group--hidden {
   display: none;
 }
 
-.constructly-estimator__field label {
+.brigmaster-estimator__field label {
   display: block;
   margin-bottom: 6px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--constructly-text-secondary);
+  color: var(--brigmaster-text-secondary);
 }
 
-.constructly-estimator__field input,
-.constructly-estimator__field select {
+.brigmaster-estimator__field input,
+.brigmaster-estimator__field select {
   width: 100%;
   height: 48px;
   padding: 0 12px;
-  border: 1px solid var(--constructly-border);
+  border: 1px solid var(--brigmaster-border);
   border-radius: 8px;
   box-sizing: border-box;
   font-size: 16px;
-  color: var(--constructly-text-primary);
-  background: var(--constructly-bg-main);
+  color: var(--brigmaster-text-primary);
+  background: var(--brigmaster-bg-main);
 }
 
-.constructly-estimator__field input::placeholder,
-.constructly-estimator__field select::placeholder {
+.brigmaster-estimator__field input::placeholder,
+.brigmaster-estimator__field select::placeholder {
   color: #9ca3af;
 }
 
-.constructly-estimator__field input:focus,
-.constructly-estimator__field select:focus {
-  border-color: var(--constructly-primary);
+.brigmaster-estimator__field input:focus,
+.brigmaster-estimator__field select:focus {
+  border-color: var(--brigmaster-primary);
   outline: none;
 }
 
-.constructly-estimator__hint {
+.brigmaster-estimator__hint {
   margin: 6px 0 0;
-  color: var(--constructly-text-muted);
+  color: var(--brigmaster-text-muted);
   font-size: 13px;
   line-height: 20px;
 }
 
-.constructly-estimator button[type="submit"] {
+.brigmaster-estimator button[type="submit"] {
   width: 100%;
   height: 48px;
   margin-top: 8px;
   padding: 0 20px;
   border: 0;
   border-radius: 8px;
-  background: var(--constructly-primary);
+  background: var(--brigmaster-primary);
   color: #ffffff;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
 }
 
-.constructly-estimator button[type="submit"]:hover {
-  background: var(--constructly-primary-hover);
+.brigmaster-estimator button[type="submit"]:hover {
+  background: var(--brigmaster-primary-hover);
 }
 
-.constructly-estimator button[type="submit"]:active {
-  background: var(--constructly-primary-active);
+.brigmaster-estimator button[type="submit"]:active {
+  background: var(--brigmaster-primary-active);
 }
 
-.constructly-estimator button[type="submit"]:disabled {
+.brigmaster-estimator button[type="submit"]:disabled {
   opacity: 0.65;
   cursor: default;
 }
 
-.constructly-estimate-form.is-loading button[type="submit"] {
+.brigmaster-estimate-form.is-loading button[type="submit"] {
   cursor: progress;
 }
 
-.constructly-estimator__error {
+.brigmaster-estimator__error {
   min-height: 18px;
   margin-top: 4px;
   font-size: 13px;
-  color: var(--constructly-error);
+  color: var(--brigmaster-error);
 }
 
-.constructly-estimate-form.has-errors .constructly-estimator__field input,
-.constructly-estimate-form.has-errors .constructly-estimator__field select {
-  border-color: var(--constructly-error);
+.brigmaster-estimate-form.has-errors .brigmaster-estimator__field input,
+.brigmaster-estimate-form.has-errors .brigmaster-estimator__field select {
+  border-color: var(--brigmaster-error);
 }
 
-.constructly-estimator__result {
+.brigmaster-estimator__result {
   margin-top: 24px;
   padding: 24px;
-  border: 1px solid var(--constructly-border);
+  border: 1px solid var(--brigmaster-border);
   border-radius: 12px;
-  background: var(--constructly-bg-main);
+  background: var(--brigmaster-bg-main);
 }
 
-.constructly-estimator__result.is-success {
+.brigmaster-estimator__result.is-success {
   border-color: rgba(22, 163, 74, 0.3);
   background: #f2fcf5;
 }
 
-.constructly-estimator__result p {
+.brigmaster-estimator__result p {
   margin: 0 0 8px;
   font-size: 14px;
-  color: var(--constructly-text-muted);
+  color: var(--brigmaster-text-muted);
 }
 
-.constructly-estimator__result p:last-child {
+.brigmaster-estimator__result p:last-child {
   margin-bottom: 0;
 }
 
-.constructly-estimator__result [data-result-volume],
-.constructly-estimator__result [data-result-material] {
+.brigmaster-estimator__result [data-result-volume],
+.brigmaster-estimator__result [data-result-material] {
   font-size: 20px;
   font-weight: 600;
-  color: var(--constructly-text-primary);
+  color: var(--brigmaster-text-primary);
 }
 
 /* Content template helper classes for editor pages */
-.constructly-content-block {
+.brigmaster-content-block {
   margin-top: 40px;
   padding: 24px;
-  border: 1px solid var(--constructly-border);
+  border: 1px solid var(--brigmaster-border);
   border-radius: 12px;
-  background: var(--constructly-bg-main);
+  background: var(--brigmaster-bg-main);
 }
 
-.constructly-content-block--muted {
-  background: var(--constructly-bg-section);
+.brigmaster-content-block--muted {
+  background: var(--brigmaster-bg-section);
 }
 
-.constructly-faq-item {
+.brigmaster-faq-item {
   padding: 18px 0;
-  border-bottom: 1px solid var(--constructly-border);
+  border-bottom: 1px solid var(--brigmaster-border);
 }
 
-.constructly-faq-item:last-child {
+.brigmaster-faq-item:last-child {
   border-bottom: 0;
 }
 
-.constructly-faq-item__question {
+.brigmaster-faq-item__question {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: var(--constructly-text-primary);
+  color: var(--brigmaster-text-primary);
 }
 
-.constructly-faq-item__answer {
+.brigmaster-faq-item__answer {
   margin: 8px 0 0;
   font-size: 15px;
   line-height: 24px;
-  color: var(--constructly-text-secondary);
+  color: var(--brigmaster-text-secondary);
 }
 
-.constructly-norms-table {
+.brigmaster-norms-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.constructly-norms-table th {
+.brigmaster-norms-table th {
   padding: 12px;
-  border-bottom: 1px solid var(--constructly-border);
-  background: var(--constructly-bg-section);
+  border-bottom: 1px solid var(--brigmaster-border);
+  background: var(--brigmaster-bg-section);
   font-size: 14px;
   font-weight: 600;
   text-align: left;
-  color: var(--constructly-text-primary);
+  color: var(--brigmaster-text-primary);
 }
 
-.constructly-norms-table td {
+.brigmaster-norms-table td {
   padding: 12px;
-  border-bottom: 1px solid var(--constructly-border);
+  border-bottom: 1px solid var(--brigmaster-border);
   font-size: 14px;
-  color: var(--constructly-text-primary);
+  color: var(--brigmaster-text-primary);
 }
 
-.constructly-disclaimer {
+.brigmaster-disclaimer {
   margin-top: 24px;
   padding: 16px;
-  border: 1px solid var(--constructly-border);
+  border: 1px solid var(--brigmaster-border);
   border-radius: 8px;
-  background: var(--constructly-bg-section);
+  background: var(--brigmaster-bg-section);
   font-size: 13px;
   line-height: 20px;
-  color: var(--constructly-text-muted);
+  color: var(--brigmaster-text-muted);
 }
 
 @media (max-width: 768px) {
-  .constructly-estimator {
+  .brigmaster-estimator {
     padding: 24px;
   }
 
-  .constructly-estimator__title {
+  .brigmaster-estimator__title {
     font-size: 22px;
     line-height: 30px;
   }
 
-  .constructly-content-block {
+  .brigmaster-content-block {
     margin-top: 32px;
     padding: 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .constructly-estimator {
+  .brigmaster-estimator {
     padding: 16px;
     border-radius: 12px;
   }
 
-  .constructly-estimator__title {
+  .brigmaster-estimator__title {
     margin-bottom: 12px;
     font-size: 28px;
     line-height: 34px;
   }
 
-  .constructly-estimator__field {
+  .brigmaster-estimator__field {
     margin-bottom: 16px;
   }
 
-  .constructly-estimator button[type="submit"] {
+  .brigmaster-estimator button[type="submit"] {
     position: sticky;
     bottom: 0;
     height: 56px;
     border-radius: 8px;
   }
 
-  .constructly-content-block {
+  .brigmaster-content-block {
     margin-top: 24px;
     padding: 16px;
   }

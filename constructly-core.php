@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Constructly Core
- * Description: Core plugin for Constructly construction calculators.
+ * Plugin Name: Brigmaster Core
+ * Description: Core plugin for brigmaster construction calculators.
  * Version: 0.1.0
- * Author: Constructly
+ * Author: brigmaster
  * Requires PHP: 8.2
  */
 
@@ -20,15 +20,15 @@ if (is_readable($autoloadPath)) {
 }
 
 add_action('rest_api_init', static function (): void {
-    $controller = new \Constructly\Http\Rest\EstimateController(
-        new \Constructly\Application\EstimateService()
+    $controller = new \Brigmaster\Http\Rest\EstimateController(
+        new \Brigmaster\Application\EstimateService()
     );
 
     $controller->registerRoutes();
 });
 
 add_action('init', static function (): void {
-    $estimateShortcode = new \Constructly\Http\Shortcode\EstimateShortcode(__FILE__);
+    $estimateShortcode = new \Brigmaster\Http\Shortcode\EstimateShortcode(__FILE__);
     $estimateShortcode->registerShortcodes();
 });
 

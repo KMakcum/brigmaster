@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Constructly\Http\Rest;
+namespace Brigmaster\Http\Rest;
 
-use Constructly\Application\EstimateService;
+use Brigmaster\Application\EstimateService;
 use InvalidArgumentException;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -43,7 +43,7 @@ final class EstimateController
     public function registerRoutes(): void
     {
         \register_rest_route(
-            'constructly/v1',
+            'brigmaster/v1',
             '/estimate',
             [
                 'methods' => 'POST',
@@ -96,6 +96,9 @@ final class EstimateController
             $area = (float) $areaRaw;
             $thickness = (float) $thicknessRaw;
             $subType = $this->isNonEmptyString($subTypeRaw) ? (string) $subTypeRaw : null;
+            if ($calculator === EstimateService::CALCULATOR_CONCRETE && $subType === null) {
+                $subType = 'slab';
+            }
             $tileLengthCm = $this->isNumericValue($tileLengthCmRaw) ? (float) $tileLengthCmRaw : null;
             $tileWidthCm = $this->isNumericValue($tileWidthCmRaw) ? (float) $tileWidthCmRaw : null;
             $length = $this->isNumericValue($lengthRaw) ? (float) $lengthRaw : null;
@@ -169,18 +172,18 @@ final class EstimateController
         }
 
         if ($calculator === EstimateService::CALCULATOR_CONCRETE) {
-            if (!$this->isNonEmptyString($subType)) {
-                $errors['subType'][] = 'The subType field is required for concrete.';
-            } elseif (!in_array($subType, self::CONCRETE_SUBTYPES, true)) {
+            $normalizedSubType = $this->isNonEmptyString($subType) ? (string) $subType : 'slab';
+
+            if (!in_array($normalizedSubType, self::CONCRETE_SUBTYPES, true)) {
                 $errors['subType'][] = 'The subType field for concrete must be one of: slab, strip.';
             }
 
-            if ($subType === 'slab') {
+            if ($normalizedSubType === 'slab') {
                 $this->validatePositiveNumericField($errors, 'area', $area, 'The area field is required and must be numeric for concrete slab.');
                 $this->validatePositiveNumericField($errors, 'thickness', $thickness, 'The thickness field is required and must be numeric for concrete slab.');
             }
 
-            if ($subType === 'strip') {
+            if ($normalizedSubType === 'strip') {
                 $this->validatePositiveNumericField($errors, 'length', $length, 'The length field is required and must be numeric for concrete strip.');
                 $this->validatePositiveNumericField($errors, 'width', $width, 'The width field is required and must be numeric for concrete strip.');
                 $this->validatePositiveNumericField($errors, 'height', $height, 'The height field is required and must be numeric for concrete strip.');

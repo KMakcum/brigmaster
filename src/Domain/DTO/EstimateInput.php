@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Constructly\Domain\DTO;
+namespace Brigmaster\Domain\DTO;
 
 use InvalidArgumentException;
 

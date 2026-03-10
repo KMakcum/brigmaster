@@ -273,7 +273,7 @@
       return;
     }
 
-    node.classList.toggle("constructly-estimator__field-group--hidden", !isVisible);
+    node.classList.toggle("brigmaster-estimator__field-group--hidden", !isVisible);
   }
 
   function syncConcreteSubTypeGroups(form) {
@@ -297,9 +297,9 @@
     event.preventDefault();
 
     const form = event.currentTarget;
-    const endpoint = window.constructlyEstimateFormData?.endpoint;
+    const endpoint = window.brigmasterEstimateFormData?.endpoint;
     const networkErrorMessage =
-      window.constructlyEstimateFormData?.networkErrorMessage ||
+      window.brigmasterEstimateFormData?.networkErrorMessage ||
       "Не удалось выполнить запрос.";
 
     clearErrors(form);
@@ -369,7 +369,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const forms = document.querySelectorAll(".constructly-estimate-form");
+    const forms = document.querySelectorAll(".brigmaster-estimate-form");
     forms.forEach((form) => initForm(form));
   });
 })();

@@ -10,7 +10,7 @@ Use this checklist before considering the MVP ready.
 
 ## Functional checks
 
-- [ ] Endpoint `POST /wp-json/constructly/v1/estimate` returns `200` for valid input.
+- [ ] Endpoint `POST /wp-json/brigmaster/v1/estimate` returns `200` for valid input.
 - [ ] Endpoint returns `400` with `validation_error` for invalid input.
 - [ ] `examples/smoke_check.php` prints `PASS` for all three cases.
 

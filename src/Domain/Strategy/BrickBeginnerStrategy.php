@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Constructly\Domain\Strategy;
+namespace Brigmaster\Domain\Strategy;
 
-use Constructly\Domain\DTO\EstimateInput;
-use Constructly\Domain\DTO\EstimateResult;
+use Brigmaster\Domain\DTO\EstimateInput;
+use Brigmaster\Domain\DTO\EstimateResult;
 
 final class BrickBeginnerStrategy implements CalculationStrategyInterface
 {

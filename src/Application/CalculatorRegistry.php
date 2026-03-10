@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Constructly\Application;
+namespace Brigmaster\Application;
 
-use Constructly\Domain\Calculator\CalculatorInterface;
-use Constructly\Domain\Calculator\BrickCalculator;
-use Constructly\Domain\Calculator\ConcreteCalculator;
-use Constructly\Domain\Calculator\DrywallCalculator;
-use Constructly\Domain\Calculator\ScreedCalculator;
-use Constructly\Domain\Calculator\TileCalculator;
-use Constructly\Domain\DTO\EstimateInput;
-use Constructly\Domain\Strategy\BrickBeginnerStrategy;
-use Constructly\Domain\Strategy\BrickNormativeStrategy;
-use Constructly\Domain\Strategy\BrickReserveStrategy;
-use Constructly\Domain\Strategy\BeginnerStrategy;
-use Constructly\Domain\Strategy\DrywallBeginnerStrategy;
-use Constructly\Domain\Strategy\DrywallNormativeStrategy;
-use Constructly\Domain\Strategy\DrywallReserveStrategy;
-use Constructly\Domain\Strategy\NormativeStrategy;
-use Constructly\Domain\Strategy\ReserveStrategy;
-use Constructly\Domain\Strategy\ScreedBeginnerStrategy;
-use Constructly\Domain\Strategy\ScreedNormativeStrategy;
-use Constructly\Domain\Strategy\ScreedReserveStrategy;
-use Constructly\Domain\Strategy\TileBeginnerStrategy;
-use Constructly\Domain\Strategy\TileNormativeStrategy;
-use Constructly\Domain\Strategy\TileReserveStrategy;
+use Brigmaster\Domain\Calculator\CalculatorInterface;
+use Brigmaster\Domain\Calculator\BrickCalculator;
+use Brigmaster\Domain\Calculator\ConcreteCalculator;
+use Brigmaster\Domain\Calculator\DrywallCalculator;
+use Brigmaster\Domain\Calculator\ScreedCalculator;
+use Brigmaster\Domain\Calculator\TileCalculator;
+use Brigmaster\Domain\DTO\EstimateInput;
+use Brigmaster\Domain\Strategy\BrickBeginnerStrategy;
+use Brigmaster\Domain\Strategy\BrickNormativeStrategy;
+use Brigmaster\Domain\Strategy\BrickReserveStrategy;
+use Brigmaster\Domain\Strategy\BeginnerStrategy;
+use Brigmaster\Domain\Strategy\DrywallBeginnerStrategy;
+use Brigmaster\Domain\Strategy\DrywallNormativeStrategy;
+use Brigmaster\Domain\Strategy\DrywallReserveStrategy;
+use Brigmaster\Domain\Strategy\NormativeStrategy;
+use Brigmaster\Domain\Strategy\ReserveStrategy;
+use Brigmaster\Domain\Strategy\ScreedBeginnerStrategy;
+use Brigmaster\Domain\Strategy\ScreedNormativeStrategy;
+use Brigmaster\Domain\Strategy\ScreedReserveStrategy;
+use Brigmaster\Domain\Strategy\TileBeginnerStrategy;
+use Brigmaster\Domain\Strategy\TileNormativeStrategy;
+use Brigmaster\Domain\Strategy\TileReserveStrategy;
 use InvalidArgumentException;
 
 final class CalculatorRegistry

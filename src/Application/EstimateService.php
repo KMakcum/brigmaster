@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Constructly\Application;
+namespace Brigmaster\Application;
 
-use Constructly\Domain\DTO\EstimateInput;
-use Constructly\Domain\DTO\EstimateResult;
+use Brigmaster\Domain\DTO\EstimateInput;
+use Brigmaster\Domain\DTO\EstimateResult;
 use InvalidArgumentException;
 
 final class EstimateService

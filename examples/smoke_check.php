@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Constructly\Application\EstimateService;
+use Brigmaster\Application\EstimateService;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 

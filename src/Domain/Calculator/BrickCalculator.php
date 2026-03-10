@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Constructly\Domain\Calculator;
+namespace Brigmaster\Domain\Calculator;
 
-use Constructly\Domain\DTO\EstimateInput;
-use Constructly\Domain\DTO\EstimateResult;
-use Constructly\Domain\Strategy\CalculationStrategyInterface;
+use Brigmaster\Domain\DTO\EstimateInput;
+use Brigmaster\Domain\DTO\EstimateResult;
+use Brigmaster\Domain\Strategy\CalculationStrategyInterface;
 
 final class BrickCalculator implements CalculatorInterface
 {
