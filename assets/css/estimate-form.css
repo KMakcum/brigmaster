@@ -13,6 +13,7 @@
 }
 
 .brigmaster-estimator {
+  position: relative;
   width: 100%;
   max-width: 560px;
   padding: 28px;
@@ -23,6 +24,18 @@
   box-sizing: border-box;
   color: var(--brigmaster-text-primary);
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.brigmaster-estimator--strip-foundation {
+  max-width: 980px;
+}
+
+.brigmaster-estimator--pile-foundation {
+  max-width: 980px;
+}
+
+[data-field-group="pile-toggles"] {
+  margin-bottom: 12px;
 }
 
 .brigmaster-estimator__title {
@@ -36,6 +49,7 @@
 
 .brigmaster-estimator__field {
   margin-bottom: 16px;
+  position: relative;
 }
 
 .brigmaster-estimator__field-group--hidden {
@@ -48,6 +62,87 @@
   font-size: 14px;
   font-weight: 500;
   color: var(--brigmaster-text-secondary);
+}
+
+.brigmaster-estimator__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.brigmaster-estimator__field-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.brigmaster-estimator__field-grid .brigmaster-estimator__field {
+  margin-bottom: 0;
+}
+
+.brigmaster-estimator__segment-list {
+  display: grid;
+  gap: 14px;
+}
+
+.brigmaster-estimator__segment-card {
+  border: 1px solid var(--brigmaster-border);
+  border-radius: 12px;
+  padding: 14px;
+  background: #ffffff;
+}
+
+.brigmaster-estimator__segment-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.brigmaster-estimator__segment-title {
+  margin: 0;
+  font-size: 16px;
+  color: var(--brigmaster-text-primary);
+}
+
+.brigmaster-estimator__segment-remove,
+.brigmaster-estimator__segment-add {
+  border: 1px solid var(--brigmaster-border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--brigmaster-text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 8px 12px;
+}
+
+.brigmaster-estimator__segment-add {
+  margin-top: 10px;
+}
+
+.brigmaster-estimator__segment-remove:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.brigmaster-estimator__segment-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--brigmaster-border);
+}
+
+.brigmaster-estimator__segment-toggles {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* Hidden state must win over layout helpers (grid/flex). */
+.brigmaster-estimator__field-group--hidden {
+  display: none;
 }
 
 .brigmaster-estimator__field input,
@@ -79,6 +174,101 @@
   color: var(--brigmaster-text-muted);
   font-size: 13px;
   line-height: 20px;
+}
+
+.brigmaster-estimator__notice {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.brigmaster-estimator__toggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 6px;
+}
+
+.brigmaster-estimator__toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.brigmaster-estimator__toggle label {
+  margin: 0;
+  flex: 1;
+}
+
+.brigmaster-estimator__toggle.is-disabled {
+  opacity: 0.72;
+}
+
+.brigmaster-estimator__toggle.is-disabled input[type="checkbox"] {
+  cursor: not-allowed;
+}
+
+.brigmaster-estimator__tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.brigmaster-estimator__tooltip-anchor--hidden {
+  display: none;
+}
+
+.brigmaster-estimator__tooltip-trigger {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--brigmaster-border);
+  border-radius: 999px;
+  background: var(--brigmaster-bg-main);
+  color: var(--brigmaster-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.brigmaster-estimator__tooltip-trigger:hover,
+.brigmaster-estimator__tooltip-trigger:focus-visible {
+  border-color: var(--brigmaster-primary);
+  color: var(--brigmaster-primary);
+  outline: none;
+}
+
+.brigmaster-estimator__tooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 10050;
+  width: min(320px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--brigmaster-border);
+  background: #ffffff;
+  color: var(--brigmaster-text-primary);
+  font-size: 12px;
+  line-height: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+}
+
+.brigmaster-estimator__tooltip-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10040;
+  background: rgba(0, 0, 0, 0.45);
 }
 
 .brigmaster-estimator button[type="submit"] {
@@ -154,6 +344,237 @@
   color: var(--brigmaster-text-primary);
 }
 
+/* pile_foundation: count + shaft row (see .field-grid--pile-primary) */
+.brigmaster-estimator--pile-foundation .brigmaster-estimator__field-grid--pile-primary {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+.brigmaster-estimator--pile-foundation .brigmaster-estimator__field-grid--pile-primary .brigmaster-estimator__field--pile-count {
+  max-width: none;
+}
+
+@media (min-width: 768px) {
+  .brigmaster-estimator--pile-foundation .brigmaster-estimator__field-grid--pile-primary.is-bored-layout {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .brigmaster-estimator--pile-foundation .brigmaster-estimator__field-grid--pile-primary:not(.is-bored-layout) .brigmaster-estimator__field--pile-count {
+    max-width: min(100%, 360px);
+  }
+}
+
+.brigmaster-estimator__result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.brigmaster-estimator--strip-foundation .brigmaster-estimator__result-grid,
+.brigmaster-estimator--pile-foundation .brigmaster-estimator__result-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+@media (min-width: 1200px) {
+  .brigmaster-estimator--pile-foundation .brigmaster-estimator__result.is-success .brigmaster-estimator__result-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.brigmaster-estimator__result-grid--pile-foundation .brigmaster-estimator__result-section {
+  grid-column: 1 / -1;
+}
+
+.brigmaster-estimator__result-section {
+  padding: 4px 0 8px;
+}
+
+.brigmaster-estimator__result-section-title {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brigmaster-text-primary);
+}
+
+.brigmaster-estimator__result-section-subtitle {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brigmaster-text-muted);
+}
+
+.brigmaster-estimator__result-card {
+  padding: 14px;
+  border: 1px solid var(--brigmaster-border);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.brigmaster-estimator__result-card h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: var(--brigmaster-text-primary);
+}
+
+.brigmaster-estimator__result-card p {
+  margin: 0 0 6px;
+}
+
+.brigmaster-estimator__result-card p:last-child {
+  margin-bottom: 0;
+}
+
+.brigmaster-estimator__result-list {
+  margin: 0 0 8px;
+  padding-left: 0;
+  list-style: none;
+  color: var(--brigmaster-text-muted);
+  font-size: 14px;
+}
+
+.brigmaster-estimator__result-list li {
+  margin: 0 0 6px;
+}
+
+.brigmaster-estimator__result-list li:last-child {
+  margin-bottom: 0;
+}
+
+.brigmaster-estimator__rebar-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.brigmaster-estimator__rebar-column-title {
+  margin: 0 0 6px;
+}
+
+.brigmaster-estimator__pile-rebar {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--brigmaster-border);
+}
+
+.brigmaster-estimator__pile-rebar-title {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--brigmaster-text-primary);
+}
+
+.brigmaster-estimator__pile-rebar-subtitle {
+  margin-top: 8px;
+}
+
+.brigmaster-estimator__scheme {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--brigmaster-border);
+}
+
+.brigmaster-estimator__scheme-title {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: var(--brigmaster-text-primary);
+}
+
+.brigmaster-slab-scheme {
+  width: 100%;
+  height: auto;
+}
+
+.brigmaster-slab-scheme-layout {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.brigmaster-slab-scheme__facts {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--brigmaster-text-secondary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.brigmaster-slab-scheme__facts li {
+  margin-bottom: 6px;
+}
+
+.brigmaster-slab-scheme__facts li:last-child {
+  margin-bottom: 0;
+}
+
+.brigmaster-slab-scheme__slab {
+  fill: #f3f4f6;
+  stroke: #9ca3af;
+  stroke-width: 2.3;
+}
+
+.brigmaster-slab-scheme__rebar line {
+  stroke: #475569;
+  stroke-width: 1.6;
+  stroke-dasharray: 4 2;
+}
+
+.brigmaster-slab-scheme__formwork {
+  fill: none;
+  stroke: #ea580c;
+  stroke-width: 3;
+}
+
+.brigmaster-slab-scheme__dimension {
+  stroke: #334155;
+  stroke-width: 1.6;
+}
+
+.brigmaster-slab-scheme__label {
+  fill: #0f172a;
+  font-size: 13px;
+}
+
+.brigmaster-slab-scheme__legend {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #334155;
+}
+
+.brigmaster-slab-scheme__legend span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brigmaster-slab-scheme__legend-mark {
+  width: 18px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid #94a3b8;
+}
+
+.brigmaster-slab-scheme__legend-mark--slab {
+  background: #f3f4f6;
+}
+
+.brigmaster-slab-scheme__legend-mark--rebar {
+  background: repeating-linear-gradient(
+    45deg,
+    #475569,
+    #475569 2px,
+    #cbd5e1 2px,
+    #cbd5e1 4px
+  );
+}
+
+.brigmaster-slab-scheme__legend-mark--formwork {
+  border: 2px solid #ea580c;
+  background: #ffffff;
+}
+
 /* Content template helper classes for editor pages */
 .brigmaster-content-block {
   margin-top: 40px;
@@ -223,6 +644,173 @@
   color: var(--brigmaster-text-muted);
 }
 
+.brigmaster-foundation-hub {
+  display: grid;
+  gap: 16px;
+}
+
+.brigmaster-foundation-hub h1,
+.brigmaster-foundation-hub h2,
+.brigmaster-foundation-hub h3 {
+  margin: 0 0 12px;
+  color: var(--brigmaster-text-primary);
+}
+
+.brigmaster-foundation-hub p {
+  margin: 0 0 12px;
+  color: var(--brigmaster-text-secondary);
+  line-height: 1.6;
+}
+
+.brigmaster-foundation-hub__hero {
+  display: grid;
+  gap: 10px;
+}
+
+.brigmaster-foundation-hub__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 8px;
+  background: var(--brigmaster-primary);
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.brigmaster-foundation-hub__cta:hover {
+  background: var(--brigmaster-primary-hover);
+}
+
+.brigmaster-foundation-hub__cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.brigmaster-foundation-hub__card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--brigmaster-border);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.brigmaster-foundation-hub__icon {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--brigmaster-border);
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brigmaster-primary);
+  font-weight: 700;
+  background: #fff7ed;
+}
+
+.brigmaster-foundation-hub__card ul,
+.brigmaster-foundation-hub__criteria,
+.brigmaster-foundation-hub__links {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--brigmaster-text-secondary);
+}
+
+.brigmaster-foundation-hub__card li,
+.brigmaster-foundation-hub__criteria li,
+.brigmaster-foundation-hub__links li {
+  margin-bottom: 6px;
+}
+
+.brigmaster-foundation-hub__card li:last-child,
+.brigmaster-foundation-hub__criteria li:last-child,
+.brigmaster-foundation-hub__links li:last-child {
+  margin-bottom: 0;
+}
+
+.brigmaster-foundation-hub__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--brigmaster-primary);
+  border-radius: 8px;
+  color: var(--brigmaster-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.brigmaster-foundation-hub__link:hover {
+  background: #fff7ed;
+}
+
+.brigmaster-foundation-hub__links a {
+  color: var(--brigmaster-text-secondary);
+}
+
+.brigmaster-foundation-hub__links--compact {
+  margin-top: 10px;
+}
+
+@media (min-width: 1200px) {
+  .brigmaster-estimator__rebar-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brigmaster-estimator__segment-toggles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brigmaster-estimator__field-grid--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .brigmaster-estimator__field-grid--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brigmaster-estimator__field-grid--four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .brigmaster-estimator__field-grid--three {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brigmaster-estimator__field-grid--two,
+  .brigmaster-estimator__field-grid--four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brigmaster-estimator__segment-toggles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brigmaster-foundation-hub__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brigmaster-estimator__rebar-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (min-width: 1200px) {
+  .brigmaster-foundation-hub__cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .brigmaster-estimator {
     padding: 24px;
@@ -236,6 +824,47 @@
   .brigmaster-content-block {
     margin-top: 32px;
     padding: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .brigmaster-estimator__field-grid--three,
+  .brigmaster-estimator__field-grid--two,
+  .brigmaster-estimator__field-grid--four {
+    grid-template-columns: 1fr;
+  }
+
+  .brigmaster-estimator__tooltip {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    max-height: 70vh;
+    overflow-y: auto;
+    border-radius: 16px 16px 0 0;
+    padding: 14px 16px 18px;
+    z-index: 10050;
+  }
+
+  .brigmaster-slab-scheme-layout {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .brigmaster-slab-scheme__facts {
+    order: 2;
+    padding-left: 16px;
+  }
+
+  .brigmaster-estimator__result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .brigmaster-estimator--strip-foundation,
+  .brigmaster-estimator--pile-foundation {
+    max-width: 100%;
   }
 }
 

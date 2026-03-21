@@ -22,11 +22,13 @@ composer install
 
 Далее активируйте плагин `brigmaster-core` в админке WordPress.
 
-## Как быстро запустить 5 страниц
+## Как быстро запустить страницы калькуляторов
 
-1. Создайте 5 отдельных страниц под калькуляторы.
+1. Создайте отдельные страницы под калькуляторы.
 2. Для каждой страницы поставьте свой shortcode:
    - Бетон: `[brigmaster_concrete_estimator]`
+   - Ленточный фундамент: `[brigmaster_strip_foundation_estimator]`
+   - Свайный фундамент: [brigmaster_pile_foundation_estimator]
    - Кирпич: `[brigmaster_brick_estimator]`
    - Стяжка: `[brigmaster_screed_estimator]`
    - Гипсокартон: `[brigmaster_drywall_estimator]`
@@ -58,225 +60,148 @@ composer install
 
 - Method: `POST`
 - URL: `/wp-json/brigmaster/v1/estimate`
-- Общие поля для всех: `calculator`, `mode`
-- `mode`: `normative | reserve | beginner`
 
-## Контракт полей по калькуляторам
+## Clean контракт: slab_foundation
 
-### concrete
+- `calculator`: только `slab_foundation`
+- `mode`: `dimensions | area`
+- `subType` для плитного фундамента не используется
+- `height` обязателен всегда
+- геометрия:
+  - `mode=dimensions`: обязательны `length`, `width`, `height`
+  - `mode=area`: обязательны `area`, `height`
+- включаемые секции:
+  - `includeReinforcement` (strict bool)
+  - `includeFormwork` (strict bool)
+- если `includeReinforcement=true`, доступны параметры (все `>0`):
+  - `rebarDiameterMm` (default `12`)
+  - `rebarStepMm` (default `200`)
+  - `rebarLayers` (default `2`, допустимо `1|2`)
+  - `rebarReservePercent` (default `10`)
+- если `includeFormwork=true`, доступны параметры (все `>0`):
+  - `formworkHeightM` (default `0.30`)
+  - `formworkReservePercent` (default `10`)
+- при `mode=area` и включенных `includeReinforcement/includeFormwork` обязательны `length` и `width`
+- скрытые предположения по геометрии не делаются
 
-- `subType`:
-  - необязателен, по умолчанию `slab`
-  - если передан, допустим только `slab | strip`
-- `subType=slab`: нужны `area`, `thickness`
-- `subType=strip`: нужны `length`, `width`, `height`
-
-### brick
-
-- нужны `area`, `subType`
-- `subType`: `bricks | mortar`
-- `thickness` не нужен
-
-### screed
-
-- нужны `area`, `thickness`
-
-### drywall
-
-- нужен `area`
-- `thickness` не нужен
-
-### tile
-
-- нужны `area`, `tileLengthCm`, `tileWidthCm`
-- `thickness` не нужен
-
-## Примеры success/error
-
-### 1) concrete slab (success)
+## Пример запроса
 
 ```bash
 curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
   -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"concrete\",\"mode\":\"normative\",\"area\":10,\"thickness\":0.2}"
+  -d '{
+    "calculator":"slab_foundation",
+    "mode":"dimensions",
+    "length":10,
+    "width":8,
+    "height":0.25,
+    "includeReinforcement":true,
+    "includeFormwork":true
+  }'
 ```
+
+## Пример успешного ответа
 
 ```json
 {
-  "calculator": "concrete",
-  "mode": "normative",
-  "calculatedVolume": 2.00,
-  "calculatedMaterialAmount": 2.00
+  "calculator": "slab_foundation",
+  "mode": "dimensions",
+  "concrete": {
+    "areaM2": 80,
+    "heightM": 0.25,
+    "volumeM3": 20
+  },
+  "reinforcement": {
+    "diameterMm": 12,
+    "stepMm": 200,
+    "layers": 2,
+    "reservePercent": 10,
+    "barsAlongLength": 41,
+    "barsAlongWidth": 51,
+    "totalLengthM": 1636,
+    "totalLengthWithReserveM": 1799.6,
+    "unitWeightKgPerM": 0.89,
+    "massKg": 1599.64
+  },
+  "formwork": {
+    "heightM": 0.3,
+    "reservePercent": 10,
+    "perimeterM": 36,
+    "areaM2": 11.88,
+    "linearMeters": 39.6
+  }
 }
 ```
 
-### 1) concrete (error)
-
-```bash
-curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
-  -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"concrete\",\"mode\":\"normative\",\"subType\":\"strip\",\"length\":10,\"width\":0.5}"
-```
+## Пример ошибки валидации
 
 ```json
 {
   "code": "validation_error",
   "message": "Validation failed.",
   "errors": {
-    "height": [
-      "The height field is required and must be numeric for concrete strip."
+    "length": [
+      "The length field is required and must be greater than 0 when includeReinforcement/includeFormwork is true and mode is area."
+    ],
+    "width": [
+      "The width field is required and must be greater than 0 when includeReinforcement/includeFormwork is true and mode is area."
     ]
   }
 }
 ```
 
-### 2) brick (success)
+## Strip Foundation контракт
 
-```bash
-curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
-  -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"brick\",\"mode\":\"normative\",\"area\":10,\"subType\":\"bricks\"}"
-```
+- `calculator`: `strip_foundation`
+- `mode`: `perimeter | house | segments`
 
-```json
-{
-  "calculator": "brick",
-  "mode": "normative",
-  "calculatedVolume": 10.00,
-  "calculatedMaterialAmount": 500.00
-}
-```
+### Режимы геометрии
 
-### 2) brick (error)
+- `mode=perimeter`: `totalLengthM`, `widthM`, `heightM`
+- `mode=house`: `houseLengthM`, `houseWidthM`, `widthM`, `heightM`
+- `mode=segments`: `segments[]` (минимум 1), в каждом:
+  - `segmentLengthM`, `segmentWidthM`, `segmentHeightM`
 
-```bash
-curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
-  -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"brick\",\"mode\":\"normative\",\"area\":10}"
-```
+### Арматура
 
-```json
-{
-  "code": "validation_error",
-  "message": "Validation failed.",
-  "errors": {
-    "subType": [
-      "The subType field is required for brick."
-    ]
-  }
-}
-```
+- `includeReinforcement` (strict bool)
+- глобальные поля:
+  - `longitudinalBarsCount`
+  - `longitudinalDiameterMm`
+  - `longitudinalReservePercent`
+  - `transverseDiameterMm`
+  - `transverseStepMm`
+  - `transverseReservePercent`
+- для `mode=segments` в каждом сегменте:
+  - `segmentIncludeReinforcement` (bool)
+  - `segmentUseGlobalRebarParams` (bool, default `true`)
+  - если `segmentUseGlobalRebarParams=false`:
+    - `segmentLongitudinalBarsCount`
+    - `segmentLongitudinalDiameterMm`
+    - `segmentTransverseDiameterMm`
+    - `segmentTransverseStepMm`
+- проценты запаса всегда глобальные
 
-### 3) screed (success)
+### Опалубка
 
-```bash
-curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
-  -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"screed\",\"mode\":\"normative\",\"area\":12,\"thickness\":0.05}"
-```
+- `includeFormwork` (strict bool)
+- глобальные поля:
+  - `formworkHeightM`
+  - `formworkReservePercent`
+- для `mode=segments` в каждом сегменте:
+  - `segmentIncludeFormwork` (bool)
+  - `segmentUseGlobalFormworkParams` (bool, default `true`)
+  - если `segmentUseGlobalFormworkParams=false`:
+    - `segmentFormworkHeightM`
 
-```json
-{
-  "calculator": "screed",
-  "mode": "normative",
-  "calculatedVolume": 0.60,
-  "calculatedMaterialAmount": 0.57
-}
-```
+### Ответ strip_foundation
 
-### 3) screed (error)
-
-```bash
-curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
-  -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"screed\",\"mode\":\"normative\",\"area\":12}"
-```
-
-```json
-{
-  "code": "validation_error",
-  "message": "Validation failed.",
-  "errors": {
-    "thickness": [
-      "The thickness field is required and must be numeric for screed."
-    ]
-  }
-}
-```
-
-### 4) drywall (success)
-
-```bash
-curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
-  -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"drywall\",\"mode\":\"normative\",\"area\":10}"
-```
-
-```json
-{
-  "calculator": "drywall",
-  "mode": "normative",
-  "calculatedVolume": 10.00,
-  "calculatedMaterialAmount": 10.50
-}
-```
-
-### 4) drywall (error)
-
-```bash
-curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
-  -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"drywall\",\"mode\":\"normative\"}"
-```
-
-```json
-{
-  "code": "validation_error",
-  "message": "Validation failed.",
-  "errors": {
-    "area": [
-      "The area field is required and must be numeric for drywall."
-    ]
-  }
-}
-```
-
-### 5) tile (success)
-
-```bash
-curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
-  -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"tile\",\"mode\":\"normative\",\"area\":10,\"tileLengthCm\":30,\"tileWidthCm\":30}"
-```
-
-```json
-{
-  "calculator": "tile",
-  "mode": "normative",
-  "calculatedVolume": 10.00,
-  "calculatedMaterialAmount": 111.11
-}
-```
-
-### 5) tile (error)
-
-```bash
-curl -X POST "http://YOUR_SITE/wp-json/brigmaster/v1/estimate" \
-  -H "Content-Type: application/json" \
-  -d "{\"calculator\":\"tile\",\"mode\":\"normative\",\"area\":10,\"tileLengthCm\":30}"
-```
-
-```json
-{
-  "code": "validation_error",
-  "message": "Validation failed.",
-  "errors": {
-    "tileWidthCm": [
-      "The tileWidthCm field is required and must be numeric for tile."
-    ]
-  }
-}
-```
+- `calculator`, `mode`
+- `concrete`:
+  - `totalLengthM`
+  - `volumeM3`
+- `reinforcement` (только если `includeReinforcement=true`)
+- `formwork` (только если `includeFormwork=true`)
 
 ## CLI примеры
 

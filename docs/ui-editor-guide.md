@@ -15,12 +15,16 @@
 ## Какой shortcode где использовать
 
 - Для страницы про бетон: `[brigmaster_concrete_estimator]`
+- Для страницы про ленточный фундамент: `[brigmaster_strip_foundation_estimator]`
+- Для страницы про свайный фундамент: `[brigmaster_pile_foundation_estimator]`
 - Для страницы про кирпич: `[brigmaster_brick_estimator]`
 - Для страницы про стяжку: `[brigmaster_screed_estimator]`
 - Для страницы про гипсокартон: `[brigmaster_drywall_estimator]`
 - Для страницы про плитку: `[brigmaster_tile_estimator]`
 
 Можно размещать по одному калькулятору на отдельной странице или несколько на одной странице.
+
+Для свайного фундамента: у буронабивных свай можно отдельно включить расчет арматуры свай.
 
 ## Что объяснять пользователю на странице
 
