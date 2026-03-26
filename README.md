@@ -61,6 +61,31 @@ composer install
 - Method: `POST`
 - URL: `/wp-json/brigmaster/v1/estimate`
 
+## Yandex Metrika (calculator goals)
+
+Counter code (`mc.yandex.ru` / tag) must be added **once** elsewhere (theme, official plugin, or GTM). This plugin only sends `reachGoal` from `estimate-form.js` when **all** are true:
+
+- HTTP host is `brigmaster.ru` or `www.brigmaster.ru` (from `home_url()`),
+- Counter ID is non-zero, resolved in order:
+  1. `BRIGMASTER_YANDEX_METRIKA_COUNTER_ID` in `wp-config.php` if defined,
+  2. else first valid **Tag number** from the official **Yandex Metrica** plugin option `yam_options` → `counters[]['number']` (wp-yandex-metrika),
+  3. then filter `brigmaster_yandex_metrika_counter_id` (can override or force `0`).
+
+On Local / staging hosts, `metrikaEnabled` is false — forms work unchanged; no calls to `ym`.
+
+| `reachGoal` id | RU name in Metrika UI (example) |
+|----------------|----------------------------------|
+| `brigmaster_calc_success` | Калькулятор — успешный расчёт |
+| `brigmaster_calc_request` | Калькулятор — запрос к API отправлен |
+| `brigmaster_calc_fail_client` | Калькулятор — ошибка клиентской проверки |
+| `brigmaster_calc_fail_api` | Калькулятор — ошибка ответа API |
+| `brigmaster_calc_fail_network` | Калькулятор — сетевая ошибка |
+| `brigmaster_calc_fail_config` | Калькулятор — сбой конфигурации |
+
+Params: `calculator_type`, `page_path`, optional `mode`; on failures also `error_kind`, and for API `http_status`, optional `api_error_code`. No user input values.
+
+Full analytics spec: see the project document `YANDEX_METRIKA_TZ_BRIGMASTER.md` if shipped with the repo.
+
 ## Clean контракт: slab_foundation
 
 - `calculator`: только `slab_foundation`

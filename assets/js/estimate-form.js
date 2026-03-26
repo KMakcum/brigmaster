@@ -8,12 +8,147 @@
     return numericValue.toFixed(3).replace(/\.?0+$/, "");
   }
 
+  const MODE_HINTS_SLAB = {
+    dimensions:
+      "Ввод по длине и ширине — нужен для опций арматуры и опалубки.",
+    area:
+      "Ввод по площади; арматура и опалубка — только если дополнительно указать габариты (как в форме).",
+  };
+
+  const MODE_HINTS_STRIP = {
+    perimeter:
+      "Считаем объём по одной общей длине и размерам сечения.",
+    house:
+      "Сначала получаем длину по габаритам дома, затем считаем объём по сечению.",
+    segments:
+      "Длина складывается из участков, объём — по суммарной длине и сечению.",
+  };
+
+  const MODE_HINTS_SIMPLE = {
+    normative:
+      "Базовый вариант без дополнительного запаса по сравнению с другими режимами калькулятора.",
+    reserve:
+      "Добавляет запас на подрезку, потери и разброс при выполнении работ.",
+    beginner:
+      "Более «щадящий» вариант с запасом — удобно при первой самостоятельной закупке.",
+  };
+
+  function updateValidationSummary(form) {
+    const box = form.querySelector("[data-validation-summary]");
+    if (!box) {
+      return;
+    }
+    const errors = [...form.querySelectorAll("[data-field-error]")].filter(
+      (n) => n.textContent && String(n.textContent).trim()
+    );
+    if (errors.length >= 2) {
+      box.textContent = "Исправьте отмеченные поля.";
+      box.hidden = false;
+    } else {
+      box.textContent = "";
+      box.hidden = true;
+    }
+  }
+
+  function markResultStale(form) {
+    const resultNode = form.parentElement.querySelector("[data-result]");
+    if (
+      !resultNode ||
+      resultNode.hidden ||
+      !resultNode.classList.contains("is-success")
+    ) {
+      return;
+    }
+    resultNode.classList.add("is-stale");
+    const notice = resultNode.querySelector("[data-result-stale-notice]");
+    if (notice) {
+      notice.hidden = false;
+    }
+  }
+
+  function finalizeSuccessfulResult(form) {
+    const resultNode = form.parentElement.querySelector("[data-result]");
+    if (resultNode) {
+      resultNode.classList.remove("is-stale");
+      const notice = resultNode.querySelector("[data-result-stale-notice]");
+      if (notice) {
+        notice.hidden = true;
+      }
+    }
+    const el = form.parentElement.querySelector("[data-result]");
+    if (el && !el.hidden) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      try {
+        el.focus({ preventScroll: true });
+      } catch (_e) {
+        /* ignore */
+      }
+    }
+  }
+
+  function updateModeHintForForm(form) {
+    const calculator = form.querySelector('[name="calculator"]')?.value;
+    const mode = form.querySelector('[name="mode"]')?.value || "";
+    const hintNodes = form.querySelectorAll("[data-mode-hint]");
+    if (!hintNodes.length) {
+      return;
+    }
+    let text = "";
+    if (calculator === "slab_foundation" && MODE_HINTS_SLAB[mode]) {
+      text = MODE_HINTS_SLAB[mode];
+    } else if (
+      (calculator === "strip_foundation" || calculator === "pile_foundation") &&
+      MODE_HINTS_STRIP[mode]
+    ) {
+      text = MODE_HINTS_STRIP[mode];
+    } else if (MODE_HINTS_SIMPLE[mode]) {
+      text = MODE_HINTS_SIMPLE[mode];
+    }
+    hintNodes.forEach((node) => {
+      node.textContent = text;
+    });
+  }
+
+  function initModeScenarioUi(form) {
+    const modeSelect = form.querySelector('[name="mode"]');
+    if (modeSelect) {
+      modeSelect.addEventListener("change", () => {
+        updateModeHintForForm(form);
+      });
+    }
+    updateModeHintForForm(form);
+  }
+
+  function initStaleOnFormChange(form) {
+    if (form.dataset.staleBound === "1") {
+      return;
+    }
+    form.dataset.staleBound = "1";
+    form.addEventListener("change", () => {
+      markResultStale(form);
+    });
+    form.addEventListener("input", (event) => {
+      const target = event.target;
+      if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement
+      ) {
+        markResultStale(form);
+      }
+    });
+  }
+
   function clearErrors(form) {
     const errorNodes = form.querySelectorAll("[data-field-error]");
     errorNodes.forEach((node) => {
       node.textContent = "";
     });
     form.classList.remove("has-errors");
+    const summary = form.querySelector("[data-validation-summary]");
+    if (summary) {
+      summary.textContent = "";
+      summary.hidden = true;
+    }
   }
 
   function clearResult(form) {
@@ -149,6 +284,11 @@
       pileReinforcementCard.innerHTML = "";
     }
 
+    resultNode.classList.remove("is-stale");
+    const staleNotice = resultNode.querySelector("[data-result-stale-notice]");
+    if (staleNotice) {
+      staleNotice.hidden = true;
+    }
     resultNode.hidden = true;
     resultNode.classList.remove("is-success");
   }
@@ -307,7 +447,7 @@
     )}</div>`;
 
     schemeNode.innerHTML = `
-      <h4 class="brigmaster-estimator__scheme-title">Схема плиты</h4>
+      <h3 class="brigmaster-estimator__scheme-title">Схема плиты</h3>
       <div class="brigmaster-slab-scheme-layout">
         <ul class="brigmaster-slab-scheme__facts" data-scheme-facts>
           ${infoItems.join("")}
@@ -381,7 +521,7 @@
       if (reinforcement) {
         reinforcementCard.hidden = false;
         reinforcementCard.innerHTML = `
-          <h4>Арматура</h4>
+          <h3>Арматура</h3>
           <p><strong>Масса:</strong> ${formatNumber(reinforcement.massKg)} кг</p>
           <p><strong>Общая длина (с запасом):</strong> ${formatNumber(
             reinforcement.totalLengthWithReserveM
@@ -402,7 +542,7 @@
       if (formwork) {
         formworkCard.hidden = false;
         formworkCard.innerHTML = `
-          <h4>Опалубка</h4>
+          <h3>Опалубка</h3>
           <p><strong>Площадь щитов:</strong> ${formatNumber(formwork.areaM2)} м2</p>
           <p><strong>Погонные метры:</strong> ${formatNumber(formwork.linearMeters)} м</p>
           <p><strong>Высота:</strong> ${formatNumber(formwork.heightM)} м</p>
@@ -416,6 +556,7 @@
     renderSlabScheme(form, payload, requestPayload);
     resultNode.hidden = false;
     resultNode.classList.add("is-success");
+    finalizeSuccessfulResult(form);
   }
 
   function buildStripReinforcementHtml(reinforcement, title = "Арматура") {
@@ -495,7 +636,7 @@
         (Number(reinforcement?.transverse?.totalLengthWithReserveM) || 0);
 
     return `
-      <h4>${escapeHtml(title)}</h4>
+      <h3>${escapeHtml(title)}</h3>
       <div class="brigmaster-estimator__rebar-columns">
         <div class="brigmaster-estimator__rebar-column">
           <p class="brigmaster-estimator__rebar-column-title"><strong>Длина (с запасом):</strong></p>
@@ -639,6 +780,7 @@
 
     resultNode.hidden = false;
     resultNode.classList.add("is-success");
+    finalizeSuccessfulResult(form);
   }
 
   function showPileFoundationResult(form, payload) {
@@ -786,6 +928,7 @@
 
     resultNode.hidden = false;
     resultNode.classList.add("is-success");
+    finalizeSuccessfulResult(form);
   }
 
   function showResult(form, payload) {
@@ -822,6 +965,7 @@
 
     resultNode.hidden = false;
     resultNode.classList.add("is-success");
+    finalizeSuccessfulResult(form);
   }
 
   function buildStripSegmentPayload(segmentNode, includeReinforcement, includeFormwork) {
@@ -1597,6 +1741,7 @@
     if (!hasMappedErrors && !form.querySelector('[data-field-error="general"]')?.textContent) {
       setFieldError(form, "general", "Ошибка валидации. Проверьте данные формы.");
     }
+    updateValidationSummary(form);
   }
 
   function toggleVisibility(node, isVisible) {
@@ -1676,26 +1821,23 @@
     return `
       <article class="brigmaster-estimator__segment-card" data-strip-segment-item data-segment-index="${index}">
         <div class="brigmaster-estimator__segment-head">
-          <h4 class="brigmaster-estimator__segment-title">Участок ${index + 1}</h4>
+          <h3 class="brigmaster-estimator__segment-title">Участок ${index + 1}</h3>
           <button type="button" class="brigmaster-estimator__segment-remove" data-strip-remove-segment>Удалить</button>
         </div>
         <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-grid--three">
           <div class="brigmaster-estimator__field">
             <label>Длина участка (м)</label>
             <input type="number" min="0.01" step="0.01" value="10" data-segment-input="segmentLengthM">
-            <p class="brigmaster-estimator__hint">Длина конкретного участка ленты.</p>
             <div class="brigmaster-estimator__error" data-segment-error-field="segmentLengthM" data-field-error="segments.${index}.segmentLengthM" aria-live="polite"></div>
           </div>
           <div class="brigmaster-estimator__field">
             <label>Ширина участка (м)</label>
             <input type="number" min="0.01" step="0.01" value="0.4" data-segment-input="segmentWidthM">
-            <p class="brigmaster-estimator__hint">Ширина сечения именно этого участка.</p>
             <div class="brigmaster-estimator__error" data-segment-error-field="segmentWidthM" data-field-error="segments.${index}.segmentWidthM" aria-live="polite"></div>
           </div>
           <div class="brigmaster-estimator__field">
             <label>Высота участка (м)</label>
             <input type="number" min="0.01" step="0.01" value="1" data-segment-input="segmentHeightM">
-            <p class="brigmaster-estimator__hint">Высота сечения именно этого участка.</p>
             <div class="brigmaster-estimator__error" data-segment-error-field="segmentHeightM" data-field-error="segments.${index}.segmentHeightM" aria-live="polite"></div>
           </div>
         </div>
@@ -1856,6 +1998,8 @@
 
       const rebarSettings = segmentNode.querySelector("[data-segment-rebar-settings]");
       const formworkSettings = segmentNode.querySelector("[data-segment-formwork-settings]");
+      const rebarLocal = segmentNode.querySelector("[data-segment-rebar-local]");
+      const formworkLocal = segmentNode.querySelector("[data-segment-formwork-local]");
       const useGlobalRebarNode = segmentNode.querySelector("[data-segment-use-global-rebar]");
       const useGlobalFormworkNode = segmentNode.querySelector("[data-segment-use-global-formwork]");
       if (index === 0) {
@@ -1869,6 +2013,8 @@
         }
         toggleVisibility(rebarSettings, false);
         toggleVisibility(formworkSettings, false);
+        toggleVisibility(rebarLocal, false);
+        toggleVisibility(formworkLocal, false);
       } else {
         if (useGlobalRebarNode) {
           useGlobalRebarNode.disabled = false;
@@ -1985,6 +2131,17 @@
       );
       toggleVisibility(reinforcementToggleRow, includeGrillage);
       toggleVisibility(formworkToggleRow, includeGrillage);
+
+      const pilesPanel = form.querySelector('[data-pile-panel="piles"]');
+      const grillagePanels = form.querySelectorAll('[data-pile-panel="grillage"]');
+      if (pilesPanel instanceof HTMLDetailsElement) {
+        pilesPanel.hidden = !includePiles;
+      }
+      grillagePanels.forEach((panel) => {
+        if (panel instanceof HTMLDetailsElement) {
+          panel.hidden = !includeGrillage;
+        }
+      });
     }
 
     toggleVisibility(perimeterGroup, includeGrillage && mode === "perimeter");
@@ -2201,7 +2358,7 @@
       }
       node.addEventListener("change", () => {
         clearErrors(form);
-        clearResult(form);
+        markResultStale(form);
         syncSlabFoundationGroups(form);
       });
     });
@@ -2235,7 +2392,7 @@
       }
       node.addEventListener("change", () => {
         clearErrors(form);
-        clearResult(form);
+        markResultStale(form);
         refresh();
       });
     });
@@ -2243,7 +2400,7 @@
     if (addSegmentButton && segmentsList) {
       addSegmentButton.addEventListener("click", () => {
         clearErrors(form);
-        clearResult(form);
+        markResultStale(form);
         const nextIndex = segmentsList.querySelectorAll("[data-strip-segment-item]").length;
         segmentsList.insertAdjacentHTML("beforeend", createStripSegmentMarkup(nextIndex));
         refresh();
@@ -2269,7 +2426,7 @@
         }
         segmentNode.remove();
         clearErrors(form);
-        clearResult(form);
+        markResultStale(form);
         refresh();
       });
 
@@ -2285,13 +2442,48 @@
           target.matches("[data-segment-use-global-formwork]")
         ) {
           clearErrors(form);
-          clearResult(form);
+          markResultStale(form);
           refresh();
         }
       });
     }
 
     refresh();
+  }
+
+  function normalizePagePath() {
+    const path = window.location.pathname || "/";
+    if (path === "/") {
+      return "/";
+    }
+    return path.endsWith("/") ? path : `${path}/`;
+  }
+
+  function buildMetrikaBaseParams(form, payload) {
+    const calculator_type = String(
+      form.querySelector('[name="calculator"]')?.value || "",
+    );
+    const page_path = normalizePagePath();
+    const params = { calculator_type, page_path };
+    if (payload && payload.mode != null && String(payload.mode) !== "") {
+      params.mode = String(payload.mode);
+    }
+    return params;
+  }
+
+  function safeReachGoal(goalId, params) {
+    const cfg = window.brigmasterEstimateFormData;
+    if (!cfg?.metrikaEnabled || !cfg?.metrikaCounterId) {
+      return;
+    }
+    if (typeof ym !== "function") {
+      return;
+    }
+    try {
+      ym(cfg.metrikaCounterId, "reachGoal", goalId, params || {});
+    } catch (_err) {
+      /* ignore */
+    }
   }
 
   async function onSubmit(event) {
@@ -2307,6 +2499,10 @@
     clearResult(form);
 
     if (!endpoint) {
+      safeReachGoal("brigmaster_calc_fail_config", {
+        ...buildMetrikaBaseParams(form, {}),
+        error_kind: "config",
+      });
       setFieldError(form, "general", "Не настроен endpoint для расчета.");
       return;
     }
@@ -2316,11 +2512,19 @@
     const submitButton = form.querySelector('button[type="submit"]');
 
     if (!isValid) {
+      updateValidationSummary(form);
+      safeReachGoal("brigmaster_calc_fail_client", {
+        ...buildMetrikaBaseParams(form, payload),
+        error_kind: "client_validation",
+      });
       return;
     }
 
     form._lastRequestPayload = payload;
     setLoadingState(form, submitButton, true);
+
+    const baseParams = buildMetrikaBaseParams(form, payload);
+    safeReachGoal("brigmaster_calc_request", { ...baseParams });
 
     try {
       const response = await fetch(endpoint, {
@@ -2331,16 +2535,45 @@
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (_parseError) {
+        safeReachGoal("brigmaster_calc_fail_api", {
+          ...baseParams,
+          error_kind: "api_other",
+          http_status: response.status,
+        });
+        setFieldError(form, "general", networkErrorMessage);
+        return;
+      }
 
       if (response.ok) {
         showResult(form, data);
+        safeReachGoal("brigmaster_calc_success", { ...baseParams });
         return;
       }
 
       const validationErrors = data?.errors || data?.validation_error?.errors;
       handleValidationErrors(form, validationErrors);
+      const hasValidationErrors =
+        validationErrors &&
+        typeof validationErrors === "object" &&
+        Object.keys(validationErrors).length > 0;
+      const failApiParams = {
+        ...baseParams,
+        error_kind: hasValidationErrors ? "api_validation" : "api_other",
+        http_status: response.status,
+      };
+      if (typeof data?.code === "string" && data.code !== "") {
+        failApiParams.api_error_code = data.code;
+      }
+      safeReachGoal("brigmaster_calc_fail_api", failApiParams);
     } catch (_error) {
+      safeReachGoal("brigmaster_calc_fail_network", {
+        ...baseParams,
+        error_kind: "network",
+      });
       setFieldError(form, "general", networkErrorMessage);
     } finally {
       setLoadingState(form, submitButton, false);
@@ -2350,6 +2583,8 @@
   function initForm(form) {
     initSlabFoundationForm(form);
     initStripFoundationForm(form);
+    initModeScenarioUi(form);
+    initStaleOnFormChange(form);
     initTooltips(form);
     form.addEventListener("submit", onSubmit);
   }

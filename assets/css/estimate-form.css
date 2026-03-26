@@ -1,7 +1,14 @@
 :root {
-  --brigmaster-primary: #f97316;
-  --brigmaster-primary-hover: #ea580c;
-  --brigmaster-primary-active: #c2410c;
+  /* Muted steel blue — low saturation, calm; slightly deepened for AA text on CTA */
+  --brigmaster-primary: #516a82;
+  --brigmaster-primary-hover: #465d73;
+  --brigmaster-primary-active: #3c5064;
+  /* Soft cool neutrals (not vivid sky-blue) */
+  --brigmaster-primary-soft-bg: #f4f6f9;
+  --brigmaster-primary-soft-border: #d7dfe9;
+  --brigmaster-primary-on-soft: #4a5c70;
+  --brigmaster-btn-transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
   --brigmaster-text-primary: #111111;
   --brigmaster-text-secondary: #374151;
   --brigmaster-text-muted: #6b7280;
@@ -32,6 +39,14 @@
 
 .brigmaster-estimator--pile-foundation {
   max-width: 980px;
+}
+
+/* Lighter chrome when nested accordions provide their own cards */
+.brigmaster-estimator--with-accordions {
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
 }
 
 [data-field-group="pile-toggles"] {
@@ -117,6 +132,14 @@
   font-size: 14px;
   line-height: 20px;
   padding: 8px 12px;
+  transition: var(--brigmaster-btn-transition);
+}
+
+.brigmaster-estimator__segment-remove:hover:not(:disabled),
+.brigmaster-estimator__segment-add:hover {
+  background: var(--brigmaster-bg-section);
+  border-color: #d1d5db;
+  color: var(--brigmaster-text-primary);
 }
 
 .brigmaster-estimator__segment-add {
@@ -179,10 +202,10 @@
 .brigmaster-estimator__notice {
   margin-top: 8px;
   padding: 12px 14px;
-  border: 1px solid #fcd34d;
+  border: 1px solid var(--brigmaster-primary-soft-border);
   border-radius: 8px;
-  background: #fffbeb;
-  color: #92400e;
+  background: var(--brigmaster-primary-soft-bg);
+  color: var(--brigmaster-primary-on-soft);
   font-size: 13px;
   line-height: 20px;
 }
@@ -239,6 +262,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
+  transition: var(--brigmaster-btn-transition);
 }
 
 .brigmaster-estimator__tooltip-trigger:hover,
@@ -276,26 +300,36 @@
   height: 48px;
   margin-top: 8px;
   padding: 0 20px;
-  border: 0;
+  border: 1px solid transparent;
   border-radius: 8px;
   background: var(--brigmaster-primary);
   color: #ffffff;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
+  text-decoration: none;
+  transition: var(--brigmaster-btn-transition);
 }
 
 .brigmaster-estimator button[type="submit"]:hover {
   background: var(--brigmaster-primary-hover);
+  color: #ffffff;
+  border-color: transparent;
 }
 
 .brigmaster-estimator button[type="submit"]:active {
   background: var(--brigmaster-primary-active);
+  color: #ffffff;
 }
 
 .brigmaster-estimator button[type="submit"]:disabled {
   opacity: 0.65;
   cursor: default;
+}
+
+.brigmaster-estimator button[type="submit"]:focus-visible {
+  outline: 3px solid var(--brigmaster-primary);
+  outline-offset: 2px;
 }
 
 .brigmaster-estimate-form.is-loading button[type="submit"] {
@@ -411,6 +445,7 @@
   background: #ffffff;
 }
 
+.brigmaster-estimator__result-card h3,
 .brigmaster-estimator__result-card h4 {
   margin: 0 0 8px;
   font-size: 16px;
@@ -521,7 +556,7 @@
 
 .brigmaster-slab-scheme__formwork {
   fill: none;
-  stroke: #ea580c;
+  stroke: var(--brigmaster-primary);
   stroke-width: 3;
 }
 
@@ -571,7 +606,7 @@
 }
 
 .brigmaster-slab-scheme__legend-mark--formwork {
-  border: 2px solid #ea580c;
+  border: 2px solid var(--brigmaster-primary);
   background: #ffffff;
 }
 
@@ -667,6 +702,30 @@
   gap: 10px;
 }
 
+.brigmaster-foundation-hub .brigmaster-foundation-hub__title,
+.brigmaster-foundation-hub #brigmaster-foundation-hub-title {
+  margin: 0 0 10px;
+  font-size: clamp(1.75rem, 2.2vw + 1.15rem, 2.375rem);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--brigmaster-text-primary);
+  letter-spacing: -0.02em;
+}
+
+.brigmaster-foundation-hub__lead {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--brigmaster-text-secondary);
+}
+
+.brigmaster-foundation-hub__card-thesis {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--brigmaster-text-secondary);
+}
+
 .brigmaster-foundation-hub__cta {
   display: inline-flex;
   align-items: center;
@@ -674,15 +733,42 @@
   width: fit-content;
   min-height: 44px;
   padding: 0 18px;
+  border: 1px solid transparent;
   border-radius: 8px;
   background: var(--brigmaster-primary);
   color: #ffffff;
   font-weight: 600;
   text-decoration: none;
+  transition: var(--brigmaster-btn-transition);
 }
 
-.brigmaster-foundation-hub__cta:hover {
+.brigmaster-foundation-hub__cta:visited {
+  color: #ffffff;
+}
+
+.brigmaster-foundation-hub__cta:hover,
+.brigmaster-foundation-hub__cta:focus-visible {
   background: var(--brigmaster-primary-hover);
+  color: #ffffff;
+  border-color: transparent;
+  text-decoration: none;
+}
+
+.brigmaster-foundation-hub__cta:active {
+  background: var(--brigmaster-primary-active);
+  color: #ffffff;
+}
+
+.brigmaster-foundation-hub a.brigmaster-foundation-hub__cta,
+.brigmaster-foundation-hub a.brigmaster-foundation-hub__link {
+  text-decoration: none;
+}
+
+.brigmaster-foundation-hub__cta--card {
+  margin-top: auto;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .brigmaster-foundation-hub__cards {
@@ -692,25 +778,40 @@
 }
 
 .brigmaster-foundation-hub__card {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
+  height: 100%;
+  box-sizing: border-box;
   padding: 16px;
   border: 1px solid var(--brigmaster-border);
   border-radius: 12px;
   background: #ffffff;
 }
 
+.brigmaster-foundation-hub__card h3 {
+  margin: 0;
+}
+
 .brigmaster-foundation-hub__icon {
-  width: 42px;
-  height: 42px;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
   border: 1px solid var(--brigmaster-border);
-  border-radius: 10px;
+  border-radius: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--brigmaster-primary);
-  font-weight: 700;
-  background: #fff7ed;
+  background: var(--brigmaster-primary-soft-bg);
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.brigmaster-foundation-hub__icon-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .brigmaster-foundation-hub__card ul,
@@ -742,13 +843,29 @@
   padding: 0 14px;
   border: 1px solid var(--brigmaster-primary);
   border-radius: 8px;
+  background: transparent;
   color: var(--brigmaster-primary);
   font-weight: 600;
   text-decoration: none;
+  transition: var(--brigmaster-btn-transition);
 }
 
-.brigmaster-foundation-hub__link:hover {
-  background: #fff7ed;
+.brigmaster-foundation-hub__link:visited {
+  color: var(--brigmaster-primary);
+}
+
+.brigmaster-foundation-hub__link:hover,
+.brigmaster-foundation-hub__link:focus-visible {
+  background: var(--brigmaster-primary);
+  border-color: var(--brigmaster-primary);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.brigmaster-foundation-hub__link:active {
+  background: var(--brigmaster-primary-active);
+  border-color: var(--brigmaster-primary-active);
+  color: #ffffff;
 }
 
 .brigmaster-foundation-hub__links a {
@@ -757,6 +874,115 @@
 
 .brigmaster-foundation-hub__links--compact {
   margin-top: 10px;
+}
+
+.brigmaster-estimator__mode-hint {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--brigmaster-text-muted);
+}
+
+.brigmaster-estimator__accordions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.brigmaster-estimator__accordion {
+  border: 1px solid var(--brigmaster-border);
+  border-radius: 10px;
+  background: var(--brigmaster-bg-main);
+  overflow: hidden;
+}
+
+.brigmaster-estimator__accordion > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--brigmaster-text-primary);
+  background: var(--brigmaster-bg-section);
+}
+
+.brigmaster-estimator__accordion > summary::-webkit-details-marker {
+  display: none;
+}
+
+.brigmaster-estimator__accordion > summary::after {
+  content: "";
+  float: right;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: 0.35rem;
+  border-right: 2px solid var(--brigmaster-text-muted);
+  border-bottom: 2px solid var(--brigmaster-text-muted);
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+.brigmaster-estimator__accordion[open] > summary::after {
+  transform: rotate(-135deg);
+  margin-top: 0.55rem;
+}
+
+.brigmaster-estimator__accordion-body {
+  padding: 12px 14px 16px;
+  border-top: 1px solid var(--brigmaster-border);
+}
+
+.brigmaster-estimator__hint--accordion {
+  margin: 0;
+}
+
+.brigmaster-estimator__validation-summary {
+  margin: 12px 0 4px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: var(--brigmaster-error);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.brigmaster-estimator__result.is-stale .brigmaster-estimator__result-grid,
+.brigmaster-estimator__result.is-stale .brigmaster-estimator__scheme {
+  opacity: 0.55;
+}
+
+.brigmaster-estimator__result.is-stale > p:not(.brigmaster-estimator__result-stale-notice) {
+  opacity: 0.55;
+}
+
+.brigmaster-estimator__result-stale-notice {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--brigmaster-primary-soft-bg);
+  border: 1px solid var(--brigmaster-primary-soft-border);
+  color: var(--brigmaster-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.brigmaster-estimator__result-note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--brigmaster-text-muted);
+}
+
+.constructly-home-disclaimer {
+  margin: 0 auto 16px;
+  max-width: 720px;
+  padding: 0 1rem;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--brigmaster-text-muted, #6b7280);
+  text-align: center;
 }
 
 @media (min-width: 1200px) {
@@ -819,6 +1045,19 @@
   .brigmaster-estimator__title {
     font-size: 22px;
     line-height: 30px;
+  }
+
+  .brigmaster-foundation-hub .brigmaster-foundation-hub__title,
+  .brigmaster-foundation-hub #brigmaster-foundation-hub-title {
+    font-size: clamp(1.625rem, 4vw + 1rem, 1.875rem);
+    margin-bottom: 8px;
+  }
+
+  .brigmaster-foundation-hub__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    padding: 8px;
   }
 
   .brigmaster-content-block {
@@ -884,11 +1123,18 @@
     margin-bottom: 16px;
   }
 
+  /* Space so sticky submit does not cover the last fields; safe-area for notched phones */
+  .brigmaster-estimate-form {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 20px);
+  }
+
   .brigmaster-estimator button[type="submit"] {
     position: sticky;
-    bottom: 0;
+    bottom: env(safe-area-inset-bottom, 0px);
     height: 56px;
     border-radius: 8px;
+    z-index: 3;
+    box-shadow: 0 -6px 16px rgba(15, 23, 42, 0.08);
   }
 
   .brigmaster-content-block {
