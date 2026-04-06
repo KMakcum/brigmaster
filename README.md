@@ -25,14 +25,14 @@ composer install
 ## Как быстро запустить страницы калькуляторов
 
 1. Создайте отдельные страницы под калькуляторы.
-2. Для каждой страницы поставьте свой shortcode:
-   - Бетон: `[brigmaster_concrete_estimator]`
-   - Ленточный фундамент: `[brigmaster_strip_foundation_estimator]`
-   - Свайный фундамент: [brigmaster_pile_foundation_estimator]
-   - Кирпич: `[brigmaster_brick_estimator]`
-   - Стяжка: `[brigmaster_screed_estimator]`
-   - Гипсокартон: `[brigmaster_drywall_estimator]`
-   - Плитка: `[brigmaster_tile_estimator]`
+2. Для каждой страницы поставьте свой shortcode. Заголовок над формой выводится **только** если задан непустой атрибут `title`; без `title` виджет остаётся без `<h2>` внутри блока калькулятора.
+   - Бетон: `[brigmaster_concrete_estimator title="Калькулятор плитного фундамента"]`
+   - Ленточный фундамент: `[brigmaster_strip_foundation_estimator title="Калькулятор ленточного фундамента"]`
+   - Свайный фундамент: `[brigmaster_pile_foundation_estimator title="Калькулятор свайного фундамента"]`
+   - Кирпич: `[brigmaster_brick_estimator title="Калькулятор кирпича"]`
+   - Стяжка: `[brigmaster_screed_estimator title="Калькулятор стяжки"]`
+   - Гипсокартон: `[brigmaster_drywall_estimator title="Калькулятор гипсокартона"]`
+   - Плитка: `[brigmaster_tile_estimator title="Калькулятор плитки"]`
 3. Используйте готовые контентные шаблоны из `docs/page-templates.md`.
 4. Добавьте внутренние ссылки между страницами калькуляторов.
 5. Используйте только `brigmaster_*` shortcode для контента.

@@ -14,13 +14,15 @@
 
 ## Какой shortcode где использовать
 
-- Для страницы про бетон: `[brigmaster_concrete_estimator]`
-- Для страницы про ленточный фундамент: `[brigmaster_strip_foundation_estimator]`
-- Для страницы про свайный фундамент: `[brigmaster_pile_foundation_estimator]`
-- Для страницы про кирпич: `[brigmaster_brick_estimator]`
-- Для страницы про стяжку: `[brigmaster_screed_estimator]`
-- Для страницы про гипсокартон: `[brigmaster_drywall_estimator]`
-- Для страницы про плитку: `[brigmaster_tile_estimator]`
+Атрибут `title` задаёт заголовок над формой калькулятора. Если `title` не указан или пустой, заголовок внутри виджета не показывается.
+
+- Для страницы про бетон: `[brigmaster_concrete_estimator title="Калькулятор плитного фундамента"]`
+- Для страницы про ленточный фундамент: `[brigmaster_strip_foundation_estimator title="Калькулятор ленточного фундамента"]`
+- Для страницы про свайный фундамент: `[brigmaster_pile_foundation_estimator title="Калькулятор свайного фундамента"]`
+- Для страницы про кирпич: `[brigmaster_brick_estimator title="Калькулятор кирпича"]`
+- Для страницы про стяжку: `[brigmaster_screed_estimator title="Калькулятор стяжки"]`
+- Для страницы про гипсокартон: `[brigmaster_drywall_estimator title="Калькулятор гипсокартона"]`
+- Для страницы про плитку: `[brigmaster_tile_estimator title="Калькулятор плитки"]`
 
 Можно размещать по одному калькулятору на отдельной странице или несколько на одной странице.
 

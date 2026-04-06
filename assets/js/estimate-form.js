@@ -33,6 +33,10 @@
       "Более «щадящий» вариант с запасом — удобно при первой самостоятельной закупке.",
   };
 
+  function getEstimatorShell(form) {
+    return form.closest(".brigmaster-estimator") ?? form.parentElement;
+  }
+
   function updateValidationSummary(form) {
     const box = form.querySelector("[data-validation-summary]");
     if (!box) {
@@ -41,7 +45,7 @@
     const errors = [...form.querySelectorAll("[data-field-error]")].filter(
       (n) => n.textContent && String(n.textContent).trim()
     );
-    if (errors.length >= 2) {
+    if (errors.length >= 1) {
       box.textContent = "Исправьте отмеченные поля.";
       box.hidden = false;
     } else {
@@ -51,7 +55,7 @@
   }
 
   function markResultStale(form) {
-    const resultNode = form.parentElement.querySelector("[data-result]");
+    const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
     if (
       !resultNode ||
       resultNode.hidden ||
@@ -67,7 +71,8 @@
   }
 
   function finalizeSuccessfulResult(form) {
-    const resultNode = form.parentElement.querySelector("[data-result]");
+    const shell = getEstimatorShell(form);
+    const resultNode = shell?.querySelector("[data-result]");
     if (resultNode) {
       resultNode.classList.remove("is-stale");
       const notice = resultNode.querySelector("[data-result-stale-notice]");
@@ -75,7 +80,7 @@
         notice.hidden = true;
       }
     }
-    const el = form.parentElement.querySelector("[data-result]");
+    const el = shell?.querySelector("[data-result]");
     if (el && !el.hidden) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
       try {
@@ -152,7 +157,7 @@
   }
 
   function clearResult(form) {
-    const resultNode = form.parentElement.querySelector("[data-result]");
+    const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
     if (!resultNode) {
       return;
     }
@@ -329,7 +334,7 @@
   }
 
   function renderSlabScheme(form, responsePayload, requestPayload) {
-    const schemeNode = form.parentElement.querySelector("[data-slab-scheme]");
+    const schemeNode = getEstimatorShell(form)?.querySelector("[data-slab-scheme]");
     if (!schemeNode) {
       return;
     }
@@ -408,19 +413,29 @@
       );
     }
 
+    const minSlabDim = Math.min(slabWidth, slabHeight);
+    let rebarInset = Math.max(6, Math.min(14, Math.round(minSlabDim * 0.035)));
+    rebarInset = Math.min(rebarInset, Math.max(0, Math.floor(minSlabDim / 2) - 2));
+    const rLeft = slabX + rebarInset;
+    const rRight = slabRight - rebarInset;
+    const rTop = slabY + rebarInset;
+    const rBottom = slabBottom - rebarInset;
+    const rSpanX = rRight - rLeft;
+    const rSpanY = rBottom - rTop;
+
     const reinforcementLayer = reinforcement
       ? `
       <g class="brigmaster-slab-scheme__rebar">
-        <line x1="${slabX}" y1="${slabY}" x2="${slabRight}" y2="${slabY}" />
-        <line x1="${slabX}" y1="${slabY + slabHeight * 0.33}" x2="${slabRight}" y2="${slabY + slabHeight * 0.33}" />
-        <line x1="${slabX}" y1="${slabY + slabHeight * 0.66}" x2="${slabRight}" y2="${slabY + slabHeight * 0.66}" />
-        <line x1="${slabX}" y1="${slabBottom}" x2="${slabRight}" y2="${slabBottom}" />
-        <line x1="${slabX}" y1="${slabY}" x2="${slabX}" y2="${slabBottom}" />
-        <line x1="${slabX + slabWidth * 0.2}" y1="${slabY}" x2="${slabX + slabWidth * 0.2}" y2="${slabBottom}" />
-        <line x1="${slabX + slabWidth * 0.4}" y1="${slabY}" x2="${slabX + slabWidth * 0.4}" y2="${slabBottom}" />
-        <line x1="${slabX + slabWidth * 0.6}" y1="${slabY}" x2="${slabX + slabWidth * 0.6}" y2="${slabBottom}" />
-        <line x1="${slabX + slabWidth * 0.8}" y1="${slabY}" x2="${slabX + slabWidth * 0.8}" y2="${slabBottom}" />
-        <line x1="${slabRight}" y1="${slabY}" x2="${slabRight}" y2="${slabBottom}" />
+        <line x1="${rLeft}" y1="${rTop}" x2="${rRight}" y2="${rTop}" />
+        <line x1="${rLeft}" y1="${rTop + rSpanY * 0.33}" x2="${rRight}" y2="${rTop + rSpanY * 0.33}" />
+        <line x1="${rLeft}" y1="${rTop + rSpanY * 0.66}" x2="${rRight}" y2="${rTop + rSpanY * 0.66}" />
+        <line x1="${rLeft}" y1="${rBottom}" x2="${rRight}" y2="${rBottom}" />
+        <line x1="${rLeft}" y1="${rTop}" x2="${rLeft}" y2="${rBottom}" />
+        <line x1="${rLeft + rSpanX * 0.2}" y1="${rTop}" x2="${rLeft + rSpanX * 0.2}" y2="${rBottom}" />
+        <line x1="${rLeft + rSpanX * 0.4}" y1="${rTop}" x2="${rLeft + rSpanX * 0.4}" y2="${rBottom}" />
+        <line x1="${rLeft + rSpanX * 0.6}" y1="${rTop}" x2="${rLeft + rSpanX * 0.6}" y2="${rBottom}" />
+        <line x1="${rLeft + rSpanX * 0.8}" y1="${rTop}" x2="${rLeft + rSpanX * 0.8}" y2="${rBottom}" />
+        <line x1="${rRight}" y1="${rTop}" x2="${rRight}" y2="${rBottom}" />
       </g>`
       : "";
 
@@ -430,16 +445,16 @@
       : "";
 
     const legendItems = [
-      `<span><span class="brigmaster-slab-scheme__legend-mark brigmaster-slab-scheme__legend-mark--slab"></span>Серый контур - плита</span>`,
+      `<span class="brigmaster-slab-scheme__legend-item"><span class="brigmaster-slab-scheme__legend-mark brigmaster-slab-scheme__legend-mark--slab" aria-hidden="true"></span><span class="brigmaster-slab-scheme__legend-text">— плита</span></span>`,
     ];
     if (reinforcement) {
       legendItems.push(
-        `<span><span class="brigmaster-slab-scheme__legend-mark brigmaster-slab-scheme__legend-mark--rebar"></span>Сетка - арматура</span>`
+        `<span class="brigmaster-slab-scheme__legend-item"><span class="brigmaster-slab-scheme__legend-mark brigmaster-slab-scheme__legend-mark--rebar" aria-hidden="true"></span><span class="brigmaster-slab-scheme__legend-text">— арматура</span></span>`
       );
     }
     if (formwork) {
       legendItems.push(
-        `<span><span class="brigmaster-slab-scheme__legend-mark brigmaster-slab-scheme__legend-mark--formwork"></span>Красный контур - опалубка</span>`
+        `<span class="brigmaster-slab-scheme__legend-item"><span class="brigmaster-slab-scheme__legend-mark brigmaster-slab-scheme__legend-mark--formwork" aria-hidden="true"></span><span class="brigmaster-slab-scheme__legend-text">— опалубка</span></span>`
       );
     }
     const legendHtml = `<div class="brigmaster-slab-scheme__legend" aria-label="Легенда схемы">${legendItems.join(
@@ -493,7 +508,7 @@
   }
 
   function showSlabResult(form, payload, requestPayload) {
-    const resultNode = form.parentElement.querySelector("[data-result]");
+    const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
     if (!resultNode) {
       return;
     }
@@ -740,7 +755,7 @@
   }
 
   function showStripResult(form, payload) {
-    const resultNode = form.parentElement.querySelector("[data-result]");
+    const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
     if (!resultNode) {
       return;
     }
@@ -784,7 +799,7 @@
   }
 
   function showPileFoundationResult(form, payload) {
-    const resultNode = form.parentElement.querySelector("[data-result]");
+    const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
     if (!resultNode) {
       return;
     }
@@ -947,7 +962,7 @@
       return;
     }
 
-    const resultNode = form.parentElement.querySelector("[data-result]");
+    const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
     if (!resultNode) {
       return;
     }
@@ -1826,18 +1841,18 @@
         </div>
         <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-grid--three">
           <div class="brigmaster-estimator__field">
-            <label>Длина участка (м)</label>
-            <input type="number" min="0.01" step="0.01" value="10" data-segment-input="segmentLengthM">
+            <label for="segment-${index}-length">Длина участка (м)</label>
+            <input id="segment-${index}-length" type="number" min="0.01" step="0.01" value="10" data-segment-input="segmentLengthM">
             <div class="brigmaster-estimator__error" data-segment-error-field="segmentLengthM" data-field-error="segments.${index}.segmentLengthM" aria-live="polite"></div>
           </div>
           <div class="brigmaster-estimator__field">
-            <label>Ширина участка (м)</label>
-            <input type="number" min="0.01" step="0.01" value="0.4" data-segment-input="segmentWidthM">
+            <label for="segment-${index}-width">Ширина участка (м)</label>
+            <input id="segment-${index}-width" type="number" min="0.01" step="0.01" value="0.4" data-segment-input="segmentWidthM">
             <div class="brigmaster-estimator__error" data-segment-error-field="segmentWidthM" data-field-error="segments.${index}.segmentWidthM" aria-live="polite"></div>
           </div>
           <div class="brigmaster-estimator__field">
-            <label>Высота участка (м)</label>
-            <input type="number" min="0.01" step="0.01" value="1" data-segment-input="segmentHeightM">
+            <label for="segment-${index}-height">Высота участка (м)</label>
+            <input id="segment-${index}-height" type="number" min="0.01" step="0.01" value="1" data-segment-input="segmentHeightM">
             <div class="brigmaster-estimator__error" data-segment-error-field="segmentHeightM" data-field-error="segments.${index}.segmentHeightM" aria-live="polite"></div>
           </div>
         </div>
@@ -1864,7 +1879,7 @@
           </div>
           <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-grid--four brigmaster-estimator__field-group brigmaster-estimator__field-group--hidden" data-segment-rebar-local>
             <div class="brigmaster-estimator__field">
-              <label class="brigmaster-estimator__label-row">
+              <label for="segment-${index}-longitudinal-bars-count" class="brigmaster-estimator__label-row">
                 <span>Кол-во продольных стержней</span>
                 <span class="brigmaster-estimator__tooltip-anchor">
                   <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: количество продольных стержней" aria-expanded="false" aria-controls="segment-${index}-seg-long-bars-tooltip">i</button>
@@ -1873,12 +1888,12 @@
                   </div>
                 </span>
               </label>
-              <input type="number" min="1" step="1" value="4" data-segment-input="segmentLongitudinalBarsCount">
+              <input id="segment-${index}-longitudinal-bars-count" type="number" min="1" step="1" value="4" data-segment-input="segmentLongitudinalBarsCount">
               <p class="brigmaster-estimator__hint">Обычно 4-6 стержней для частного дома.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalBarsCount" data-field-error="segments.${index}.segmentLongitudinalBarsCount" aria-live="polite"></div>
             </div>
             <div class="brigmaster-estimator__field">
-              <label class="brigmaster-estimator__label-row">
+              <label for="segment-${index}-longitudinal-diameter" class="brigmaster-estimator__label-row">
                 <span>Диаметр продольной (мм)</span>
                 <span class="brigmaster-estimator__tooltip-anchor">
                   <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр продольной арматуры" aria-expanded="false" aria-controls="segment-${index}-seg-long-diameter-tooltip">i</button>
@@ -1887,12 +1902,12 @@
                   </div>
                 </span>
               </label>
-              <input type="number" min="1" step="1" value="12" data-segment-input="segmentLongitudinalDiameterMm">
+              <input id="segment-${index}-longitudinal-diameter" type="number" min="1" step="1" value="12" data-segment-input="segmentLongitudinalDiameterMm">
               <p class="brigmaster-estimator__hint">Чаще всего 10-14 мм.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalDiameterMm" data-field-error="segments.${index}.segmentLongitudinalDiameterMm" aria-live="polite"></div>
             </div>
             <div class="brigmaster-estimator__field">
-              <label class="brigmaster-estimator__label-row">
+              <label for="segment-${index}-transverse-diameter" class="brigmaster-estimator__label-row">
                 <span>Диаметр поперечной (мм)</span>
                 <span class="brigmaster-estimator__tooltip-anchor">
                   <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр поперечной арматуры" aria-expanded="false" aria-controls="segment-${index}-seg-transverse-diameter-tooltip">i</button>
@@ -1901,12 +1916,12 @@
                   </div>
                 </span>
               </label>
-              <input type="number" min="1" step="1" value="8" data-segment-input="segmentTransverseDiameterMm">
+              <input id="segment-${index}-transverse-diameter" type="number" min="1" step="1" value="8" data-segment-input="segmentTransverseDiameterMm">
               <p class="brigmaster-estimator__hint">Обычно 6-10 мм для хомутов.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseDiameterMm" data-field-error="segments.${index}.segmentTransverseDiameterMm" aria-live="polite"></div>
             </div>
             <div class="brigmaster-estimator__field">
-              <label class="brigmaster-estimator__label-row">
+              <label for="segment-${index}-transverse-step" class="brigmaster-estimator__label-row">
                 <span>Шаг поперечной (мм)</span>
                 <span class="brigmaster-estimator__tooltip-anchor">
                   <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: шаг поперечной арматуры" aria-expanded="false" aria-controls="segment-${index}-seg-transverse-step-tooltip">i</button>
@@ -1915,7 +1930,7 @@
                   </div>
                 </span>
               </label>
-              <input type="number" min="1" step="10" value="300" data-segment-input="segmentTransverseStepMm">
+              <input id="segment-${index}-transverse-step" type="number" min="1" step="10" value="300" data-segment-input="segmentTransverseStepMm">
               <p class="brigmaster-estimator__hint">Меньше шаг = больше хомутов и расход стали.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseStepMm" data-field-error="segments.${index}.segmentTransverseStepMm" aria-live="polite"></div>
             </div>
@@ -1944,8 +1959,8 @@
           </div>
           <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-group brigmaster-estimator__field-group--hidden" data-segment-formwork-local>
             <div class="brigmaster-estimator__field">
-              <label>Высота опалубки участка (м)</label>
-              <input type="number" min="0.01" step="0.01" value="0.8" data-segment-input="segmentFormworkHeightM">
+              <label for="segment-${index}-formwork-height">Высота опалубки участка (м)</label>
+              <input id="segment-${index}-formwork-height" type="number" min="0.01" step="0.01" value="0.8" data-segment-input="segmentFormworkHeightM">
               <p class="brigmaster-estimator__hint">Считаются только боковые щиты участка.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentFormworkHeightM" data-field-error="segments.${index}.segmentFormworkHeightM" aria-live="polite"></div>
             </div>
@@ -1993,6 +2008,28 @@
         }
         if (label) {
           label.setAttribute("for", id);
+        }
+      });
+
+      const inputMappings = [
+        { field: "segmentLengthM", id: `segment-${index}-length` },
+        { field: "segmentWidthM", id: `segment-${index}-width` },
+        { field: "segmentHeightM", id: `segment-${index}-height` },
+        { field: "segmentLongitudinalBarsCount", id: `segment-${index}-longitudinal-bars-count` },
+        { field: "segmentLongitudinalDiameterMm", id: `segment-${index}-longitudinal-diameter` },
+        { field: "segmentTransverseDiameterMm", id: `segment-${index}-transverse-diameter` },
+        { field: "segmentTransverseStepMm", id: `segment-${index}-transverse-step` },
+        { field: "segmentFormworkHeightM", id: `segment-${index}-formwork-height` },
+      ];
+      inputMappings.forEach(({ field, id }) => {
+        const input = segmentNode.querySelector(`[data-segment-input="${field}"]`);
+        if (input) {
+          input.id = id;
+          const fieldWrap = input.closest(".brigmaster-estimator__field");
+          const label = fieldWrap?.querySelector("label[for]");
+          if (label) {
+            label.setAttribute("for", id);
+          }
         }
       });
 
@@ -2161,7 +2198,7 @@
   }
 
   function setTooltipBackdropVisible(form, isVisible) {
-    const backdrop = form.parentElement.querySelector("[data-tooltip-backdrop]");
+    const backdrop = getEstimatorShell(form)?.querySelector("[data-tooltip-backdrop]");
     if (!backdrop) {
       return;
     }
@@ -2306,7 +2343,7 @@
     });
 
     if (form.dataset.tooltipGlobalBound !== "1") {
-      const backdrop = form.parentElement.querySelector("[data-tooltip-backdrop]");
+      const backdrop = getEstimatorShell(form)?.querySelector("[data-tooltip-backdrop]");
       if (backdrop) {
         backdrop.addEventListener("click", () => {
           closeAllTooltips(form);

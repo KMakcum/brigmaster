@@ -27,157 +27,52 @@ final class EstimateShortcode
 
     public function renderConcreteShortcode(array $attributes = [], ?string $content = null, string $shortcodeTag = ''): string
     {
-        return $this->renderEstimator(
-            calculator: 'slab_foundation',
-            title: 'Калькулятор плитного фундамента'
-        );
+        return $this->renderEstimator('slab_foundation', $this->resolveEstimatorTitle($attributes, $shortcodeTag));
     }
 
     public function renderStripFoundationShortcode(array $attributes = [], ?string $content = null, string $shortcodeTag = ''): string
     {
-        return $this->renderEstimator(
-            calculator: 'strip_foundation',
-            title: 'Калькулятор ленточного фундамента'
-        );
+        return $this->renderEstimator('strip_foundation', $this->resolveEstimatorTitle($attributes, $shortcodeTag));
     }
 
     public function renderPileFoundationShortcode(array $attributes = [], ?string $content = null, string $shortcodeTag = ''): string
     {
-        return $this->renderEstimator(
-            calculator: 'pile_foundation',
-            title: 'Калькулятор свайного фундамента'
-        );
+        return $this->renderEstimator('pile_foundation', $this->resolveEstimatorTitle($attributes, $shortcodeTag));
     }
 
     public function renderScreedShortcode(array $attributes = [], ?string $content = null, string $shortcodeTag = ''): string
     {
-        return $this->renderEstimator(
-            calculator: 'screed',
-            title: 'Калькулятор стяжки'
-        );
+        return $this->renderEstimator('screed', $this->resolveEstimatorTitle($attributes, $shortcodeTag));
     }
 
     public function renderBrickShortcode(array $attributes = [], ?string $content = null, string $shortcodeTag = ''): string
     {
-        return $this->renderEstimator(
-            calculator: 'brick',
-            title: 'Калькулятор кирпича'
-        );
+        return $this->renderEstimator('brick', $this->resolveEstimatorTitle($attributes, $shortcodeTag));
     }
 
     public function renderDrywallShortcode(array $attributes = [], ?string $content = null, string $shortcodeTag = ''): string
     {
-        return $this->renderEstimator(
-            calculator: 'drywall',
-            title: 'Калькулятор гипсокартона'
-        );
+        return $this->renderEstimator('drywall', $this->resolveEstimatorTitle($attributes, $shortcodeTag));
     }
 
     public function renderTileShortcode(array $attributes = [], ?string $content = null, string $shortcodeTag = ''): string
     {
-        return $this->renderEstimator(
-            calculator: 'tile',
-            title: 'Калькулятор плитки'
-        );
+        return $this->renderEstimator('tile', $this->resolveEstimatorTitle($attributes, $shortcodeTag));
+    }
+
+    /**
+     * @param array<string, string> $attributes
+     */
+    private function resolveEstimatorTitle(array $attributes, string $shortcodeTag): string
+    {
+        $atts = shortcode_atts(['title' => ''], $attributes, $shortcodeTag);
+
+        return trim((string) $atts['title']);
     }
 
     public function renderFoundationHubShortcode(array $attributes = [], ?string $content = null, string $shortcodeTag = ''): string
     {
-        $this->enqueueAssets();
-
-        ob_start();
-        ?>
-        <section class="brigmaster-foundation-hub" aria-labelledby="brigmaster-foundation-hub-title">
-            <div class="brigmaster-content-block brigmaster-foundation-hub__hero">
-                <h1 id="brigmaster-foundation-hub-title" class="brigmaster-foundation-hub__title">Калькулятор фундамента</h1>
-                <p class="brigmaster-foundation-hub__lead">
-                    Три типа фундамента — три отдельных калькулятора. Здесь можно выбрать тип расчёта фундамента и перейти к нужному калькулятору по карточке.
-                    Откройте подходящий вариант и на открывшейся странице следуйте короткой инструкции над формой. Если не уверены в типе основания,
-                    лучше обсудить выбор с проектировщиком или инженером по основаниям — калькуляторы помогают с оценкой материалов, а не подбирают конструкцию под ваш участок.
-                </p>
-                <a class="brigmaster-foundation-hub__cta" href="#foundation-types">К типам фундамента</a>
-            </div>
-
-            <div id="foundation-types" class="brigmaster-content-block brigmaster-content-block--muted">
-                <h2>Выберите тип фундамента</h2>
-                <div class="brigmaster-foundation-hub__cards">
-                    <article class="brigmaster-foundation-hub__card">
-                        <div class="brigmaster-foundation-hub__icon" aria-hidden="true"><svg class="brigmaster-foundation-hub__icon-svg" focusable="false" aria-hidden="true" version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 415 415" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,415.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none"><path d="M1865 3364 c-99 -58 -205 -121 -235 -139 -426 -252 -709 -420 -727 -431 -46 -29 -37 -104 12 -104 14 0 54 18 90 40 l65 40 0 -283 0 -283 -27 -11 c-69 -27 -518 -198 -603 -229 -52 -19 -103 -44 -112 -55 -16 -19 -18 -46 -18 -233 0 -160 3 -217 13 -230 7 -10 90 -47 183 -81 274 -102 551 -206 839 -315 149 -56 358 -135 466 -175 108 -40 206 -78 217 -84 36 -19 89 -12 174 23 74 30 559 213 1108 416 467 173 534 200 541 212 5 7 9 110 9 229 0 192 -2 219 -17 238 -12 13 -152 71 -383 159 l-365 139 -3 276 c-1 173 1 277 7 277 6 0 37 -16 71 -36 64 -37 105 -42 123 -13 27 43 7 61 -270 226 -277 166 -497 296 -618 366 -38 22 -97 57 -130 78 -102 63 -158 89 -195 89 -26 0 -79 -26 -215 -106z m450 -132 c121 -71 283 -166 360 -212 77 -46 179 -106 227 -134 l88 -51 0 -442 0 -443 -905 0 -905 0 0 443 0 442 58 34 c31 19 118 70 192 114 444 263 642 377 655 377 6 0 110 -58 230 -128z m-1243 -1230 c-3 -96 -1 -111 17 -133 l19 -24 964 -3 c995 -3 998 -2 1013 37 4 9 6 64 5 124 0 59 2 107 5 107 4 0 126 -45 273 -101 147 -55 287 -108 311 -116 31 -11 39 -18 30 -24 -14 -7 -227 -86 -804 -295 -159 -58 -349 -127 -420 -154 -262 -97 -384 -140 -398 -140 -12 0 -349 119 -482 170 -27 11 -232 85 -455 166 -664 241 -690 250 -694 255 -2 2 116 49 262 103 147 55 283 108 302 118 19 9 40 17 45 18 6 0 9 -40 7 -108z m-495 -268 c98 -36 309 -113 468 -171 160 -57 331 -120 380 -138 726 -269 637 -253 885 -161 96 35 294 108 440 161 146 54 418 153 605 222 187 69 357 131 378 139 l38 13 -3 -70 -3 -70 -65 -23 c-201 -72 -517 -187 -745 -271 -442 -163 -635 -235 -754 -277 l-114 -41 -116 40 c-64 23 -240 87 -391 143 -151 56 -354 130 -450 165 -96 35 -278 101 -405 148 -126 46 -254 92 -282 101 l-53 18 0 69 c0 38 2 69 4 69 2 0 85 -30 183 -66z"/></g></svg></div>
-                        <h3>Плитный фундамент</h3>
-                        <p class="brigmaster-foundation-hub__card-thesis">
-                            Монолитная плита на весь контур — удобно оценить бетон, арматуру и опалубку в одном расчёте.
-                        </p>
-                        <a href="/kalkulyator-plitnogo-fundamenta/" class="brigmaster-foundation-hub__cta brigmaster-foundation-hub__cta--card">Открыть калькулятор плиты</a>
-                    </article>
-
-                    <article class="brigmaster-foundation-hub__card">
-                        <div class="brigmaster-foundation-hub__icon" aria-hidden="true"><svg class="brigmaster-foundation-hub__icon-svg" focusable="false" aria-hidden="true" version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" preserveAspectRatio="xMidYMid meet"><g transform="translate(0,420) scale(0.100000,-0.100000)" fill="currentColor" stroke="none"><path d="M1925 3388 c-324 -190 -668 -394 -920 -544 -132 -79 -155 -106 -120 -144 26 -29 52 -25 123 20 l62 39 0 -277 0 -278 -27 -10 c-16 -6 -136 -53 -268 -104 -132 -50 -286 -110 -342 -132 -61 -23 -109 -48 -118 -61 -12 -17 -15 -60 -15 -224 0 -111 4 -213 9 -226 6 -16 23 -29 48 -37 21 -7 126 -45 233 -86 284 -106 926 -345 1140 -424 102 -38 219 -82 260 -99 41 -17 84 -31 95 -31 11 0 56 14 100 31 129 49 308 116 485 180 91 33 296 109 455 169 160 59 393 145 519 191 191 70 230 87 237 107 5 13 9 114 9 225 0 164 -3 207 -15 224 -9 13 -62 40 -138 69 -67 26 -212 82 -322 124 -110 43 -225 87 -255 98 -30 11 -55 25 -54 31 1 6 2 130 3 276 l1 265 64 -40 c71 -45 110 -51 126 -19 19 34 4 65 -47 97 -46 29 -371 222 -483 287 -30 17 -176 103 -325 190 -148 87 -284 164 -302 172 -59 24 -91 15 -218 -59z m254 -81 c72 -41 481 -280 714 -418 l107 -63 0 -443 0 -443 -910 0 -910 0 0 443 0 442 203 119 c262 154 467 274 592 347 55 32 106 59 114 59 7 0 48 -19 90 -43z m-1111 -1254 l-3 -57 -130 -47 c-143 -52 -174 -76 -139 -108 10 -10 138 -61 284 -114 146 -53 371 -135 500 -182 454 -168 482 -177 525 -172 22 2 166 50 320 107 308 112 689 250 860 311 60 22 113 43 118 48 5 5 7 19 5 32 -2 18 -18 28 -83 51 -44 16 -110 40 -147 54 l-68 26 0 54 c0 30 2 54 5 54 2 0 33 -11 67 -25 87 -34 395 -150 500 -188 49 -18 88 -34 88 -37 0 -3 -53 -24 -117 -47 -65 -23 -228 -83 -363 -133 -135 -50 -274 -102 -310 -115 -36 -13 -121 -44 -190 -70 -547 -203 -676 -247 -715 -242 -44 5 -465 158 -1312 476 -178 66 -327 121 -333 121 -5 0 -10 5 -10 10 0 6 5 10 11 10 11 0 433 160 554 209 39 16 74 30 78 30 4 1 7 -25 5 -56z m12 -162 c0 -11 12 -29 26 -40 27 -21 31 -21 988 -21 1046 0 996 -3 1010 55 8 31 9 31 80 2 l58 -24 -74 -25 c-190 -67 -634 -227 -823 -298 -115 -43 -220 -81 -232 -84 -15 -5 -93 19 -245 74 -406 149 -662 241 -778 282 -154 53 -151 51 -88 75 68 27 78 27 78 4z m-280 -268 c387 -145 717 -268 1060 -393 l185 -68 3 -141 c1 -78 0 -141 -3 -141 -2 0 -69 25 -147 56 -79 30 -204 78 -278 105 -74 27 -169 63 -210 79 -41 16 -185 70 -320 120 -135 50 -350 130 -477 177 l-233 87 0 139 c0 129 1 139 18 132 9 -4 190 -72 402 -152z m2998 11 l-3 -136 -350 -128 c-285 -104 -1229 -457 -1298 -485 -16 -7 -17 2 -15 135 l3 143 190 69 c105 38 219 80 255 93 222 80 1090 402 1160 430 62 25 61 28 58 -121z"/></g></svg></div>
-                        <h3>Ленточный фундамент</h3>
-                        <p class="brigmaster-foundation-hub__card-thesis">
-                            Лента под несущими стенами — считаем объём по длине и сечению, можно задать участки.
-                        </p>
-                        <a href="/kalkulyator-lentochnogo-fundamenta/" class="brigmaster-foundation-hub__cta brigmaster-foundation-hub__cta--card">Открыть калькулятор ленты</a>
-                    </article>
-
-                    <article class="brigmaster-foundation-hub__card">
-                        <div class="brigmaster-foundation-hub__icon" aria-hidden="true"><svg class="brigmaster-foundation-hub__icon-svg" focusable="false" aria-hidden="true" version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" preserveAspectRatio="xMidYMid meet"><g transform="translate(0,420) scale(0.100000,-0.100000)" fill="currentColor" stroke="none"><path d="M1870 3441 c-102 -59 -279 -163 -395 -231 -455 -266 -594 -352 -600 -371 -10 -30 4 -58 30 -65 17 -4 43 5 89 30 35 20 67 36 70 36 4 0 5 -113 4 -252 l-3 -252 -308 -105 c-169 -58 -312 -113 -317 -121 -5 -8 -10 -74 -10 -146 0 -113 2 -133 18 -146 9 -8 70 -32 135 -53 l117 -39 0 -377 0 -377 24 -29 c32 -37 84 -53 178 -53 85 0 161 22 183 53 13 18 15 73 15 329 0 237 3 308 12 308 7 0 88 -26 180 -57 l168 -58 0 -342 c0 -193 4 -353 10 -367 16 -42 63 -60 178 -64 81 -3 113 -1 148 13 75 28 74 25 74 331 0 149 2 273 5 276 3 3 53 -11 111 -30 l105 -34 97 31 c53 18 103 35 110 37 9 5 12 -54 12 -273 0 -230 3 -282 15 -300 22 -32 98 -53 189 -53 91 0 144 12 178 39 l23 19 5 357 5 357 169 59 c93 33 173 59 178 59 4 0 8 -140 8 -310 l0 -311 25 -23 c39 -36 103 -50 203 -43 95 6 155 26 172 56 6 13 10 156 10 398 l0 379 129 42 c77 25 132 49 135 58 3 9 6 76 6 150 0 128 -1 134 -22 148 -13 8 -157 58 -320 112 l-298 99 0 253 c0 138 2 252 4 252 2 0 30 -16 62 -35 61 -37 83 -42 115 -25 22 12 25 49 7 72 -7 8 -56 40 -108 70 -52 30 -203 120 -335 198 -132 79 -312 184 -400 235 -88 51 -198 115 -245 144 -124 74 -125 74 -350 -58z m263 -17 c18 -9 205 -118 417 -242 212 -124 402 -235 422 -246 l38 -21 0 -438 0 -437 -917 2 -918 3 -3 431 -2 430 162 96 c569 335 748 438 761 438 4 0 22 -7 40 -16z m-1063 -1313 c0 -133 1 -141 22 -155 20 -14 131 -16 1001 -16 l978 0 24 25 c24 23 25 29 25 155 0 71 2 130 4 130 7 0 490 -161 494 -164 2 -2 -41 -19 -95 -36 -54 -18 -377 -129 -718 -248 -341 -118 -642 -221 -670 -229 l-50 -14 -435 151 c-512 178 -1025 355 -1060 365 -19 6 25 25 215 91 132 45 246 83 253 83 9 1 12 -33 12 -138z m-305 -176 c945 -329 1311 -455 1325 -455 18 0 181 54 620 207 369 128 964 333 968 333 1 0 2 -32 0 -71 l-3 -72 -40 -12 c-22 -7 -296 -101 -610 -210 -313 -108 -653 -225 -753 -259 l-184 -61 -296 102 c-164 56 -490 169 -727 251 -236 82 -456 157 -487 167 l-58 18 0 74 c0 68 2 74 18 68 9 -4 111 -40 227 -80z m255 -620 c0 -263 -2 -306 -16 -319 -18 -19 -155 -23 -198 -6 l-26 10 0 258 c0 143 3 299 6 348 l7 90 113 -39 114 -39 0 -303z m2380 30 l0 -344 -22 -13 c-32 -17 -170 -17 -191 1 -15 12 -17 47 -17 320 l0 307 108 36 c59 21 110 37 115 38 4 0 7 -155 7 -345z m-1710 39 l95 -32 0 -277 c0 -249 -2 -278 -17 -286 -23 -12 -175 -11 -199 1 -18 10 -19 25 -19 326 l0 315 23 -7 c12 -4 65 -22 117 -40z m940 -273 l0 -319 -22 -6 c-42 -11 -174 -6 -191 7 -16 11 -17 37 -15 286 l3 274 105 38 c58 21 108 38 113 38 4 1 7 -142 7 -318z"/></g></svg></div>
-                        <h3>Свайный фундамент</h3>
-                        <p class="brigmaster-foundation-hub__card-thesis">
-                            Сваи и ростверк — оценка по вашим вводным; итог по несущей способности и геологии всё равно в проекте.
-                        </p>
-                        <a href="/kalkulyator-svajnogo-fundamenta/" class="brigmaster-foundation-hub__cta brigmaster-foundation-hub__cta--card">Открыть калькулятор свай</a>
-                    </article>
-                </div>
-            </div>
-
-            <div class="brigmaster-content-block">
-                <h2>Как выбрать тип фундамента</h2>
-                <ol class="brigmaster-foundation-hub__criteria">
-                    <li>Проверьте тип грунта и уровень грунтовых вод на участке.</li>
-                    <li>Оцените вес дома, этажность и тип стеновых материалов.</li>
-                    <li>Сравните бюджет и сроки реализации разных решений.</li>
-                    <li>Учитывайте рельеф, перепады высот и особенности участка.</li>
-                    <li>Согласуйте итоговый вариант с проектировщиком.</li>
-                </ol>
-            </div>
-
-            <div class="brigmaster-content-block">
-                <h2>Частые вопросы по фундаментам</h2>
-                <div id="foundation-hub-faq-1" class="brigmaster-faq-item">
-                    <h3 class="brigmaster-faq-item__question">Какой фундамент выбрать для одноэтажного дома?</h3>
-                    <p class="brigmaster-faq-item__answer">Выбор зависит от грунта, конструкции дома и бюджета.</p>
-                </div>
-                <div id="foundation-hub-faq-2" class="brigmaster-faq-item">
-                    <h3 class="brigmaster-faq-item__question">Можно ли ориентироваться только на онлайн-калькулятор?</h3>
-                    <p class="brigmaster-faq-item__answer">Калькулятор дает предварительную оценку, но не заменяет проект.</p>
-                </div>
-                <div id="foundation-hub-faq-3" class="brigmaster-faq-item">
-                    <h3 class="brigmaster-faq-item__question">Нужен ли запас по материалам?</h3>
-                    <p class="brigmaster-faq-item__answer">Обычно закладывают запас на технологические потери.</p>
-                </div>
-                <div id="foundation-hub-faq-4" class="brigmaster-faq-item">
-                    <h3 class="brigmaster-faq-item__question">Почему результаты на разных страницах отличаются?</h3>
-                    <p class="brigmaster-faq-item__answer">Каждый тип фундамента рассчитывается по своей модели.</p>
-                </div>
-            </div>
-
-            <div class="brigmaster-content-block brigmaster-content-block--muted">
-                <h2>Полезные ссылки</h2>
-                <ul class="brigmaster-foundation-hub__links">
-                    <li><a href="/kalkulyator-plitnogo-fundamenta/">Калькулятор плитного фундамента</a></li>
-                    <li><a href="/kalkulyator-lentochnogo-fundamenta/">Калькулятор ленточного фундамента</a></li>
-                    <li><a href="/kalkulyator-svajnogo-fundamenta/">Калькулятор свайного фундамента</a></li>
-                </ul>
-                <ul class="brigmaster-foundation-hub__links brigmaster-foundation-hub__links--compact">
-                    <li><a href="/kalkulyator-kirpicha/">Калькулятор кирпича</a></li>
-                    <li><a href="/kalkulyator-styazhki/">Калькулятор стяжки</a></li>
-                    <li><a href="/kalkulyator-plitki/">Калькулятор плитки</a></li>
-                </ul>
-            </div>
-        </section>
-        <?php
-
-        return (string) ob_get_clean();
+        return (string) apply_filters('constructly_render_foundation_hub', '');
     }
 
     /**
@@ -198,7 +93,16 @@ final class EstimateShortcode
             return $data;
         }
 
-        if (!has_shortcode((string) $post->post_content, 'brigmaster_foundation_hub')) {
+        $postContent = (string) $post->post_content;
+
+        if (has_block('rank-math/faq-block', $postContent)) {
+            return $data;
+        }
+
+        if (
+            !has_block('constructly/foundation-hub', $postContent)
+            && !has_shortcode($postContent, 'brigmaster_foundation_hub')
+        ) {
             return $data;
         }
 
@@ -255,6 +159,8 @@ final class EstimateShortcode
         }
 
         $this->enqueueAssets();
+
+        $heading = trim($title);
 
         $instanceId = wp_unique_id('brigmaster-' . $calculator . '-');
         $modeFieldId = $instanceId . 'mode';
@@ -329,7 +235,9 @@ final class EstimateShortcode
         ob_start();
         ?>
         <div class="brigmaster-estimator brigmaster-estimator--<?php echo esc_attr(str_replace('_', '-', $calculator)); ?><?php echo esc_attr($estimatorModifierClass); ?>" data-calculator="<?php echo esc_attr($calculator); ?>">
-            <h2 class="brigmaster-estimator__title"><?php echo esc_html($title); ?></h2>
+            <?php if ($heading !== '') : ?>
+            <h2 class="brigmaster-estimator__title"><?php echo esc_html($heading); ?></h2>
+            <?php endif; ?>
             <form class="brigmaster-estimate-form" novalidate>
                 <input type="hidden" name="calculator" value="<?php echo esc_attr($calculator); ?>">
 
@@ -394,8 +302,7 @@ final class EstimateShortcode
                         </div>
                     </div>
 
-                    <div class="brigmaster-estimator__field-group">
-                        <div class="brigmaster-estimator__field brigmaster-estimator__toggle" data-toggle-field="reinforcement">
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field brigmaster-estimator__toggle" data-toggle-field="reinforcement">
                             <input id="<?php echo esc_attr($includeReinforcementFieldId); ?>" type="checkbox" name="includeReinforcement" value="1" checked>
                             <label for="<?php echo esc_attr($includeReinforcementFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Учитывать арматуру</span>
@@ -407,7 +314,6 @@ final class EstimateShortcode
                                 </span>
                             </label>
                             <div class="brigmaster-estimator__error" data-field-error="includeReinforcement" aria-live="polite"></div>
-                        </div>
                     </div>
 
                     <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--four" data-field-group="slab-reinforcement">
@@ -475,8 +381,7 @@ final class EstimateShortcode
                         </div>
                     </div>
 
-                    <div class="brigmaster-estimator__field-group">
-                        <div class="brigmaster-estimator__field brigmaster-estimator__toggle" data-toggle-field="formwork">
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field brigmaster-estimator__toggle" data-toggle-field="formwork">
                             <input id="<?php echo esc_attr($includeFormworkFieldId); ?>" type="checkbox" name="includeFormwork" value="1" checked>
                             <label for="<?php echo esc_attr($includeFormworkFieldId); ?>" class="brigmaster-estimator__label-row">
                                 <span>Учитывать опалубку</span>
@@ -488,7 +393,6 @@ final class EstimateShortcode
                                 </span>
                             </label>
                             <div class="brigmaster-estimator__error" data-field-error="includeFormwork" aria-live="polite"></div>
-                        </div>
                     </div>
 
                     <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--two" data-field-group="slab-formwork">
@@ -549,8 +453,7 @@ final class EstimateShortcode
                         <details class="brigmaster-estimator__accordion" open data-pile-panel="piles">
                             <summary class="brigmaster-estimator__accordion-summary">Сваи</summary>
                             <div class="brigmaster-estimator__accordion-body">
-                        <div class="brigmaster-estimator__field-group" data-field-group="pile-type">
-                            <div class="brigmaster-estimator__field">
+                        <div class="brigmaster-estimator__field-group brigmaster-estimator__field" data-field-group="pile-type">
                                 <label for="<?php echo esc_attr($pileTypeFieldId); ?>">Тип свай</label>
                                 <select id="<?php echo esc_attr($pileTypeFieldId); ?>" name="pileType">
                                     <option value="bored">Буронабивные</option>
@@ -561,31 +464,25 @@ final class EstimateShortcode
                                     Для винтовых и забивных свай бетон не требуется. Для буронабивных выполняется расчет бетона.
                                 </p>
                                 <div class="brigmaster-estimator__error" data-field-error="pileType" aria-live="polite"></div>
-                            </div>
                         </div>
 
-                        <div class="brigmaster-estimator__field-group" data-field-group="pile-base-toggle">
-                            <div class="brigmaster-estimator__field brigmaster-estimator__toggle">
+                        <div class="brigmaster-estimator__field-group brigmaster-estimator__field brigmaster-estimator__toggle" data-field-group="pile-base-toggle">
                                 <input id="<?php echo esc_attr($includePileBaseFieldId); ?>" type="checkbox" name="includePileBase" value="1" checked>
                                 <label for="<?php echo esc_attr($includePileBaseFieldId); ?>" class="brigmaster-estimator__label-row">
                                     <span>Учитывать уширение сваи (пяту)</span>
                                 </label>
                                 <div class="brigmaster-estimator__error" data-field-error="includePileBase" aria-live="polite"></div>
-                            </div>
                         </div>
 
-                        <div class="brigmaster-estimator__field-group" data-field-group="pile-reinforcement-toggle">
-                            <div class="brigmaster-estimator__field brigmaster-estimator__toggle">
+                        <div class="brigmaster-estimator__field-group brigmaster-estimator__field brigmaster-estimator__toggle" data-field-group="pile-reinforcement-toggle">
                                 <input id="<?php echo esc_attr($includePileReinforcementFieldId); ?>" type="checkbox" name="includePileReinforcement" value="1">
                                 <label for="<?php echo esc_attr($includePileReinforcementFieldId); ?>" class="brigmaster-estimator__label-row">
                                     <span>Учитывать арматуру свай</span>
                                 </label>
                                 <div class="brigmaster-estimator__error" data-field-error="includePileReinforcement" aria-live="polite"></div>
-                            </div>
                         </div>
 
-                        <div class="brigmaster-estimator__field-group" data-field-group="pile-primary-row">
-                            <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-grid--pile-primary" data-pile-primary-grid>
+                        <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--pile-primary" data-field-group="pile-primary-row" data-pile-primary-grid>
                                 <div class="brigmaster-estimator__field brigmaster-estimator__field--pile-count">
                                     <label for="<?php echo esc_attr($pilesCountFieldId); ?>" class="brigmaster-estimator__label-row">
                                         <span>Количество свай</span>
@@ -609,7 +506,6 @@ final class EstimateShortcode
                                     <input id="<?php echo esc_attr($pileShaftHeightFieldId); ?>" type="number" name="pileShaftHeightM" min="0.01" step="0.01" value="2">
                                     <div class="brigmaster-estimator__error" data-field-error="pileShaftHeightM" aria-live="polite"></div>
                                 </div>
-                            </div>
                         </div>
 
                         <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--two" data-field-group="pile-base-fields">
@@ -736,18 +632,18 @@ final class EstimateShortcode
                                 </div>
                                 <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-grid--three">
                                     <div class="brigmaster-estimator__field">
-                                        <label>Длина участка <?php echo esc_html($stripLabel); ?> (м)</label>
-                                        <input type="number" min="0.01" step="0.01" value="10" data-segment-input="segmentLengthM">
+                                        <label for="<?php echo esc_attr($instanceId . 'segment-0-length'); ?>">Длина участка <?php echo esc_html($stripLabel); ?> (м)</label>
+                                        <input id="<?php echo esc_attr($instanceId . 'segment-0-length'); ?>" type="number" min="0.01" step="0.01" value="10" data-segment-input="segmentLengthM">
                                         <div class="brigmaster-estimator__error" data-segment-error-field="segmentLengthM" data-field-error="segments.0.segmentLengthM" aria-live="polite"></div>
                                     </div>
                                     <div class="brigmaster-estimator__field">
-                                        <label>Ширина участка <?php echo esc_html($stripLabel); ?> (м)</label>
-                                        <input type="number" min="0.01" step="0.01" value="0.4" data-segment-input="segmentWidthM">
+                                        <label for="<?php echo esc_attr($instanceId . 'segment-0-width'); ?>">Ширина участка <?php echo esc_html($stripLabel); ?> (м)</label>
+                                        <input id="<?php echo esc_attr($instanceId . 'segment-0-width'); ?>" type="number" min="0.01" step="0.01" value="0.4" data-segment-input="segmentWidthM">
                                         <div class="brigmaster-estimator__error" data-segment-error-field="segmentWidthM" data-field-error="segments.0.segmentWidthM" aria-live="polite"></div>
                                     </div>
                                     <div class="brigmaster-estimator__field">
-                                        <label>Высота участка <?php echo esc_html($stripLabel); ?> (м)</label>
-                                        <input type="number" min="0.01" step="0.01" value="1" data-segment-input="segmentHeightM">
+                                        <label for="<?php echo esc_attr($instanceId . 'segment-0-height'); ?>">Высота участка <?php echo esc_html($stripLabel); ?> (м)</label>
+                                        <input id="<?php echo esc_attr($instanceId . 'segment-0-height'); ?>" type="number" min="0.01" step="0.01" value="1" data-segment-input="segmentHeightM">
                                         <div class="brigmaster-estimator__error" data-segment-error-field="segmentHeightM" data-field-error="segments.0.segmentHeightM" aria-live="polite"></div>
                                     </div>
                                 </div>
@@ -763,7 +659,7 @@ final class EstimateShortcode
                                     </div>
                                     <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-grid--four brigmaster-estimator__field-group brigmaster-estimator__field-group--hidden" data-segment-rebar-local>
                                         <div class="brigmaster-estimator__field">
-                                            <label class="brigmaster-estimator__label-row">
+                                            <label for="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-bars-count'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Кол-во продольных стержней</span>
                                                 <span class="brigmaster-estimator__tooltip-anchor">
                                                     <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: количество продольных стержней" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-long-bars-tooltip'); ?>">i</button>
@@ -772,12 +668,12 @@ final class EstimateShortcode
                                                     </div>
                                                 </span>
                                             </label>
-                                            <input type="number" min="1" step="1" value="4" data-segment-input="segmentLongitudinalBarsCount">
+                                            <input id="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-bars-count'); ?>" type="number" min="1" step="1" value="4" data-segment-input="segmentLongitudinalBarsCount">
                                             <p class="brigmaster-estimator__hint">Обычно 4-6 стержней для частного дома.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalBarsCount" data-field-error="segments.0.segmentLongitudinalBarsCount" aria-live="polite"></div>
                                         </div>
                                         <div class="brigmaster-estimator__field">
-                                            <label class="brigmaster-estimator__label-row">
+                                            <label for="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-diameter'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Диаметр продольной (мм)</span>
                                                 <span class="brigmaster-estimator__tooltip-anchor">
                                                     <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр продольной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-long-diameter-tooltip'); ?>">i</button>
@@ -786,12 +682,12 @@ final class EstimateShortcode
                                                     </div>
                                                 </span>
                                             </label>
-                                            <input type="number" min="1" step="1" value="12" data-segment-input="segmentLongitudinalDiameterMm">
+                                            <input id="<?php echo esc_attr($instanceId . 'segment-0-longitudinal-diameter'); ?>" type="number" min="1" step="1" value="12" data-segment-input="segmentLongitudinalDiameterMm">
                                             <p class="brigmaster-estimator__hint">Чаще всего 10-14 мм.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentLongitudinalDiameterMm" data-field-error="segments.0.segmentLongitudinalDiameterMm" aria-live="polite"></div>
                                         </div>
                                         <div class="brigmaster-estimator__field">
-                                            <label class="brigmaster-estimator__label-row">
+                                            <label for="<?php echo esc_attr($instanceId . 'segment-0-transverse-diameter'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Диаметр поперечной (мм)</span>
                                                 <span class="brigmaster-estimator__tooltip-anchor">
                                                     <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: диаметр поперечной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-diameter-tooltip'); ?>">i</button>
@@ -800,12 +696,12 @@ final class EstimateShortcode
                                                     </div>
                                                 </span>
                                             </label>
-                                            <input type="number" min="1" step="1" value="8" data-segment-input="segmentTransverseDiameterMm">
+                                            <input id="<?php echo esc_attr($instanceId . 'segment-0-transverse-diameter'); ?>" type="number" min="1" step="1" value="8" data-segment-input="segmentTransverseDiameterMm">
                                             <p class="brigmaster-estimator__hint">Обычно 6-10 мм для хомутов.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseDiameterMm" data-field-error="segments.0.segmentTransverseDiameterMm" aria-live="polite"></div>
                                         </div>
                                         <div class="brigmaster-estimator__field">
-                                            <label class="brigmaster-estimator__label-row">
+                                            <label for="<?php echo esc_attr($instanceId . 'segment-0-transverse-step'); ?>" class="brigmaster-estimator__label-row">
                                                 <span>Шаг поперечной (мм)</span>
                                                 <span class="brigmaster-estimator__tooltip-anchor">
                                                     <button type="button" class="brigmaster-estimator__tooltip-trigger" data-tooltip-trigger aria-label="Подсказка: шаг поперечной арматуры" aria-expanded="false" aria-controls="<?php echo esc_attr($instanceId . 'segment-0-seg-transverse-step-tooltip'); ?>">i</button>
@@ -814,7 +710,7 @@ final class EstimateShortcode
                                                     </div>
                                                 </span>
                                             </label>
-                                            <input type="number" min="1" step="10" value="300" data-segment-input="segmentTransverseStepMm">
+                                            <input id="<?php echo esc_attr($instanceId . 'segment-0-transverse-step'); ?>" type="number" min="1" step="10" value="300" data-segment-input="segmentTransverseStepMm">
                                             <p class="brigmaster-estimator__hint">Меньше шаг = больше хомутов и расход стали.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseStepMm" data-field-error="segments.0.segmentTransverseStepMm" aria-live="polite"></div>
                                         </div>
@@ -832,8 +728,8 @@ final class EstimateShortcode
                                     </div>
                                     <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-group brigmaster-estimator__field-group--hidden" data-segment-formwork-local>
                                         <div class="brigmaster-estimator__field">
-                                            <label>Высота опалубки участка (м)</label>
-                                            <input type="number" min="0.01" step="0.01" value="0.8" data-segment-input="segmentFormworkHeightM">
+                                            <label for="<?php echo esc_attr($instanceId . 'segment-0-formwork-height'); ?>">Высота опалубки участка (м)</label>
+                                            <input id="<?php echo esc_attr($instanceId . 'segment-0-formwork-height'); ?>" type="number" min="0.01" step="0.01" value="0.8" data-segment-input="segmentFormworkHeightM">
                                             <p class="brigmaster-estimator__hint">Считаются только боковые щиты участка.</p>
                                             <div class="brigmaster-estimator__error" data-segment-error-field="segmentFormworkHeightM" data-field-error="segments.0.segmentFormworkHeightM" aria-live="polite"></div>
                                         </div>
@@ -852,13 +748,11 @@ final class EstimateShortcode
                             <summary class="brigmaster-estimator__accordion-summary"><?php echo $calculator === 'pile_foundation' ? 'Арматура ростверка' : 'Арматура'; ?></summary>
                             <div class="brigmaster-estimator__accordion-body">
 
-                    <div class="brigmaster-estimator__field-group">
-                        <div class="brigmaster-estimator__field brigmaster-estimator__toggle" data-toggle-field="strip-reinforcement">
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field brigmaster-estimator__toggle" data-toggle-field="strip-reinforcement">
                             <input id="<?php echo esc_attr($instanceId . 'strip-include-reinforcement'); ?>" type="checkbox" name="includeReinforcement" value="1" checked>
                             <label for="<?php echo esc_attr($instanceId . 'strip-include-reinforcement'); ?>" class="brigmaster-estimator__label-row">
                                 <span><?php echo $calculator === 'pile_foundation' ? 'Учитывать арматуру ростверга' : 'Учитывать арматуру'; ?></span>
                             </label>
-                        </div>
                     </div>
 
                     <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--three" data-field-group="strip-reinforcement-global">
@@ -947,8 +841,7 @@ final class EstimateShortcode
                             <summary class="brigmaster-estimator__accordion-summary"><?php echo $calculator === 'pile_foundation' ? 'Опалубка ростверка' : 'Опалубка'; ?></summary>
                             <div class="brigmaster-estimator__accordion-body">
 
-                    <div class="brigmaster-estimator__field-group">
-                        <div class="brigmaster-estimator__field brigmaster-estimator__toggle" data-toggle-field="strip-formwork">
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field brigmaster-estimator__toggle" data-toggle-field="strip-formwork">
                             <input id="<?php echo esc_attr($instanceId . 'strip-include-formwork'); ?>" type="checkbox" name="includeFormwork" value="1" checked>
                             <label for="<?php echo esc_attr($instanceId . 'strip-include-formwork'); ?>" class="brigmaster-estimator__label-row">
                                 <span><?php echo $calculator === 'pile_foundation' ? 'Учитывать опалубку ростверга' : 'Учитывать опалубку'; ?></span>
@@ -959,7 +852,6 @@ final class EstimateShortcode
                                     </div>
                                 </span>
                             </label>
-                        </div>
                     </div>
 
                     <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--two" data-field-group="strip-formwork-global">
@@ -990,37 +882,31 @@ final class EstimateShortcode
                 <?php endif; ?>
 
                 <?php if ($calculator === 'brick') : ?>
-                    <div class="brigmaster-estimator__field-group" data-field-group="brick-subtype">
-                        <div class="brigmaster-estimator__field">
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field" data-field-group="brick-subtype">
                             <label for="<?php echo esc_attr($subTypeFieldId); ?>">Тип расчета кирпича</label>
                             <select id="<?php echo esc_attr($subTypeFieldId); ?>" name="subType">
                                 <option value="bricks">Кирпичи (bricks)</option>
                                 <option value="mortar">Раствор (mortar)</option>
                             </select>
                             <div class="brigmaster-estimator__error" data-field-error="subType" aria-live="polite"></div>
-                        </div>
                     </div>
                 <?php endif; ?>
 
                 <?php if (in_array($calculator, ['brick', 'screed', 'drywall', 'tile'], true)) : ?>
-                    <div class="brigmaster-estimator__field-group" data-field-group="area">
-                        <div class="brigmaster-estimator__field">
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field" data-field-group="area">
                             <label for="<?php echo esc_attr($areaFieldId); ?>">Площадь (м²)</label>
                             <input id="<?php echo esc_attr($areaFieldId); ?>" type="number" name="area" min="0.01" step="0.01" aria-describedby="<?php echo esc_attr($areaHintId); ?>">
                             <p id="<?php echo esc_attr($areaHintId); ?>" class="brigmaster-estimator__hint">Введите площадь в м² (например, 25.5).</p>
                             <div class="brigmaster-estimator__error" data-field-error="area" aria-live="polite"></div>
-                        </div>
                     </div>
                 <?php endif; ?>
 
                 <?php if ($calculator === 'screed') : ?>
-                    <div class="brigmaster-estimator__field-group" data-field-group="thickness">
-                        <div class="brigmaster-estimator__field">
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field" data-field-group="thickness">
                             <label for="<?php echo esc_attr($thicknessFieldId); ?>">Толщина (м)</label>
                             <input id="<?php echo esc_attr($thicknessFieldId); ?>" type="number" name="thickness" min="0.001" step="0.001" aria-describedby="<?php echo esc_attr($thicknessHintId); ?>">
                             <p id="<?php echo esc_attr($thicknessHintId); ?>" class="brigmaster-estimator__hint">Вводите в метрах: 0.1 = 10 см.</p>
                             <div class="brigmaster-estimator__error" data-field-error="thickness" aria-live="polite"></div>
-                        </div>
                     </div>
                 <?php endif; ?>
 
@@ -1134,17 +1020,9 @@ final class EstimateShortcode
 
     private function enqueueAssets(): void
     {
-        $styleHandle = 'brigmaster-estimate-form';
         $scriptHandle = 'brigmaster-estimate-form';
-        $assetVersion = '0.8.6';
+        $assetVersion = '0.8.9';
         $baseUrl = plugin_dir_url($this->pluginFilePath);
-
-        wp_register_style(
-            $styleHandle,
-            $baseUrl . 'assets/css/estimate-form.css',
-            [],
-            $assetVersion
-        );
 
         wp_register_script(
             $scriptHandle,
@@ -1167,7 +1045,6 @@ final class EstimateShortcode
             ]
         );
 
-        wp_enqueue_style($styleHandle);
         wp_enqueue_script($scriptHandle);
     }
 
