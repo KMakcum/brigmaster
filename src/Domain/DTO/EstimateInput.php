@@ -71,7 +71,14 @@ final class EstimateInput
         public readonly ?bool $includePileReinforcement = null,
         public readonly ?int $pileReinforcementBarsCount = null,
         public readonly ?float $pileReinforcementDiameterMm = null,
-        public readonly ?float $pileReinforcementReservePercent = null
+        public readonly ?float $pileReinforcementReservePercent = null,
+        /** @var array<string, mixed>|null */
+        public readonly ?array $mixture = null,
+        public readonly ?bool $useUnifiedConcreteMixtureSettings = null,
+        /** @var array<string, mixed>|null */
+        public readonly ?array $pileMixture = null,
+        /** @var array<string, mixed>|null */
+        public readonly ?array $grillageMixture = null
     ) {
         if ($this->mode === '') {
             throw new InvalidArgumentException('Field "mode" is required.');

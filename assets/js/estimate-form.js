@@ -5,7 +5,10 @@
       return "-";
     }
 
-    return numericValue.toFixed(3).replace(/\.?0+$/, "");
+    const normalized = numericValue.toFixed(3).replace(/\.?0+$/, "");
+    const parts = normalized.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    return parts.join(".");
   }
 
   const MODE_HINTS_SLAB = {
@@ -33,6 +36,25 @@
       "Более «щадящий» вариант с запасом — удобно при первой самостоятельной закупке.",
   };
 
+  function buildPrefixedFieldName(prefix, suffix) {
+    if (!prefix) {
+      return suffix;
+    }
+
+    return `${prefix}${suffix.charAt(0).toUpperCase()}${suffix.slice(1)}`;
+  }
+
+  function getMixtureErrorPrefix(prefix) {
+    if (prefix === "pile") {
+      return "pileMixture";
+    }
+    if (prefix === "grillage") {
+      return "grillageMixture";
+    }
+
+    return "mixture";
+  }
+
   function getEstimatorShell(form) {
     return form.closest(".brigmaster-estimator") ?? form.parentElement;
   }
@@ -55,6 +77,10 @@
   }
 
   function markResultStale(form) {
+    if (form.dataset.suspendStaleTracking === "1") {
+      return;
+    }
+
     const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
     if (
       !resultNode ||
@@ -89,6 +115,32 @@
         /* ignore */
       }
     }
+
+    window.setTimeout(() => {
+      delete form.dataset.suspendStaleTracking;
+    }, 0);
+  }
+
+  function syncResultGridLayout(resultNode) {
+    if (!(resultNode instanceof Element)) {
+      return;
+    }
+
+    const grids = resultNode.querySelectorAll(".brigmaster-estimator__result-grid");
+    grids.forEach((grid) => {
+      if (!(grid instanceof HTMLElement)) {
+        return;
+      }
+
+      const visibleCards = Array.from(
+        grid.querySelectorAll(
+          '.brigmaster-estimator__result-card:not([hidden]):not(.brigmaster-estimator__result-card--mixture)'
+        )
+      );
+
+      const columns = Math.max(1, visibleCards.length);
+      grid.style.setProperty("--brigmaster-result-columns", String(columns));
+    });
   }
 
   function updateModeHintForForm(form) {
@@ -99,7 +151,10 @@
       return;
     }
     let text = "";
-    if (calculator === "slab_foundation" && MODE_HINTS_SLAB[mode]) {
+    if (
+      (calculator === "slab_foundation" || calculator === "screed") &&
+      MODE_HINTS_SLAB[mode]
+    ) {
       text = MODE_HINTS_SLAB[mode];
     } else if (
       (calculator === "strip_foundation" || calculator === "pile_foundation") &&
@@ -192,6 +247,14 @@
     const pilePerPileRow = resultNode.querySelector("[data-result-pile-per-pile-row]");
     const pileNoteNode = resultNode.querySelector("[data-result-pile-note]");
     const pileNoteRow = resultNode.querySelector("[data-result-pile-note-row]");
+    const screedAreaNode = resultNode.querySelector("[data-result-screed-area]");
+    const screedHeightNode = resultNode.querySelector("[data-result-screed-height]");
+    const screedRebarCard = resultNode.querySelector('[data-result-card="screed-reinforcement"]');
+    const screedRebarMass = resultNode.querySelector("[data-result-screed-rebar-mass]");
+    const screedRebarLen = resultNode.querySelector("[data-result-screed-rebar-length]");
+    const mixtureCard = resultNode.querySelector('[data-result-card="mixture"]');
+    const pileFoundationMixtureCard = resultNode.querySelector('[data-result-card="pile-foundation-mixture"]');
+    const grillageMixtureCard = resultNode.querySelector('[data-result-card="grillage-mixture"]');
 
     if (concreteVolumeNode) {
       concreteVolumeNode.textContent = "-";
@@ -220,6 +283,29 @@
 
     if (materialNode) {
       materialNode.textContent = "-";
+    }
+    if (screedAreaNode) {
+      screedAreaNode.textContent = "-";
+    }
+    if (screedHeightNode) {
+      screedHeightNode.textContent = "-";
+    }
+    if (screedRebarCard && screedRebarMass && screedRebarLen) {
+      screedRebarCard.hidden = true;
+      screedRebarMass.textContent = "-";
+      screedRebarLen.textContent = "-";
+    }
+    if (mixtureCard) {
+      mixtureCard.hidden = true;
+      mixtureCard.innerHTML = "";
+    }
+    if (pileFoundationMixtureCard) {
+      pileFoundationMixtureCard.hidden = true;
+      pileFoundationMixtureCard.innerHTML = "";
+    }
+    if (grillageMixtureCard) {
+      grillageMixtureCard.hidden = true;
+      grillageMixtureCard.innerHTML = "";
     }
     if (stripConcreteLengthNode) {
       stripConcreteLengthNode.textContent = "-";
@@ -569,9 +655,150 @@
     }
 
     renderSlabScheme(form, payload, requestPayload);
+    renderMixtureCard(
+      resultNode.querySelector('[data-result-card="mixture"]'),
+      payload?.mixture,
+      "Смесь и материалы"
+    );
+    syncResultGridLayout(resultNode);
     resultNode.hidden = false;
     resultNode.classList.add("is-success");
     finalizeSuccessfulResult(form);
+  }
+
+  function buildMixtureResultHtml(mixture, title) {
+    if (!mixture || typeof mixture !== "object") {
+      return "";
+    }
+
+    const type = String(mixture.type || "").trim();
+    const summaryItems = [];
+    const componentItems = [];
+    const noteLines = [];
+
+    const buildPurchaseText = (component) => {
+      const unit = String(component.purchaseUnit || "");
+      const displayUnitWeight = formatNumber(component.displayUnitWeight);
+      if (unit === "bag") {
+        return `${formatNumber(component.requiredUnits)} шт мешков, к покупке рекомендовано ${formatNumber(
+          component.roundedUnits
+        )} шт мешков по ${displayUnitWeight} кг`;
+      }
+
+      return `${formatNumber(component.requiredUnits)} т, к покупке рекомендовано ${formatNumber(
+        component.roundedUnits
+      )} т`;
+    };
+
+    if (type === "ready") {
+      summaryItems.push(
+        `<div class="brigmaster-estimator__mixture-item"><span>Тип</span><strong>${escapeHtml(
+          mixture.displayType || "Готовая"
+        )}</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Объём</span><strong>${formatNumber(
+          mixture.volumeM3
+        )} м³</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Цена за м³</span><strong>${formatNumber(
+          mixture.pricePerM3
+        )}</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Итоговая стоимость</span><strong>${formatNumber(
+          mixture.totalCost
+        )}</strong></div>`
+      );
+    } else if (type === "dry_ready") {
+      summaryItems.push(
+        `<div class="brigmaster-estimator__mixture-item"><span>Тип</span><strong>${escapeHtml(
+          mixture.displayType || "Готовая, сухая"
+        )}</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Ориентир расхода</span><strong>${formatNumber(
+          mixture.consumptionKgPerM2Per10mm
+        )} кг на 1 м² при 10 мм</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Общий вес смеси</span><strong>${formatNumber(
+          mixture.totalWeightKg
+        )} кг</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Мешки</span><strong>${formatNumber(
+          mixture.requiredBags
+        )} шт мешков, к покупке рекомендовано ${formatNumber(
+          mixture.roundedBags
+        )} шт мешков по ${formatNumber(mixture.bagWeightKg)} кг</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Стоимость</span><strong>${formatNumber(
+          mixture.totalCostExact
+        )} / ${formatNumber(mixture.totalCostRounded)}</strong></div>`
+      );
+    } else if (type === "self_mix") {
+      summaryItems.push(
+        `<div class="brigmaster-estimator__mixture-item"><span>Тип</span><strong>${escapeHtml(
+          mixture.displayType || "Самомесная"
+        )}</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Объём готовой смеси</span><strong>${formatNumber(
+          mixture.volumeM3
+        )} м³</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Вода</span><strong>${formatNumber(
+          mixture.waterLiters
+        )} л</strong></div>`,
+        `<div class="brigmaster-estimator__mixture-item"><span>Итоговая стоимость</span><strong>${formatNumber(
+          mixture.totalCostExact
+        )} / ${formatNumber(mixture.totalCostRounded)}</strong></div>`
+      );
+
+      const components = mixture.components || {};
+      Object.values(components).forEach((component) => {
+        if (!component || typeof component !== "object") {
+          return;
+        }
+        componentItems.push(
+          `<div class="brigmaster-estimator__mixture-component">
+            <h4>${escapeHtml(component.label || "Материал")}</h4>
+            <p><strong>${formatNumber(component.weightKg)}</strong> кг</p>
+            <p>${buildPurchaseText(component)}</p>
+            <p>Стоимость: ${formatNumber(component.totalCostExact)} / ${formatNumber(
+            component.totalCostRounded
+          )}</p>
+          </div>`
+        );
+      });
+    }
+
+    if (mixture.note) {
+      noteLines.push(
+        `<p class="brigmaster-estimator__result-note">${escapeHtml(
+          String(mixture.note)
+        )}</p>`
+      );
+    }
+
+    return `
+      <h3>${escapeHtml(title)}</h3>
+      <div class="brigmaster-estimator__mixture-summary">
+        ${summaryItems.join("")}
+      </div>
+      ${
+        componentItems.length
+          ? `<div class="brigmaster-estimator__mixture-components">${componentItems.join(
+              ""
+            )}</div>`
+          : ""
+      }
+      ${noteLines.join("")}
+    `;
+  }
+
+  function renderMixtureCard(cardNode, mixture, title) {
+    if (!cardNode) {
+      return;
+    }
+
+    const html = buildMixtureResultHtml(mixture, title);
+    if (!html) {
+      cardNode.hidden = true;
+      cardNode.innerHTML = "";
+      cardNode.classList.remove("brigmaster-estimator__result-card--mixture");
+      return;
+    }
+
+    cardNode.hidden = false;
+    cardNode.classList.add("brigmaster-estimator__result-card--mixture");
+    cardNode.innerHTML = html;
   }
 
   function buildStripReinforcementHtml(reinforcement, title = "Арматура") {
@@ -793,6 +1020,13 @@
       }
     }
 
+    renderMixtureCard(
+      resultNode.querySelector('[data-result-card="mixture"]'),
+      payload?.mixture,
+      "Смесь и материалы"
+    );
+
+    syncResultGridLayout(resultNode);
     resultNode.hidden = false;
     resultNode.classList.add("is-success");
     finalizeSuccessfulResult(form);
@@ -818,12 +1052,14 @@
     const pileNoteNode = resultNode.querySelector("[data-result-pile-note]");
     const pileNoteRow = resultNode.querySelector("[data-result-pile-note-row]");
     const pileReinforcementCard = resultNode.querySelector('[data-result-card="pile-reinforcement"]');
+    const pileFoundationMixtureCard = resultNode.querySelector('[data-result-card="pile-foundation-mixture"]');
     const grillageHeaderSection = resultNode.querySelector('[data-result-section="grillage-header"]');
     const concreteCard = resultNode.querySelector('[data-result-card="strip-concrete"]');
     const concreteLengthNode = resultNode.querySelector("[data-result-strip-concrete-length]");
     const concreteVolumeNode = resultNode.querySelector("[data-result-strip-concrete-volume]");
     const reinforcementCard = resultNode.querySelector('[data-result-card="strip-reinforcement"]');
     const formworkCard = resultNode.querySelector('[data-result-card="strip-formwork"]');
+    const grillageMixtureCard = resultNode.querySelector('[data-result-card="grillage-mixture"]');
     const formworkAreaNode = resultNode.querySelector("[data-result-strip-formwork-area]");
     const formworkLinearNode = resultNode.querySelector("[data-result-strip-formwork-linear]");
     const requestPayload = form._lastRequestPayload || {};
@@ -941,6 +1177,69 @@
       }
     }
 
+    renderMixtureCard(
+      pileFoundationMixtureCard,
+      payload?.mixture || payload?.piles?.mixture,
+      payload?.mixture ? "Смесь и материалы" : "Смесь для свай"
+    );
+    renderMixtureCard(
+      grillageMixtureCard,
+      payload?.grillageMixture,
+      "Смесь для ростверка"
+    );
+
+    syncResultGridLayout(resultNode);
+    resultNode.hidden = false;
+    resultNode.classList.add("is-success");
+    finalizeSuccessfulResult(form);
+  }
+
+  function showScreedResult(form, payload) {
+    const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
+    if (!resultNode) {
+      return;
+    }
+
+    const volumeNode = resultNode.querySelector("[data-result-volume]");
+    const areaNode = resultNode.querySelector("[data-result-screed-area]");
+    const heightNode = resultNode.querySelector("[data-result-screed-height]");
+    const rebarCard = resultNode.querySelector('[data-result-card="screed-reinforcement"]');
+    const rebarMass = resultNode.querySelector("[data-result-screed-rebar-mass]");
+    const rebarLen = resultNode.querySelector("[data-result-screed-rebar-length]");
+    const reinforcement = payload?.reinforcement;
+
+    if (volumeNode) {
+      volumeNode.textContent = formatNumber(payload?.concrete?.volumeM3);
+    }
+    if (areaNode) {
+      const areaVal = payload?.concrete?.areaM2;
+      areaNode.textContent = Number.isFinite(Number(areaVal))
+        ? formatNumber(areaVal)
+        : "-";
+    }
+    if (heightNode) {
+      heightNode.textContent = formatNumber(payload?.concrete?.heightM);
+    }
+
+    if (rebarCard && rebarMass && rebarLen) {
+      if (reinforcement && Number.isFinite(Number(reinforcement.massKg))) {
+        rebarCard.hidden = false;
+        rebarMass.textContent = formatNumber(reinforcement.massKg);
+        rebarLen.textContent = formatNumber(reinforcement.totalLengthWithReserveM);
+      } else {
+        rebarCard.hidden = true;
+        rebarMass.textContent = "-";
+        rebarLen.textContent = "-";
+      }
+    }
+
+    renderMixtureCard(
+      resultNode.querySelector('[data-result-card="mixture"]'),
+      payload?.mixture,
+      "Смесь и материалы"
+    );
+
+    syncResultGridLayout(resultNode);
     resultNode.hidden = false;
     resultNode.classList.add("is-success");
     finalizeSuccessfulResult(form);
@@ -961,6 +1260,10 @@
       showPileFoundationResult(form, payload);
       return;
     }
+    if (calculator === "screed") {
+      showScreedResult(form, payload);
+      return;
+    }
 
     const resultNode = getEstimatorShell(form)?.querySelector("[data-result]");
     if (!resultNode) {
@@ -978,6 +1281,7 @@
       materialNode.textContent = formatNumber(payload.calculatedMaterialAmount);
     }
 
+    syncResultGridLayout(resultNode);
     resultNode.hidden = false;
     resultNode.classList.add("is-success");
     finalizeSuccessfulResult(form);
@@ -1043,6 +1347,212 @@
     }
 
     return true;
+  }
+
+  function validatePositiveValue(form, errorKey, value, message) {
+    if (!isPositiveNumber(value)) {
+      setFieldError(form, errorKey, message);
+      return false;
+    }
+
+    return true;
+  }
+
+  function validateSelectedValue(form, errorKey, value, allowedValues, message) {
+    if (!allowedValues.includes(value)) {
+      setFieldError(form, errorKey, message);
+      return false;
+    }
+
+    return true;
+  }
+
+  function normalizePurchaseWeight(rawValue, purchaseUnit) {
+    const numericValue = Number(rawValue);
+    if (!Number.isFinite(numericValue) || numericValue <= 0) {
+      return rawValue;
+    }
+
+    return purchaseUnit === "tonne"
+      ? String(numericValue * 1000)
+      : String(numericValue);
+  }
+
+  function buildMixturePayload(form, formData, prefix = "", options = {}) {
+    const allowDryReady = options.allowDryReady === true;
+    const includeGravel = options.includeGravel !== false;
+    const errorPrefix = getMixtureErrorPrefix(prefix);
+    const nameOf = (suffix) => buildPrefixedFieldName(prefix, suffix);
+    const mixtureType = readTrimmed(formData, nameOf("mixtureType"));
+    const allowedTypes = allowDryReady
+      ? ["ready", "dry_ready", "self_mix"]
+      : ["ready", "self_mix"];
+
+    let isValid = validateSelectedValue(
+      form,
+      `${errorPrefix}.type`,
+      mixtureType,
+      allowedTypes,
+      "Выберите корректный тип смеси."
+    );
+
+    const mixture = {
+      type: mixtureType,
+    };
+
+    if (mixtureType === "ready") {
+      mixture.readyConcretePricePerM3 = readTrimmed(
+        formData,
+        nameOf("readyConcretePricePerM3")
+      );
+      isValid =
+        validatePositiveValue(
+          form,
+          `${errorPrefix}.readyConcretePricePerM3`,
+          mixture.readyConcretePricePerM3,
+          "Цена раствора за м³ должна быть больше 0."
+        ) && isValid;
+      return { mixture, isValid };
+    }
+
+    if (mixtureType === "dry_ready") {
+      mixture.dryMixBagWeightKg = readTrimmed(formData, nameOf("dryMixBagWeightKg"));
+      mixture.dryMixBagPrice = readTrimmed(formData, nameOf("dryMixBagPrice"));
+      isValid =
+        validatePositiveValue(
+          form,
+          `${errorPrefix}.dryMixBagWeightKg`,
+          mixture.dryMixBagWeightKg,
+          "Вес мешка должен быть больше 0."
+        ) && isValid;
+      isValid =
+        validatePositiveValue(
+          form,
+          `${errorPrefix}.dryMixBagPrice`,
+          mixture.dryMixBagPrice,
+          "Цена мешка должна быть больше 0."
+        ) && isValid;
+      return { mixture, isValid };
+    }
+
+    mixture.cementShare = readTrimmed(formData, nameOf("cementShare"));
+    mixture.cementPurchaseUnit = readTrimmed(formData, nameOf("cementPurchaseUnit"));
+    mixture.cementUnitWeightKg = normalizePurchaseWeight(
+      readTrimmed(formData, nameOf("cementUnitWeightKg")),
+      mixture.cementPurchaseUnit
+    );
+    mixture.cementUnitPrice = readTrimmed(formData, nameOf("cementUnitPrice"));
+    mixture.sandShare = readTrimmed(formData, nameOf("sandShare"));
+    mixture.sandPurchaseUnit = readTrimmed(formData, nameOf("sandPurchaseUnit"));
+    mixture.sandUnitWeightKg = normalizePurchaseWeight(
+      readTrimmed(formData, nameOf("sandUnitWeightKg")),
+      mixture.sandPurchaseUnit
+    );
+    mixture.sandUnitPrice = readTrimmed(formData, nameOf("sandUnitPrice"));
+
+    isValid =
+      validatePositiveValue(
+        form,
+        `${errorPrefix}.cementShare`,
+        mixture.cementShare,
+        "Доля цемента должна быть больше 0."
+      ) && isValid;
+    isValid =
+      validateSelectedValue(
+        form,
+        `${errorPrefix}.cementPurchaseUnit`,
+        mixture.cementPurchaseUnit,
+        ["bag", "tonne"],
+        "Выберите единицу покупки цемента."
+      ) && isValid;
+    isValid =
+      validatePositiveValue(
+        form,
+        `${errorPrefix}.cementUnitWeightKg`,
+        mixture.cementUnitWeightKg,
+          "Вес единицы цемента должен быть больше 0."
+      ) && isValid;
+    isValid =
+      validatePositiveValue(
+        form,
+        `${errorPrefix}.cementUnitPrice`,
+        mixture.cementUnitPrice,
+        "Цена цемента должна быть больше 0."
+      ) && isValid;
+    isValid =
+      validatePositiveValue(
+        form,
+        `${errorPrefix}.sandShare`,
+        mixture.sandShare,
+        "Доля песка должна быть больше 0."
+      ) && isValid;
+    isValid =
+      validateSelectedValue(
+        form,
+        `${errorPrefix}.sandPurchaseUnit`,
+        mixture.sandPurchaseUnit,
+        ["bag", "tonne"],
+        "Выберите единицу покупки песка."
+      ) && isValid;
+    isValid =
+      validatePositiveValue(
+        form,
+        `${errorPrefix}.sandUnitWeightKg`,
+        mixture.sandUnitWeightKg,
+          "Вес единицы песка должен быть больше 0."
+      ) && isValid;
+    isValid =
+      validatePositiveValue(
+        form,
+        `${errorPrefix}.sandUnitPrice`,
+        mixture.sandUnitPrice,
+        "Цена песка должна быть больше 0."
+      ) && isValid;
+
+    if (includeGravel) {
+      mixture.gravelShare = readTrimmed(formData, nameOf("gravelShare"));
+      mixture.gravelPurchaseUnit = readTrimmed(
+        formData,
+        nameOf("gravelPurchaseUnit")
+      );
+      mixture.gravelUnitWeightKg = normalizePurchaseWeight(
+        readTrimmed(formData, nameOf("gravelUnitWeightKg")),
+        mixture.gravelPurchaseUnit
+      );
+      mixture.gravelUnitPrice = readTrimmed(formData, nameOf("gravelUnitPrice"));
+
+      isValid =
+        validatePositiveValue(
+          form,
+          `${errorPrefix}.gravelShare`,
+          mixture.gravelShare,
+          "Доля щебня должна быть больше 0."
+        ) && isValid;
+      isValid =
+        validateSelectedValue(
+          form,
+          `${errorPrefix}.gravelPurchaseUnit`,
+          mixture.gravelPurchaseUnit,
+          ["bag", "tonne"],
+          "Выберите единицу покупки щебня."
+        ) && isValid;
+      isValid =
+        validatePositiveValue(
+          form,
+          `${errorPrefix}.gravelUnitWeightKg`,
+          mixture.gravelUnitWeightKg,
+          "Вес единицы щебня должен быть больше 0."
+        ) && isValid;
+      isValid =
+        validatePositiveValue(
+          form,
+          `${errorPrefix}.gravelUnitPrice`,
+          mixture.gravelUnitPrice,
+          "Цена щебня должна быть больше 0."
+        ) && isValid;
+    }
+
+    return { mixture, isValid };
   }
 
   function buildPayload(form, formData) {
@@ -1166,6 +1676,13 @@
             "Запас опалубки должен быть больше 0."
           ) && isValid;
       }
+
+      const mixtureResult = buildMixturePayload(form, formData, "", {
+        allowDryReady: false,
+        includeGravel: true,
+      });
+      payload.mixture = mixtureResult.mixture;
+      isValid = mixtureResult.isValid && isValid;
     } else if (calculator === "strip_foundation") {
       const includeReinforcement = formData.get("includeReinforcement") !== null;
       const includeFormwork = formData.get("includeFormwork") !== null;
@@ -1378,6 +1895,13 @@
             "Запас опалубки должен быть больше 0."
           ) && isValid;
       }
+
+      const mixtureResult = buildMixturePayload(form, formData, "", {
+        allowDryReady: false,
+        includeGravel: true,
+      });
+      payload.mixture = mixtureResult.mixture;
+      isValid = mixtureResult.isValid && isValid;
     } else if (calculator === "pile_foundation") {
       const includePiles = formData.get("includePiles") !== null;
       const includeGrillage = formData.get("includeGrillage") !== null;
@@ -1640,6 +2164,43 @@
         payload.includeReinforcement = false;
         payload.includeFormwork = false;
       }
+
+      const useUnifiedConcreteMixtureSettings =
+        formData.get("useUnifiedConcreteMixtureSettings") !== null;
+      payload.useUnifiedConcreteMixtureSettings = useUnifiedConcreteMixtureSettings;
+
+      if (useUnifiedConcreteMixtureSettings) {
+        const mixtureResult = buildMixturePayload(form, formData, "", {
+          allowDryReady: false,
+          includeGravel: true,
+        });
+        payload.mixture = mixtureResult.mixture;
+        isValid = mixtureResult.isValid && isValid;
+      } else {
+        const pileNeedsConcrete = includePiles && payload.pileType === "bored";
+        if (pileNeedsConcrete) {
+          const pileMixtureResult = buildMixturePayload(form, formData, "pile", {
+            allowDryReady: false,
+            includeGravel: true,
+          });
+          payload.pileMixture = pileMixtureResult.mixture;
+          isValid = pileMixtureResult.isValid && isValid;
+        }
+
+        if (includeGrillage) {
+          const grillageMixtureResult = buildMixturePayload(
+            form,
+            formData,
+            "grillage",
+            {
+              allowDryReady: false,
+              includeGravel: true,
+            }
+          );
+          payload.grillageMixture = grillageMixtureResult.mixture;
+          isValid = grillageMixtureResult.isValid && isValid;
+        }
+      }
     } else if (calculator === "brick") {
       const subType = readTrimmed(formData, "subType");
       payload.subType = subType || "bricks";
@@ -1653,23 +2214,94 @@
           "Площадь должна быть больше 0."
         ) && isValid;
     } else if (calculator === "screed") {
-      payload.area = readTrimmed(formData, "area");
-      payload.thickness = readTrimmed(formData, "thickness");
+      const isAreaMode = mode === "area";
+      const includeReinforcement = isAreaMode
+        ? false
+        : formData.get("includeReinforcement") !== null;
+      payload.includeReinforcement = includeReinforcement;
+      payload.height = readTrimmed(formData, "height");
 
       isValid =
         validatePositiveField(
           form,
           payload,
-          "area",
-          "Площадь должна быть больше 0."
+          "height",
+          "Высота должна быть больше 0."
         ) && isValid;
-      isValid =
-        validatePositiveField(
-          form,
-          payload,
-          "thickness",
-          "Толщина должна быть больше 0."
-        ) && isValid;
+
+      if (mode === "dimensions") {
+        payload.length = readTrimmed(formData, "length");
+        payload.width = readTrimmed(formData, "width");
+        isValid =
+          validatePositiveField(
+            form,
+            payload,
+            "length",
+            "Длина должна быть больше 0."
+          ) && isValid;
+        isValid =
+          validatePositiveField(
+            form,
+            payload,
+            "width",
+            "Ширина должна быть больше 0."
+          ) && isValid;
+      } else if (mode === "area") {
+        payload.area = readTrimmed(formData, "area");
+        isValid =
+          validatePositiveField(
+            form,
+            payload,
+            "area",
+            "Площадь должна быть больше 0."
+          ) && isValid;
+      } else {
+        setFieldError(form, "mode", "Выберите режим dimensions или area.");
+        isValid = false;
+      }
+
+      if (includeReinforcement) {
+        payload.rebarDiameterMm = readTrimmed(formData, "rebarDiameterMm");
+        payload.rebarStepMm = readTrimmed(formData, "rebarStepMm");
+        payload.rebarLayers = readTrimmed(formData, "rebarLayers");
+        payload.rebarReservePercent = readTrimmed(formData, "rebarReservePercent");
+
+        isValid =
+          validatePositiveField(
+            form,
+            payload,
+            "rebarDiameterMm",
+            "Диаметр арматуры должен быть больше 0."
+          ) && isValid;
+        isValid =
+          validatePositiveField(
+            form,
+            payload,
+            "rebarStepMm",
+            "Шаг арматуры должен быть больше 0."
+          ) && isValid;
+        isValid =
+          validatePositiveField(
+            form,
+            payload,
+            "rebarLayers",
+            "Количество слоёв должно быть больше 0."
+          ) && isValid;
+        isValid =
+          validatePositiveField(
+            form,
+            payload,
+            "rebarReservePercent",
+            "Запас арматуры должен быть больше 0."
+          ) && isValid;
+      }
+
+      const mixtureResult = buildMixturePayload(form, formData, "", {
+        allowDryReady: true,
+        includeGravel: false,
+      });
+      payload.mixture = mixtureResult.mixture;
+      isValid = mixtureResult.isValid && isValid;
     } else if (calculator === "drywall") {
       payload.area = readTrimmed(formData, "area");
 
@@ -1930,7 +2562,7 @@
                   </div>
                 </span>
               </label>
-              <input id="segment-${index}-transverse-step" type="number" min="1" step="10" value="300" data-segment-input="segmentTransverseStepMm">
+              <input id="segment-${index}-transverse-step" type="number" min="10" step="10" value="300" data-segment-input="segmentTransverseStepMm">
               <p class="brigmaster-estimator__hint">Меньше шаг = больше хомутов и расход стали.</p>
               <div class="brigmaster-estimator__error" data-segment-error-field="segmentTransverseStepMm" data-field-error="segments.${index}.segmentTransverseStepMm" aria-live="polite"></div>
             </div>
@@ -2378,6 +3010,188 @@
 
   }
 
+  function syncScreedFormGroups(form) {
+    const calculator = form.querySelector('[name="calculator"]')?.value;
+    if (calculator !== "screed") {
+      return;
+    }
+    closeAllTooltips(form);
+    const mode = form.querySelector('[name="mode"]')?.value || "dimensions";
+    const isAreaMode = mode === "area";
+    setModeLockState(form, isAreaMode);
+
+    const includeRebar = form.querySelector('[name="includeReinforcement"]')?.checked === true;
+    const dimensionsGroup = form.querySelector('[data-field-group="screed-dimensions"]');
+    const areaGroup = form.querySelector('[data-field-group="screed-area"]');
+    const heightGroup = form.querySelector('[data-field-group="screed-height"]');
+    const rebarGroup = form.querySelector('[data-field-group="screed-reinforcement"]');
+
+    toggleVisibility(dimensionsGroup, mode === "dimensions");
+    toggleVisibility(areaGroup, mode === "area");
+    toggleVisibility(heightGroup, true);
+    toggleVisibility(rebarGroup, mode === "dimensions" && includeRebar);
+  }
+
+  function initScreedForm(form) {
+    const calculator = form.querySelector('[name="calculator"]')?.value;
+    if (calculator !== "screed") {
+      return;
+    }
+
+    const modeSelect = form.querySelector('[name="mode"]');
+    const includeRebar = form.querySelector('[name="includeReinforcement"]');
+
+    syncScreedFormGroups(form);
+    [modeSelect, includeRebar].forEach((node) => {
+      if (!node) {
+        return;
+      }
+      node.addEventListener("change", () => {
+        clearErrors(form);
+        markResultStale(form);
+        syncScreedFormGroups(form);
+      });
+    });
+  }
+
+  function syncMixtureBlock(block) {
+    if (!(block instanceof Element)) {
+      return;
+    }
+
+    const select = block.querySelector("[data-mixture-type-select]");
+    const type = select instanceof HTMLSelectElement ? select.value : "ready";
+    const panels = block.querySelectorAll("[data-mixture-panel]");
+    panels.forEach((panel) => {
+      const panelType = panel.getAttribute("data-mixture-panel");
+      const isVisible = panelType === type;
+      toggleVisibility(panel, isVisible);
+      panel
+        .querySelectorAll("input, select")
+        .forEach((control) => {
+          if (
+            control instanceof HTMLInputElement ||
+            control instanceof HTMLSelectElement
+          ) {
+            control.disabled = !isVisible;
+          }
+        });
+    });
+  }
+
+  function syncMixtureUnitFields(block, materialKey) {
+    if (!(block instanceof Element)) {
+      return;
+    }
+
+    const unitSelect = block.querySelector(`[name$="${materialKey}PurchaseUnit"]`);
+    const weightLabel = block.querySelector(
+      `[data-mixture-unit-label="${materialKey}"]`
+    );
+    const priceLabel = block.querySelector(
+      `[data-mixture-price-label="${materialKey}"]`
+    );
+    const weightInput = block.querySelector(
+      `[data-mixture-unit-input="${materialKey}"]`
+    );
+
+    if (!(unitSelect instanceof HTMLSelectElement)) {
+      return;
+    }
+
+    const isTonne = unitSelect.value === "tonne";
+    const unitText = isTonne ? "т" : "кг";
+    const purchaseText = isTonne ? "тонны" : "мешка";
+
+    if (weightLabel) {
+      weightLabel.textContent = `Вес единицы ${materialKey === "cement" ? "цемента" : materialKey === "sand" ? "песка" : "щебня"} (${unitText})`;
+    }
+    if (priceLabel) {
+      priceLabel.textContent = `Цена ${purchaseText} ${
+        materialKey === "cement" ? "цемента" : materialKey === "sand" ? "песка" : "щебня"
+      }`;
+    }
+    if (weightInput instanceof HTMLInputElement) {
+      const previousUnit = weightInput.dataset.displayUnit || unitText;
+      const currentValue = Number(weightInput.value);
+      if (Number.isFinite(currentValue) && currentValue > 0 && previousUnit !== unitText) {
+        weightInput.value = previousUnit === "кг" && unitText === "т"
+          ? String(currentValue / 1000)
+          : previousUnit === "т" && unitText === "кг"
+            ? String(currentValue * 1000)
+            : weightInput.value;
+      }
+      if (isTonne) {
+        weightInput.step = "0.001";
+        weightInput.min = "0.001";
+      } else {
+        weightInput.step = "1";
+        weightInput.min = "1";
+      }
+      weightInput.dataset.displayUnit = unitText;
+    }
+  }
+
+  function syncPileMixtureBlocks(form) {
+    const calculator = form.querySelector('[name="calculator"]')?.value;
+    if (calculator !== "pile_foundation") {
+      return;
+    }
+
+    const useUnified =
+      form.querySelector('[name="useUnifiedConcreteMixtureSettings"]')?.checked !==
+      false;
+    const sharedBlock = form.querySelector('[data-pile-mixture-block="shared"]');
+    const pileBlock = form.querySelector('[data-pile-mixture-block="pile"]');
+    const grillageBlock = form.querySelector(
+      '[data-pile-mixture-block="grillage"]'
+    );
+
+    toggleVisibility(sharedBlock, useUnified);
+    toggleVisibility(pileBlock, !useUnified);
+    toggleVisibility(grillageBlock, !useUnified);
+  }
+
+  function initMixtureFields(form) {
+    const mixtureBlocks = form.querySelectorAll("[data-mixture-scope]");
+    mixtureBlocks.forEach((block) => {
+      syncMixtureBlock(block);
+      ["cement", "sand", "gravel"].forEach((materialKey) => {
+        syncMixtureUnitFields(block, materialKey);
+        const unitSelect = block.querySelector(
+          `[name$="${materialKey}PurchaseUnit"]`
+        );
+        if (unitSelect) {
+          unitSelect.addEventListener("change", () => {
+            clearErrors(form);
+            markResultStale(form);
+            syncMixtureUnitFields(block, materialKey);
+          });
+        }
+      });
+      const select = block.querySelector("[data-mixture-type-select]");
+      if (select) {
+        select.addEventListener("change", () => {
+          clearErrors(form);
+          markResultStale(form);
+          syncMixtureBlock(block);
+        });
+      }
+    });
+
+    const pileUnifiedToggle = form.querySelector(
+      '[name="useUnifiedConcreteMixtureSettings"]'
+    );
+    if (pileUnifiedToggle) {
+      syncPileMixtureBlocks(form);
+      pileUnifiedToggle.addEventListener("change", () => {
+        clearErrors(form);
+        markResultStale(form);
+        syncPileMixtureBlocks(form);
+      });
+    }
+  }
+
   function initSlabFoundationForm(form) {
     const calculator = form.querySelector('[name="calculator"]')?.value;
     if (calculator !== "slab_foundation") {
@@ -2533,7 +3347,6 @@
       "Не удалось выполнить запрос.";
 
     clearErrors(form);
-    clearResult(form);
 
     if (!endpoint) {
       safeReachGoal("brigmaster_calc_fail_config", {
@@ -2544,9 +3357,15 @@
       return;
     }
 
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
     const formData = new FormData(form);
     const { isValid, payload } = buildPayload(form, formData);
     const submitButton = form.querySelector('button[type="submit"]');
+    let requestSucceeded = false;
 
     if (!isValid) {
       updateValidationSummary(form);
@@ -2558,6 +3377,7 @@
     }
 
     form._lastRequestPayload = payload;
+    form.dataset.suspendStaleTracking = "1";
     setLoadingState(form, submitButton, true);
 
     const baseParams = buildMetrikaBaseParams(form, payload);
@@ -2586,7 +3406,9 @@
       }
 
       if (response.ok) {
+        clearResult(form);
         showResult(form, data);
+        requestSucceeded = true;
         safeReachGoal("brigmaster_calc_success", { ...baseParams });
         return;
       }
@@ -2614,14 +3436,19 @@
       setFieldError(form, "general", networkErrorMessage);
     } finally {
       setLoadingState(form, submitButton, false);
+      if (!requestSucceeded) {
+        delete form.dataset.suspendStaleTracking;
+      }
     }
   }
 
   function initForm(form) {
+    initScreedForm(form);
     initSlabFoundationForm(form);
     initStripFoundationForm(form);
     initModeScenarioUi(form);
     initStaleOnFormChange(form);
+    initMixtureFields(form);
     initTooltips(form);
     form.addEventListener("submit", onSubmit);
   }

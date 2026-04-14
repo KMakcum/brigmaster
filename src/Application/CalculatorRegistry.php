@@ -19,9 +19,6 @@ use Brigmaster\Domain\Strategy\BrickReserveStrategy;
 use Brigmaster\Domain\Strategy\DrywallBeginnerStrategy;
 use Brigmaster\Domain\Strategy\DrywallNormativeStrategy;
 use Brigmaster\Domain\Strategy\DrywallReserveStrategy;
-use Brigmaster\Domain\Strategy\ScreedBeginnerStrategy;
-use Brigmaster\Domain\Strategy\ScreedNormativeStrategy;
-use Brigmaster\Domain\Strategy\ScreedReserveStrategy;
 use Brigmaster\Domain\Strategy\TileBeginnerStrategy;
 use Brigmaster\Domain\Strategy\TileNormativeStrategy;
 use Brigmaster\Domain\Strategy\TileReserveStrategy;
@@ -36,9 +33,8 @@ final class CalculatorRegistry
     {
         $this->factories = [
             EstimateService::CALCULATOR_SCREED => [
-                EstimateInput::MODE_NORMATIVE => static fn (): CalculatorInterface => new ScreedCalculator(new ScreedNormativeStrategy()),
-                EstimateInput::MODE_RESERVE => static fn (): CalculatorInterface => new ScreedCalculator(new ScreedReserveStrategy()),
-                EstimateInput::MODE_BEGINNER => static fn (): CalculatorInterface => new ScreedCalculator(new ScreedBeginnerStrategy()),
+                EstimateInput::MODE_DIMENSIONS => static fn (): CalculatorInterface => new ScreedCalculator(),
+                EstimateInput::MODE_AREA => static fn (): CalculatorInterface => new ScreedCalculator(),
             ],
             EstimateService::CALCULATOR_BRICK => [
                 EstimateInput::MODE_NORMATIVE => static fn (): CalculatorInterface => new BrickCalculator(new BrickNormativeStrategy()),

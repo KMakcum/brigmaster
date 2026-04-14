@@ -10,6 +10,11 @@ use InvalidArgumentException;
 
 final class StripFoundationCalculator implements CalculatorInterface
 {
+    public function __construct(
+        private readonly ConcreteMixtureCalculator $mixtureCalculator = new ConcreteMixtureCalculator()
+    ) {
+    }
+
     public function calculate(EstimateInput $input): EstimateResult
     {
         if (!in_array($input->mode, [EstimateInput::MODE_PERIMETER, EstimateInput::MODE_HOUSE, EstimateInput::MODE_SEGMENTS], true)) {
@@ -43,6 +48,11 @@ final class StripFoundationCalculator implements CalculatorInterface
 
         if (($input->includeFormwork ?? false) === true) {
             $details['formwork'] = $this->calculateFormwork($input, $segments);
+        }
+
+        $mixture = $this->mixtureCalculator->calculate('strip_foundation', $volumeM3, $input->mixture);
+        if ($mixture !== null) {
+            $details['mixture'] = $mixture;
         }
 
         return new EstimateResult(

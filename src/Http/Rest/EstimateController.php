@@ -49,6 +49,22 @@ final class EstimateController
         'mortar',
     ];
 
+    private const ALLOWED_MIXTURE_TYPES_FOUNDATION = [
+        'ready',
+        'self_mix',
+    ];
+
+    private const ALLOWED_MIXTURE_TYPES_SCREED = [
+        'ready',
+        'dry_ready',
+        'self_mix',
+    ];
+
+    private const ALLOWED_PURCHASE_UNITS = [
+        'bag',
+        'tonne',
+    ];
+
     /** @var array<int> */
     private const ALLOWED_REBAR_LAYERS = [1, 2];
 
@@ -115,6 +131,10 @@ final class EstimateController
         $pileReinforcementBarsCountRaw = $request->get_param('pileReinforcementBarsCount');
         $pileReinforcementDiameterMmRaw = $request->get_param('pileReinforcementDiameterMm');
         $pileReinforcementReservePercentRaw = $request->get_param('pileReinforcementReservePercent');
+        $mixtureRaw = $request->get_param('mixture');
+        $useUnifiedConcreteMixtureSettingsRaw = $request->get_param('useUnifiedConcreteMixtureSettings');
+        $pileMixtureRaw = $request->get_param('pileMixture');
+        $grillageMixtureRaw = $request->get_param('grillageMixture');
 
         $errors = $this->validateRequest(
             calculator: $calculatorRaw,
@@ -159,7 +179,11 @@ final class EstimateController
             includePileReinforcement: $includePileReinforcementRaw,
             pileReinforcementBarsCount: $pileReinforcementBarsCountRaw,
             pileReinforcementDiameterMm: $pileReinforcementDiameterMmRaw,
-            pileReinforcementReservePercent: $pileReinforcementReservePercentRaw
+            pileReinforcementReservePercent: $pileReinforcementReservePercentRaw,
+            mixture: $mixtureRaw,
+            useUnifiedConcreteMixtureSettings: $useUnifiedConcreteMixtureSettingsRaw,
+            pileMixture: $pileMixtureRaw,
+            grillageMixture: $grillageMixtureRaw
         );
 
         if ($errors !== []) {
@@ -217,6 +241,10 @@ final class EstimateController
             $pileReinforcementBarsCount = $this->isNumericValue($pileReinforcementBarsCountRaw) ? (int) $pileReinforcementBarsCountRaw : null;
             $pileReinforcementDiameterMm = $this->isNumericValue($pileReinforcementDiameterMmRaw) ? (float) $pileReinforcementDiameterMmRaw : null;
             $pileReinforcementReservePercent = $this->isNumericValue($pileReinforcementReservePercentRaw) ? (float) $pileReinforcementReservePercentRaw : null;
+            $mixture = is_array($mixtureRaw) ? $mixtureRaw : null;
+            $useUnifiedConcreteMixtureSettings = is_bool($useUnifiedConcreteMixtureSettingsRaw) ? $useUnifiedConcreteMixtureSettingsRaw : null;
+            $pileMixture = is_array($pileMixtureRaw) ? $pileMixtureRaw : null;
+            $grillageMixture = is_array($grillageMixtureRaw) ? $grillageMixtureRaw : null;
 
             $result = $this->estimateService->calculate(
                 calculator: $calculator,
@@ -261,7 +289,11 @@ final class EstimateController
                 includePileReinforcement: $includePileReinforcement,
                 pileReinforcementBarsCount: $pileReinforcementBarsCount,
                 pileReinforcementDiameterMm: $pileReinforcementDiameterMm,
-                pileReinforcementReservePercent: $pileReinforcementReservePercent
+                pileReinforcementReservePercent: $pileReinforcementReservePercent,
+                mixture: $mixture,
+                useUnifiedConcreteMixtureSettings: $useUnifiedConcreteMixtureSettings,
+                pileMixture: $pileMixture,
+                grillageMixture: $grillageMixture
             );
 
             $response = [
@@ -341,7 +373,11 @@ final class EstimateController
         mixed $includePileReinforcement,
         mixed $pileReinforcementBarsCount,
         mixed $pileReinforcementDiameterMm,
-        mixed $pileReinforcementReservePercent
+        mixed $pileReinforcementReservePercent,
+        mixed $mixture,
+        mixed $useUnifiedConcreteMixtureSettings,
+        mixed $pileMixture,
+        mixed $grillageMixture
     ): array
     {
         $errors = [];
@@ -354,9 +390,9 @@ final class EstimateController
 
         if (!$this->isNonEmptyString($mode)) {
             $errors['mode'][] = 'The mode field is required and must be a string.';
-        } elseif ($calculator === EstimateService::CALCULATOR_SLAB_FOUNDATION) {
+        } elseif ($calculator === EstimateService::CALCULATOR_SLAB_FOUNDATION || $calculator === EstimateService::CALCULATOR_SCREED) {
             if (!in_array($mode, self::ALLOWED_SLAB_FOUNDATION_MODES, true)) {
-                $errors['mode'][] = 'The mode field for slab_foundation must be one of: dimensions, area.';
+                $errors['mode'][] = sprintf('The mode field for %s must be one of: dimensions, area.', (string) $calculator);
             }
         } elseif ($calculator === EstimateService::CALCULATOR_STRIP_FOUNDATION) {
             if (!in_array($mode, self::ALLOWED_STRIP_FOUNDATION_MODES, true)) {
@@ -368,11 +404,6 @@ final class EstimateController
             }
         } elseif (!in_array($mode, self::ALLOWED_MODES, true)) {
             $errors['mode'][] = 'The mode field must be one of: normative, reserve, beginner.';
-        }
-
-        if ($calculator === EstimateService::CALCULATOR_SCREED) {
-            $this->validatePositiveNumericField($errors, 'area', $area, 'The area field is required and must be numeric for screed.');
-            $this->validatePositiveNumericField($errors, 'thickness', $thickness, 'The thickness field is required and must be numeric for screed.');
         }
 
         if ($calculator === EstimateService::CALCULATOR_BRICK) {
@@ -438,6 +469,47 @@ final class EstimateController
                 $this->validateOptionalPositiveNumericField($errors, 'formworkHeightM', $formworkHeightM);
                 $this->validateOptionalPositiveNumericField($errors, 'formworkReservePercent', $formworkReservePercent);
             }
+
+            $this->validateConcreteMixtureConfig($errors, 'mixture', $mixture, self::ALLOWED_MIXTURE_TYPES_FOUNDATION, true);
+        }
+
+        if ($calculator === EstimateService::CALCULATOR_SCREED) {
+            if ($mode === 'dimensions') {
+                $this->validatePositiveNumericField($errors, 'length', $length, 'The length field is required and must be numeric for screed in dimensions mode.');
+                $this->validatePositiveNumericField($errors, 'width', $width, 'The width field is required and must be numeric for screed in dimensions mode.');
+                $this->validatePositiveNumericField($errors, 'height', $height, 'The height field is required and must be numeric for screed.');
+            }
+
+            if ($mode === 'area') {
+                $this->validatePositiveNumericField($errors, 'area', $area, 'The area field is required and must be numeric for screed in area mode.');
+                $this->validatePositiveNumericField($errors, 'height', $height, 'The height field is required and must be numeric for screed.');
+            }
+
+            $this->validateStrictBooleanField($errors, 'includeReinforcement', $includeReinforcement);
+            $includeReinforcementEnabled = is_bool($includeReinforcement) && $includeReinforcement;
+            $needsGeometry = $mode === 'area' && $includeReinforcementEnabled;
+
+            if ($needsGeometry) {
+                if (!$this->isNumericValue($length) || (float) $length <= 0) {
+                    $errors['length'][] = 'The length field is required and must be greater than 0 when includeReinforcement is true and mode is area.';
+                }
+
+                if (!$this->isNumericValue($width) || (float) $width <= 0) {
+                    $errors['width'][] = 'The width field is required and must be greater than 0 when includeReinforcement is true and mode is area.';
+                }
+            }
+
+            if ($includeReinforcementEnabled) {
+                $this->validateOptionalPositiveNumericField($errors, 'rebarDiameterMm', $rebarDiameterMm);
+                $this->validateOptionalPositiveNumericField($errors, 'rebarStepMm', $rebarStepMm);
+                $this->validateOptionalPositiveNumericField($errors, 'rebarReservePercent', $rebarReservePercent);
+
+                if ($rebarLayers !== null && !$this->isValidRebarLayers($rebarLayers)) {
+                    $errors['rebarLayers'][] = 'The rebarLayers field must be one of: 1, 2.';
+                }
+            }
+
+            $this->validateConcreteMixtureConfig($errors, 'mixture', $mixture, self::ALLOWED_MIXTURE_TYPES_SCREED, false);
         }
 
         if ($calculator === EstimateService::CALCULATOR_STRIP_FOUNDATION) {
@@ -462,6 +534,8 @@ final class EstimateController
                 formworkReservePercent: $formworkReservePercent,
                 contextLabel: 'strip_foundation'
             );
+
+            $this->validateConcreteMixtureConfig($errors, 'mixture', $mixture, self::ALLOWED_MIXTURE_TYPES_FOUNDATION, true);
         }
 
         if ($calculator === EstimateService::CALCULATOR_PILE_FOUNDATION) {
@@ -469,6 +543,7 @@ final class EstimateController
             $this->validateStrictBooleanField($errors, 'includePileBase', $includePileBase);
             $this->validateStrictBooleanField($errors, 'includeGrillage', $includeGrillage);
             $this->validateStrictBooleanField($errors, 'includePileReinforcement', $includePileReinforcement);
+            $this->validateStrictBooleanField($errors, 'useUnifiedConcreteMixtureSettings', $useUnifiedConcreteMixtureSettings);
 
             $includePilesEnabled = !is_bool($includePiles) || $includePiles;
             if ($includePilesEnabled) {
@@ -528,6 +603,23 @@ final class EstimateController
                     formworkReservePercent: $formworkReservePercent,
                     contextLabel: 'pile_foundation'
                 );
+            }
+
+            $useUnifiedMixture = !is_bool($useUnifiedConcreteMixtureSettings) || $useUnifiedConcreteMixtureSettings;
+            $pileHasConcrete = $includePilesEnabled && $this->isBoredPileType($pileType);
+            $grillageHasConcrete = $includeGrillageEnabled;
+            $requiresAnyMixture = $pileHasConcrete || $grillageHasConcrete;
+
+            if ($useUnifiedMixture && $requiresAnyMixture) {
+                $this->validateConcreteMixtureConfig($errors, 'mixture', $mixture, self::ALLOWED_MIXTURE_TYPES_FOUNDATION, true);
+            } else {
+                if ($pileHasConcrete) {
+                    $this->validateConcreteMixtureConfig($errors, 'pileMixture', $pileMixture, self::ALLOWED_MIXTURE_TYPES_FOUNDATION, true);
+                }
+
+                if ($grillageHasConcrete) {
+                    $this->validateConcreteMixtureConfig($errors, 'grillageMixture', $grillageMixture, self::ALLOWED_MIXTURE_TYPES_FOUNDATION, true);
+                }
             }
         }
 
@@ -799,6 +891,146 @@ final class EstimateController
                 sprintf('The segmentFormworkHeightM field is required and must be numeric in segments[%d] when segmentUseGlobalFormworkParams is false.', $index)
             );
         }
+    }
+
+    /**
+     * @param array<string, array<int, string>> $errors
+     * @param array<string, mixed>|mixed $mixture
+     * @param array<int, string> $allowedTypes
+     */
+    private function validateConcreteMixtureConfig(array &$errors, string $fieldPrefix, mixed $mixture, array $allowedTypes, bool $requiresGravel): void
+    {
+        if (!is_array($mixture)) {
+            $errors[$fieldPrefix][] = sprintf('The %s field is required and must be an object.', $fieldPrefix);
+            return;
+        }
+
+        $type = $mixture['type'] ?? null;
+        if (!$this->isNonEmptyString($type)) {
+            $errors[$fieldPrefix . '.type'][] = sprintf('The %s.type field is required.', $fieldPrefix);
+            return;
+        }
+
+        $type = (string) $type;
+        if (!in_array($type, $allowedTypes, true)) {
+            $errors[$fieldPrefix . '.type'][] = sprintf(
+                'The %s.type field must be one of: %s.',
+                $fieldPrefix,
+                implode(', ', $allowedTypes)
+            );
+            return;
+        }
+
+        if ($type === 'ready') {
+            $this->validatePositiveNumericField(
+                $errors,
+                $fieldPrefix . '.readyConcretePricePerM3',
+                $mixture['readyConcretePricePerM3'] ?? null,
+                sprintf('The %s.readyConcretePricePerM3 field is required and must be numeric.', $fieldPrefix)
+            );
+            return;
+        }
+
+        if ($type === 'dry_ready') {
+            $this->validatePositiveNumericField(
+                $errors,
+                $fieldPrefix . '.dryMixBagWeightKg',
+                $mixture['dryMixBagWeightKg'] ?? null,
+                sprintf('The %s.dryMixBagWeightKg field is required and must be numeric.', $fieldPrefix)
+            );
+            $this->validatePositiveNumericField(
+                $errors,
+                $fieldPrefix . '.dryMixBagPrice',
+                $mixture['dryMixBagPrice'] ?? null,
+                sprintf('The %s.dryMixBagPrice field is required and must be numeric.', $fieldPrefix)
+            );
+            return;
+        }
+
+        $this->validatePositiveNumericField(
+            $errors,
+            $fieldPrefix . '.cementShare',
+            $mixture['cementShare'] ?? null,
+            sprintf('The %s.cementShare field is required and must be numeric.', $fieldPrefix)
+        );
+        $this->validatePositiveNumericField(
+            $errors,
+            $fieldPrefix . '.sandShare',
+            $mixture['sandShare'] ?? null,
+            sprintf('The %s.sandShare field is required and must be numeric.', $fieldPrefix)
+        );
+        $this->validatePurchaseUnitField($errors, $fieldPrefix . '.cementPurchaseUnit', $mixture['cementPurchaseUnit'] ?? null);
+        $this->validatePurchaseUnitField($errors, $fieldPrefix . '.sandPurchaseUnit', $mixture['sandPurchaseUnit'] ?? null);
+        $this->validatePositiveNumericField(
+            $errors,
+            $fieldPrefix . '.cementUnitWeightKg',
+            $mixture['cementUnitWeightKg'] ?? null,
+            sprintf('The %s.cementUnitWeightKg field is required and must be numeric.', $fieldPrefix)
+        );
+        $this->validatePositiveNumericField(
+            $errors,
+            $fieldPrefix . '.cementUnitPrice',
+            $mixture['cementUnitPrice'] ?? null,
+            sprintf('The %s.cementUnitPrice field is required and must be numeric.', $fieldPrefix)
+        );
+        $this->validatePositiveNumericField(
+            $errors,
+            $fieldPrefix . '.sandUnitWeightKg',
+            $mixture['sandUnitWeightKg'] ?? null,
+            sprintf('The %s.sandUnitWeightKg field is required and must be numeric.', $fieldPrefix)
+        );
+        $this->validatePositiveNumericField(
+            $errors,
+            $fieldPrefix . '.sandUnitPrice',
+            $mixture['sandUnitPrice'] ?? null,
+            sprintf('The %s.sandUnitPrice field is required and must be numeric.', $fieldPrefix)
+        );
+
+        if ($requiresGravel) {
+            $this->validatePositiveNumericField(
+                $errors,
+                $fieldPrefix . '.gravelShare',
+                $mixture['gravelShare'] ?? null,
+                sprintf('The %s.gravelShare field is required and must be numeric.', $fieldPrefix)
+            );
+            $this->validatePurchaseUnitField($errors, $fieldPrefix . '.gravelPurchaseUnit', $mixture['gravelPurchaseUnit'] ?? null);
+            $this->validatePositiveNumericField(
+                $errors,
+                $fieldPrefix . '.gravelUnitWeightKg',
+                $mixture['gravelUnitWeightKg'] ?? null,
+                sprintf('The %s.gravelUnitWeightKg field is required and must be numeric.', $fieldPrefix)
+            );
+            $this->validatePositiveNumericField(
+                $errors,
+                $fieldPrefix . '.gravelUnitPrice',
+                $mixture['gravelUnitPrice'] ?? null,
+                sprintf('The %s.gravelUnitPrice field is required and must be numeric.', $fieldPrefix)
+            );
+        }
+    }
+
+    /**
+     * @param array<string, array<int, string>> $errors
+     */
+    private function validatePurchaseUnitField(array &$errors, string $field, mixed $value): void
+    {
+        if (!$this->isNonEmptyString($value)) {
+            $errors[$field][] = sprintf('The %s field is required.', $field);
+            return;
+        }
+
+        if (!in_array((string) $value, self::ALLOWED_PURCHASE_UNITS, true)) {
+            $errors[$field][] = sprintf('The %s field must be one of: bag, tonne.', $field);
+        }
+    }
+
+    private function isBoredPileType(mixed $pileType): bool
+    {
+        if (!$this->isNonEmptyString($pileType)) {
+            return true;
+        }
+
+        return (string) $pileType === 'bored';
     }
 
     private function isIntegerNumber(mixed $value): bool

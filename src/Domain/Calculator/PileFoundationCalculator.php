@@ -16,7 +16,8 @@ final class PileFoundationCalculator implements CalculatorInterface
     private const PI = 3.141592653589793;
 
     public function __construct(
-        private readonly StripFoundationCalculator $stripFoundationCalculator = new StripFoundationCalculator()
+        private readonly StripFoundationCalculator $stripFoundationCalculator = new StripFoundationCalculator(),
+        private readonly ConcreteMixtureCalculator $mixtureCalculator = new ConcreteMixtureCalculator()
     ) {
     }
 
@@ -48,6 +49,30 @@ final class PileFoundationCalculator implements CalculatorInterface
 
             if (isset($grillageDetails['formwork'])) {
                 $details['formwork'] = $grillageDetails['formwork'];
+            }
+        }
+
+        $useUnifiedMixture = $input->useUnifiedConcreteMixtureSettings ?? true;
+        if ($useUnifiedMixture) {
+            $mixture = $this->mixtureCalculator->calculate('pile_foundation', $totalVolumeM3, $input->mixture);
+            if ($mixture !== null) {
+                $details['mixture'] = $mixture;
+            }
+        } else {
+            $pileConcreteVolume = (float) (($details['piles']['concreteVolumeM3'] ?? 0.0));
+            if ($pileConcreteVolume > 0) {
+                $pileMixture = $this->mixtureCalculator->calculate('pile_foundation', $pileConcreteVolume, $input->pileMixture);
+                if ($pileMixture !== null) {
+                    $details['piles']['mixture'] = $pileMixture;
+                }
+            }
+
+            $grillageConcreteVolume = (float) (($details['concrete']['volumeM3'] ?? 0.0));
+            if ($grillageConcreteVolume > 0) {
+                $grillageMixture = $this->mixtureCalculator->calculate('pile_foundation', $grillageConcreteVolume, $input->grillageMixture);
+                if ($grillageMixture !== null) {
+                    $details['grillageMixture'] = $grillageMixture;
+                }
             }
         }
 

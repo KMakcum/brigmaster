@@ -76,7 +76,11 @@ final class EstimateService
         ?bool $includePileReinforcement = null,
         ?int $pileReinforcementBarsCount = null,
         ?float $pileReinforcementDiameterMm = null,
-        ?float $pileReinforcementReservePercent = null
+        ?float $pileReinforcementReservePercent = null,
+        ?array $mixture = null,
+        ?bool $useUnifiedConcreteMixtureSettings = null,
+        ?array $pileMixture = null,
+        ?array $grillageMixture = null
     ): EstimateResult
     {
         if (!in_array($calculator, self::ALLOWED_CALCULATORS, true)) {
@@ -125,7 +129,11 @@ final class EstimateService
             includePileReinforcement: $includePileReinforcement,
             pileReinforcementBarsCount: $pileReinforcementBarsCount,
             pileReinforcementDiameterMm: $pileReinforcementDiameterMm,
-            pileReinforcementReservePercent: $pileReinforcementReservePercent
+            pileReinforcementReservePercent: $pileReinforcementReservePercent,
+            mixture: $mixture,
+            useUnifiedConcreteMixtureSettings: $useUnifiedConcreteMixtureSettings,
+            pileMixture: $pileMixture,
+            grillageMixture: $grillageMixture
         );
 
         $calculatorService = $this->calculatorRegistry->resolve($calculator, $mode);
