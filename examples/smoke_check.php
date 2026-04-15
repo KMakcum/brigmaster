@@ -65,26 +65,39 @@ $runErrorCase = static function (
 };
 
 $runSuccessCase(
-    'brick normative (bricks) works',
-    10.00,
-    500.00,
+    'brick dimensions works',
+    90.00,
+    14538.46,
     static fn () => $service->calculate(
         calculator: 'brick',
-        mode: 'normative',
-        area: 10.0,
-        subType: 'bricks'
+        mode: 'dimensions',
+        brickFormat: 'single_nf',
+        brickLengthMm: 250.0,
+        brickWidthMm: 120.0,
+        brickHeightMm: 65.0,
+        jointThicknessMm: 10.0,
+        wallThicknessType: 'one_and_half_bricks',
+        wallLengthM: 30.0,
+        wallHeightM: 3.0,
+        reservePercent: 5.0,
+        cementBagWeightKg: 50.0
     )
 );
 
 $runSuccessCase(
-    'screed normative works',
+    'screed area works',
     2.00,
-    1.90,
+    2.00,
     static fn () => $service->calculate(
         calculator: 'screed',
-        mode: 'normative',
+        mode: 'area',
         area: 10.0,
-        thickness: 0.2
+        height: 0.2,
+        includeReinforcement: false,
+        mixture: [
+            'type' => 'ready',
+            'readyConcretePricePerM3' => 7000.0,
+        ]
     )
 );
 

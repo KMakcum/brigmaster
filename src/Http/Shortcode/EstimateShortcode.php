@@ -169,7 +169,6 @@ final class EstimateShortcode
         $instanceId = wp_unique_id('brigmaster-' . $calculator . '-');
         $modeFieldId = $instanceId . 'mode';
         $areaFieldId = $instanceId . 'area';
-        $subTypeFieldId = $instanceId . 'sub-type';
         $lengthFieldId = $instanceId . 'length';
         $widthFieldId = $instanceId . 'width';
         $heightFieldId = $instanceId . 'height';
@@ -231,7 +230,7 @@ final class EstimateShortcode
         $formworkModeLockTooltipId = $instanceId . 'formwork-mode-lock-tooltip';
         $modeHintId = $instanceId . 'mode-hint';
         $grillageModeHintId = $instanceId . 'grillage-mode-hint';
-        $estimatorModifierClass = in_array($calculator, ['strip_foundation', 'pile_foundation'], true)
+        $estimatorModifierClass = in_array($calculator, ['strip_foundation', 'pile_foundation', 'brick'], true)
             ? ' brigmaster-estimator--with-accordions'
             : '';
         if ($calculator === 'screed') {
@@ -250,7 +249,7 @@ final class EstimateShortcode
                     <div class="brigmaster-estimator__field" data-field-group="estimator-mode">
                         <label for="<?php echo esc_attr($modeFieldId); ?>">Режим расчета</label>
                         <select id="<?php echo esc_attr($modeFieldId); ?>" name="mode" required aria-describedby="<?php echo esc_attr($modeHintId); ?>">
-                            <?php if (in_array($calculator, ['slab_foundation', 'screed'], true)) : ?>
+                            <?php if (in_array($calculator, ['slab_foundation', 'screed', 'brick'], true)) : ?>
                                 <option value="dimensions">По длине и ширине</option>
                                 <option value="area">По площади</option>
                             <?php elseif ($calculator === 'strip_foundation') : ?>
@@ -923,17 +922,10 @@ final class EstimateShortcode
                 <?php endif; ?>
 
                 <?php if ($calculator === 'brick') : ?>
-                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field" data-field-group="brick-subtype">
-                            <label for="<?php echo esc_attr($subTypeFieldId); ?>">Тип расчета кирпича</label>
-                            <select id="<?php echo esc_attr($subTypeFieldId); ?>" name="subType">
-                                <option value="bricks">Кирпичи (bricks)</option>
-                                <option value="mortar">Раствор (mortar)</option>
-                            </select>
-                            <div class="brigmaster-estimator__error" data-field-error="subType" aria-live="polite"></div>
-                    </div>
+                    <?php echo $this->renderBrickEstimatorFields($instanceId); ?>
                 <?php endif; ?>
 
-                <?php if (in_array($calculator, ['brick', 'drywall', 'tile'], true)) : ?>
+                <?php if (in_array($calculator, ['drywall', 'tile'], true)) : ?>
                     <div class="brigmaster-estimator__field-group brigmaster-estimator__field" data-field-group="area">
                             <label for="<?php echo esc_attr($areaFieldId); ?>">Площадь (м²)</label>
                             <input id="<?php echo esc_attr($areaFieldId); ?>" type="number" name="area" min="0.01" step="0.01" aria-describedby="<?php echo esc_attr($areaHintId); ?>">
@@ -1153,6 +1145,8 @@ final class EstimateShortcode
                         </section>
                         <section class="brigmaster-estimator__result-card" data-result-card="mixture" hidden></section>
                     </div>
+                <?php elseif ($calculator === 'brick') : ?>
+                    <?php echo $this->renderBrickResultTemplate(); ?>
                 <?php elseif ($calculator === 'tile') : ?>
                     <p><strong>Площадь покрытия:</strong> <span data-result-volume>-</span> м²</p>
                     <p><strong>Количество плиток (с запасом):</strong> <span data-result-material>-</span> шт</p>
@@ -1160,9 +1154,6 @@ final class EstimateShortcode
                     <p><strong>Площадь по вводу:</strong> <span data-result-volume>-</span> м²</p>
                     <p><strong>Площадь листов с запасом:</strong> <span data-result-material>-</span> м²</p>
                     <p class="brigmaster-estimator__result-note">Каркас и шаг стоек в расчёт не входят. При двойной обшивке удвойте площадь или сделайте два расчёта.</p>
-                <?php else : ?>
-                    <p><strong>Площадь кладки:</strong> <span data-result-volume>-</span> м²</p>
-                    <p><strong>Количество материала:</strong> <span data-result-material>-</span></p>
                 <?php endif; ?>
             </div>
             <div class="brigmaster-estimator__tooltip-backdrop" data-tooltip-backdrop hidden></div>
@@ -1344,6 +1335,333 @@ final class EstimateShortcode
         return (string) ob_get_clean();
     }
 
+    private function renderBrickEstimatorFields(string $instanceId): string
+    {
+        $brickFormatFieldId = $instanceId . 'brick-format';
+        $brickLengthFieldId = $instanceId . 'brick-length-mm';
+        $brickWidthFieldId = $instanceId . 'brick-width-mm';
+        $brickHeightFieldId = $instanceId . 'brick-height-mm';
+        $brickWeightFieldId = $instanceId . 'brick-weight-kg';
+        $brickPriceFieldId = $instanceId . 'brick-price';
+        $wallLengthFieldId = $instanceId . 'wall-length-m';
+        $wallHeightFieldId = $instanceId . 'wall-height-m';
+        $brickAreaFieldId = $instanceId . 'brick-area';
+        $jointThicknessFieldId = $instanceId . 'joint-thickness-mm';
+        $wallThicknessFieldId = $instanceId . 'wall-thickness-type';
+        $reserveFieldId = $instanceId . 'reserve-percent';
+        $includeOpeningsFieldId = $instanceId . 'include-openings';
+        $includeGablesFieldId = $instanceId . 'include-gables';
+        $includeMeshFieldId = $instanceId . 'include-masonry-mesh';
+        $meshFrequencyFieldId = $instanceId . 'masonry-mesh-frequency';
+        $cementShareFieldId = $instanceId . 'brick-cement-share';
+        $sandShareFieldId = $instanceId . 'brick-sand-share';
+        $cementUnitTypeFieldId = $instanceId . 'brick-cement-unit-type';
+        $cementUnitWeightFieldId = $instanceId . 'brick-cement-unit-weight';
+        $cementUnitPriceFieldId = $instanceId . 'brick-cement-unit-price';
+        $sandUnitTypeFieldId = $instanceId . 'brick-sand-unit-type';
+        $sandUnitWeightFieldId = $instanceId . 'brick-sand-unit-weight';
+        $sandUnitPriceFieldId = $instanceId . 'brick-sand-unit-price';
+
+        ob_start();
+        ?>
+        <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--two" data-field-group="brick-main">
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($brickFormatFieldId); ?>">Формат кирпича</label>
+                <select id="<?php echo esc_attr($brickFormatFieldId); ?>" name="brickFormat" data-brick-format-select>
+                    <option value="single_nf" data-brick-length="250" data-brick-width="120" data-brick-height="65">1 НФ (250×120×65 мм)</option>
+                    <option value="one_and_half_nf" data-brick-length="250" data-brick-width="120" data-brick-height="88">1.4 НФ (250×120×88 мм)</option>
+                    <option value="double_nf" data-brick-length="250" data-brick-width="120" data-brick-height="140">2.1 НФ (250×120×140 мм)</option>
+                    <option value="euro_nf" data-brick-length="250" data-brick-width="85" data-brick-height="65">Евро (250×85×65 мм)</option>
+                    <option value="custom">Свой размер</option>
+                </select>
+                <p class="brigmaster-estimator__hint">Стандартные размеры подставляются автоматически. Свой формат можно ввести вручную.</p>
+                <div class="brigmaster-estimator__error" data-field-error="brickFormat" aria-live="polite"></div>
+            </div>
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($wallThicknessFieldId); ?>">Толщина стены</label>
+                <select id="<?php echo esc_attr($wallThicknessFieldId); ?>" name="wallThicknessType">
+                    <option value="half_brick">В 0.5 кирпича</option>
+                    <option value="one_brick">В 1 кирпич</option>
+                    <option value="one_and_half_bricks" selected>В 1.5 кирпича</option>
+                    <option value="two_bricks">В 2 кирпича</option>
+                    <option value="two_and_half_bricks">В 2.5 кирпича</option>
+                </select>
+                <p class="brigmaster-estimator__hint">Толщина автоматически учитывает выбранный формат кирпича и растворный шов.</p>
+                <div class="brigmaster-estimator__error" data-field-error="wallThicknessType" aria-live="polite"></div>
+            </div>
+        </div>
+
+        <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--three" data-field-group="brick-size">
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($brickLengthFieldId); ?>">Длина кирпича (мм)</label>
+                <input id="<?php echo esc_attr($brickLengthFieldId); ?>" type="number" name="brickLengthMm" min="1" step="1" value="250" data-brick-size-input="length">
+                <div class="brigmaster-estimator__error" data-field-error="brickLengthMm" aria-live="polite"></div>
+            </div>
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($brickWidthFieldId); ?>">Ширина кирпича (мм)</label>
+                <input id="<?php echo esc_attr($brickWidthFieldId); ?>" type="number" name="brickWidthMm" min="1" step="1" value="120" data-brick-size-input="width">
+                <div class="brigmaster-estimator__error" data-field-error="brickWidthMm" aria-live="polite"></div>
+            </div>
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($brickHeightFieldId); ?>">Высота кирпича (мм)</label>
+                <input id="<?php echo esc_attr($brickHeightFieldId); ?>" type="number" name="brickHeightMm" min="1" step="1" value="65" data-brick-size-input="height">
+                <div class="brigmaster-estimator__error" data-field-error="brickHeightMm" aria-live="polite"></div>
+            </div>
+        </div>
+
+        <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--two" data-field-group="brick-geometry-dimensions">
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($wallLengthFieldId); ?>">Общая длина стен (м)</label>
+                <input id="<?php echo esc_attr($wallLengthFieldId); ?>" type="number" name="wallLengthM" min="0.01" step="0.01" value="30">
+                <p class="brigmaster-estimator__hint">Сумма длин всех стен. Например: 7 + 7 + 8 + 8 = 30 м.</p>
+                <div class="brigmaster-estimator__error" data-field-error="wallLengthM" aria-live="polite"></div>
+            </div>
+        </div>
+
+        <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-group--hidden" data-field-group="brick-geometry-area">
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($brickAreaFieldId); ?>">Площадь стен (м²)</label>
+                <input id="<?php echo esc_attr($brickAreaFieldId); ?>" type="number" name="area" min="0.01" step="0.01" value="90">
+                <p class="brigmaster-estimator__hint">Указывайте полную площадь стен без вычета проёмов, если планируете учесть их ниже.</p>
+                <div class="brigmaster-estimator__error" data-field-error="area" aria-live="polite"></div>
+            </div>
+        </div>
+
+        <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--two" data-field-group="brick-common-geometry">
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($jointThicknessFieldId); ?>">Толщина шва (мм)</label>
+                <input id="<?php echo esc_attr($jointThicknessFieldId); ?>" type="number" name="jointThicknessMm" min="1" step="1" value="10">
+                <p class="brigmaster-estimator__hint">Чаще всего 8-12 мм. Шов влияет на количество кирпича и объём раствора.</p>
+                <div class="brigmaster-estimator__error" data-field-error="jointThicknessMm" aria-live="polite"></div>
+            </div>
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($instanceId . 'wall-height-common'); ?>">Средняя высота стен (м)</label>
+                <input id="<?php echo esc_attr($instanceId . 'wall-height-common'); ?>" type="number" name="wallHeightM" min="0.01" step="0.01" value="3" data-brick-wall-height>
+                <p class="brigmaster-estimator__hint">Если высота стен разная, укажите среднее значение по всем стенам.</p>
+                <div class="brigmaster-estimator__error" data-field-error="wallHeightM" aria-live="polite"></div>
+            </div>
+        </div>
+
+        <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--three" data-field-group="brick-economics">
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($reserveFieldId); ?>">Запас (%)</label>
+                <input id="<?php echo esc_attr($reserveFieldId); ?>" type="number" name="reservePercent" min="1" step="1" value="5">
+                <p class="brigmaster-estimator__hint">Обычно 5-10% на бой, подрезку и подгонку кладки.</p>
+                <div class="brigmaster-estimator__error" data-field-error="reservePercent" aria-live="polite"></div>
+            </div>
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($brickWeightFieldId); ?>">Масса 1 кирпича (кг)</label>
+                <input id="<?php echo esc_attr($brickWeightFieldId); ?>" type="number" name="brickWeightKg" min="0.1" step="0.1" placeholder="Например, 3.5">
+                <p class="brigmaster-estimator__hint">Необязательно. Если поле пустое, калькулятор покажет ориентир по габаритам кирпича.</p>
+                <div class="brigmaster-estimator__error" data-field-error="brickWeightKg" aria-live="polite"></div>
+            </div>
+            <div class="brigmaster-estimator__field">
+                <label for="<?php echo esc_attr($brickPriceFieldId); ?>">Цена 1 кирпича</label>
+                <input id="<?php echo esc_attr($brickPriceFieldId); ?>" type="number" name="brickPricePerUnit" min="0.01" step="0.01" placeholder="Необязательно">
+                <p class="brigmaster-estimator__hint">Если цена не указана, блок со стоимостью кирпича не выводится.</p>
+                <div class="brigmaster-estimator__error" data-field-error="brickPricePerUnit" aria-live="polite"></div>
+            </div>
+        </div>
+
+        <div class="brigmaster-estimator__accordions brigmaster-estimator__accordions--brick" data-estimator-accordions>
+            <details class="brigmaster-estimator__accordion" open>
+                <summary class="brigmaster-estimator__accordion-summary">Проёмы и фронтоны<?php echo $this->accordionChevronMarkup(); ?></summary>
+                <div class="brigmaster-estimator__accordion-body">
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--two">
+                        <div class="brigmaster-estimator__field brigmaster-estimator__toggle">
+                            <input id="<?php echo esc_attr($includeOpeningsFieldId); ?>" type="checkbox" name="includeOpenings" value="1">
+                            <label for="<?php echo esc_attr($includeOpeningsFieldId); ?>" class="brigmaster-estimator__label-row">
+                                <span>Вычесть окна и двери</span>
+                            </label>
+                            <div class="brigmaster-estimator__error" data-field-error="includeOpenings" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field brigmaster-estimator__toggle">
+                            <input id="<?php echo esc_attr($includeGablesFieldId); ?>" type="checkbox" name="includeGables" value="1">
+                            <label for="<?php echo esc_attr($includeGablesFieldId); ?>" class="brigmaster-estimator__label-row">
+                                <span>Учесть фронтоны</span>
+                            </label>
+                            <div class="brigmaster-estimator__error" data-field-error="includeGables" aria-live="polite"></div>
+                        </div>
+                    </div>
+
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field-group--hidden" data-brick-openings-root>
+                        <?php echo $this->renderBrickRepeatableGroup($instanceId, 'windows', 'Окна', 'window'); ?>
+                        <?php echo $this->renderBrickRepeatableGroup($instanceId, 'doors', 'Двери', 'door'); ?>
+                    </div>
+
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field-group--hidden" data-brick-gables-root>
+                        <p class="brigmaster-estimator__hint brigmaster-estimator__hint--accordion">
+                            Фронтон считается как треугольник по формуле `0.5 x ширина x высота`. Угол отдельно не задаётся: он автоматически определяется этими двумя размерами.
+                        </p>
+                        <?php echo $this->renderBrickRepeatableGroup($instanceId, 'gables', 'Фронтоны', 'gable'); ?>
+                    </div>
+                </div>
+            </details>
+
+            <details class="brigmaster-estimator__accordion" open>
+                <summary class="brigmaster-estimator__accordion-summary">Раствор и кладочная сетка<?php echo $this->accordionChevronMarkup(); ?></summary>
+                <div class="brigmaster-estimator__accordion-body">
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--two">
+                        <div class="brigmaster-estimator__field brigmaster-estimator__toggle">
+                            <input id="<?php echo esc_attr($includeMeshFieldId); ?>" type="checkbox" name="includeMasonryMesh" value="1">
+                            <label for="<?php echo esc_attr($includeMeshFieldId); ?>" class="brigmaster-estimator__label-row">
+                                <span>Учитывать кладочную сетку</span>
+                            </label>
+                            <div class="brigmaster-estimator__error" data-field-error="includeMasonryMesh" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($meshFrequencyFieldId); ?>">Шаг сетки по рядам</label>
+                            <select id="<?php echo esc_attr($meshFrequencyFieldId); ?>" name="masonryMeshFrequencyRows">
+                                <option value="1">Каждый ряд</option>
+                                <option value="2">Каждый 2 ряд</option>
+                                <option value="3" selected>Каждый 3 ряд</option>
+                                <option value="4">Каждый 4 ряд</option>
+                                <option value="5">Каждый 5 ряд</option>
+                            </select>
+                            <p class="brigmaster-estimator__hint">Для частного дома чаще применяют армирование через 3-5 рядов.</p>
+                            <div class="brigmaster-estimator__error" data-field-error="masonryMeshFrequencyRows" aria-live="polite"></div>
+                        </div>
+                    </div>
+
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--four" data-brick-mortar-ratio-fields>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($cementShareFieldId); ?>">Доля цемента</label>
+                            <input id="<?php echo esc_attr($cementShareFieldId); ?>" type="number" name="cementShare" min="0.1" step="0.1" value="1">
+                            <div class="brigmaster-estimator__error" data-field-error="cementShare" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($cementUnitTypeFieldId); ?>">Единица покупки цемента</label>
+                            <select id="<?php echo esc_attr($cementUnitTypeFieldId); ?>" name="cementPurchaseUnit">
+                                <option value="bag">Мешок</option>
+                                <option value="tonne">Тонна</option>
+                            </select>
+                            <div class="brigmaster-estimator__error" data-field-error="cementPurchaseUnit" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($cementUnitWeightFieldId); ?>" data-mixture-unit-label="cement">Вес единицы цемента (кг)</label>
+                            <input id="<?php echo esc_attr($cementUnitWeightFieldId); ?>" type="number" name="cementUnitWeightKg" min="0.001" step="0.001" value="50" data-mixture-unit-input="cement">
+                            <div class="brigmaster-estimator__error" data-field-error="cementUnitWeightKg" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($cementUnitPriceFieldId); ?>" data-mixture-price-label="cement">Цена мешка цемента</label>
+                            <input id="<?php echo esc_attr($cementUnitPriceFieldId); ?>" type="number" name="cementUnitPrice" min="0.01" step="0.01" placeholder="Необязательно">
+                            <div class="brigmaster-estimator__error" data-field-error="cementUnitPrice" aria-live="polite"></div>
+                        </div>
+                    </div>
+
+                    <div class="brigmaster-estimator__field-group brigmaster-estimator__field-grid brigmaster-estimator__field-grid--four">
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($sandShareFieldId); ?>">Доля песка</label>
+                            <input id="<?php echo esc_attr($sandShareFieldId); ?>" type="number" name="sandShare" min="0.1" step="0.1" value="4">
+                            <div class="brigmaster-estimator__error" data-field-error="sandShare" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($sandUnitTypeFieldId); ?>">Единица покупки песка</label>
+                            <select id="<?php echo esc_attr($sandUnitTypeFieldId); ?>" name="sandPurchaseUnit">
+                                <option value="tonne">Тонна</option>
+                                <option value="bag">Мешок</option>
+                            </select>
+                            <div class="brigmaster-estimator__error" data-field-error="sandPurchaseUnit" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($sandUnitWeightFieldId); ?>" data-mixture-unit-label="sand">Вес единицы песка (т)</label>
+                            <input id="<?php echo esc_attr($sandUnitWeightFieldId); ?>" type="number" name="sandUnitWeightKg" min="0.001" step="0.001" value="1" data-mixture-unit-input="sand">
+                            <div class="brigmaster-estimator__error" data-field-error="sandUnitWeightKg" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($sandUnitPriceFieldId); ?>" data-mixture-price-label="sand">Цена тонны песка</label>
+                            <input id="<?php echo esc_attr($sandUnitPriceFieldId); ?>" type="number" name="sandUnitPrice" min="0.01" step="0.01" placeholder="Необязательно">
+                            <div class="brigmaster-estimator__error" data-field-error="sandUnitPrice" aria-live="polite"></div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+        <?php
+
+        return (string) ob_get_clean();
+    }
+
+    private function renderBrickRepeatableGroup(string $instanceId, string $group, string $title, string $type): string
+    {
+        $addButtonId = $instanceId . $group . '-add';
+        $listId = $instanceId . $group . '-list';
+        $defaultWidth = $type === 'door' ? '0.9' : '1.2';
+        $defaultHeight = $type === 'door' ? '2.1' : '1.4';
+        $defaultCount = '1';
+        $itemTitle = match ($group) {
+            'windows' => 'Окно',
+            'doors' => 'Дверь',
+            'gables' => 'Фронтон',
+            default => 'Элемент',
+        };
+
+        ob_start();
+        ?>
+        <div class="brigmaster-estimator__repeatable-group">
+            <div class="brigmaster-estimator__segment-head">
+                <h3 class="brigmaster-estimator__segment-title"><?php echo esc_html($title); ?></h3>
+                <button id="<?php echo esc_attr($addButtonId); ?>" type="button" class="brigmaster-estimator__segment-add" data-brick-add-item="<?php echo esc_attr($group); ?>">
+                    Добавить размер
+                </button>
+            </div>
+            <div id="<?php echo esc_attr($listId); ?>" class="brigmaster-estimator__segment-list" data-brick-repeat-list="<?php echo esc_attr($group); ?>" data-brick-item-type="<?php echo esc_attr($type); ?>">
+                <article class="brigmaster-estimator__segment-card" data-brick-repeat-item data-brick-item-type="<?php echo esc_attr($type); ?>" data-brick-group="<?php echo esc_attr($group); ?>">
+                    <div class="brigmaster-estimator__segment-head">
+                        <h4 class="brigmaster-estimator__segment-title"><?php echo esc_html($itemTitle); ?> 1</h4>
+                        <button type="button" class="brigmaster-estimator__segment-remove" data-brick-remove-item>Удалить</button>
+                    </div>
+                    <div class="brigmaster-estimator__field-grid brigmaster-estimator__field-grid--three">
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($listId . '-0-width'); ?>">Ширина (м)</label>
+                            <input id="<?php echo esc_attr($listId . '-0-width'); ?>" type="number" min="0.01" step="0.01" value="<?php echo esc_attr($defaultWidth); ?>" data-brick-repeat-input="widthM" name="<?php echo esc_attr($group . '[0][widthM]'); ?>">
+                            <div class="brigmaster-estimator__error" data-brick-error-field="widthM" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($listId . '-0-height'); ?>">Высота (м)</label>
+                            <input id="<?php echo esc_attr($listId . '-0-height'); ?>" type="number" min="0.01" step="0.01" value="<?php echo esc_attr($defaultHeight); ?>" data-brick-repeat-input="heightM" name="<?php echo esc_attr($group . '[0][heightM]'); ?>">
+                            <div class="brigmaster-estimator__error" data-brick-error-field="heightM" aria-live="polite"></div>
+                        </div>
+                        <div class="brigmaster-estimator__field">
+                            <label for="<?php echo esc_attr($listId . '-0-count'); ?>">Количество</label>
+                            <input id="<?php echo esc_attr($listId . '-0-count'); ?>" type="number" min="1" step="1" value="<?php echo esc_attr($defaultCount); ?>" data-brick-repeat-input="count" name="<?php echo esc_attr($group . '[0][count]'); ?>">
+                            <div class="brigmaster-estimator__error" data-brick-error-field="count" aria-live="polite"></div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="brigmaster-estimator__error" data-field-error="<?php echo esc_attr($group); ?>" aria-live="polite"></div>
+        </div>
+        <?php
+
+        return (string) ob_get_clean();
+    }
+
+    private function renderBrickResultTemplate(): string
+    {
+        ob_start();
+        ?>
+        <div class="brigmaster-estimator__result-grid brigmaster-estimator__result-grid--brick">
+            <section class="brigmaster-estimator__result-card" data-result-card="brick-summary"></section>
+            <section class="brigmaster-estimator__result-card" data-result-card="brick-geometry"></section>
+            <section class="brigmaster-estimator__result-card" data-result-card="brick-mortar"></section>
+            <section class="brigmaster-estimator__result-card" data-result-card="brick-mesh" hidden></section>
+            <section class="brigmaster-estimator__result-card" data-result-card="brick-lintels" hidden></section>
+            <section class="brigmaster-estimator__result-card" data-result-card="brick-costs" hidden></section>
+            <section class="brigmaster-estimator__result-card brigmaster-estimator__result-card--wide" data-result-card="brick-armopoyas-note">
+                <h3>Армопояс</h3>
+                <p>Для кирпичных стен армопояс удобнее считать в калькуляторе ленточного фундамента.</p>
+                <p>
+                    <a href="<?php echo esc_url(home_url('/kalkulyator-lentochnogo-fundamenta/')); ?>">Открыть калькулятор ленточного фундамента</a>
+                </p>
+                <p class="brigmaster-estimator__result-note">Укажите периметр стен, ширину по толщине стены и высоту пояса 0.2-0.3 м.</p>
+            </section>
+        </div>
+        <?php
+
+        return (string) ob_get_clean();
+    }
+
     /**
      * Accordion summary chevron (SVG in markup; child theme animates via scaleY).
      */
@@ -1358,7 +1676,7 @@ final class EstimateShortcode
     private function enqueueAssets(): void
     {
         $scriptHandle = 'brigmaster-estimate-form';
-        $assetVersion = '1.0.0';
+        $assetVersion = '1.1.2';
         $baseUrl = plugin_dir_url($this->pluginFilePath);
 
         wp_register_script(

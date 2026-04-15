@@ -13,9 +13,6 @@ use Brigmaster\Domain\Calculator\SlabFoundationCalculator;
 use Brigmaster\Domain\Calculator\StripFoundationCalculator;
 use Brigmaster\Domain\Calculator\TileCalculator;
 use Brigmaster\Domain\DTO\EstimateInput;
-use Brigmaster\Domain\Strategy\BrickBeginnerStrategy;
-use Brigmaster\Domain\Strategy\BrickNormativeStrategy;
-use Brigmaster\Domain\Strategy\BrickReserveStrategy;
 use Brigmaster\Domain\Strategy\DrywallBeginnerStrategy;
 use Brigmaster\Domain\Strategy\DrywallNormativeStrategy;
 use Brigmaster\Domain\Strategy\DrywallReserveStrategy;
@@ -37,9 +34,8 @@ final class CalculatorRegistry
                 EstimateInput::MODE_AREA => static fn (): CalculatorInterface => new ScreedCalculator(),
             ],
             EstimateService::CALCULATOR_BRICK => [
-                EstimateInput::MODE_NORMATIVE => static fn (): CalculatorInterface => new BrickCalculator(new BrickNormativeStrategy()),
-                EstimateInput::MODE_RESERVE => static fn (): CalculatorInterface => new BrickCalculator(new BrickReserveStrategy()),
-                EstimateInput::MODE_BEGINNER => static fn (): CalculatorInterface => new BrickCalculator(new BrickBeginnerStrategy()),
+                EstimateInput::MODE_DIMENSIONS => static fn (): CalculatorInterface => new BrickCalculator(),
+                EstimateInput::MODE_AREA => static fn (): CalculatorInterface => new BrickCalculator(),
             ],
             EstimateService::CALCULATOR_DRYWALL => [
                 EstimateInput::MODE_NORMATIVE => static fn (): CalculatorInterface => new DrywallCalculator(new DrywallNormativeStrategy()),

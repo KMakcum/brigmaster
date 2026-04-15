@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Brigmaster\Http\Rest;
 
 use Brigmaster\Application\EstimateService;
+use Brigmaster\Domain\DTO\EstimateInput;
 use InvalidArgumentException;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -27,6 +28,11 @@ final class EstimateController
         'beginner',
     ];
 
+    private const ALLOWED_BRICK_MODES = [
+        'dimensions',
+        'area',
+    ];
+
     private const ALLOWED_SLAB_FOUNDATION_MODES = [
         'dimensions',
         'area',
@@ -44,9 +50,20 @@ final class EstimateController
         'segments',
     ];
 
-    private const BRICK_SUBTYPES = [
-        'bricks',
-        'mortar',
+    private const ALLOWED_BRICK_FORMATS = [
+        'single_nf',
+        'one_and_half_nf',
+        'double_nf',
+        'euro_nf',
+        'custom',
+    ];
+
+    private const ALLOWED_BRICK_WALL_THICKNESS = [
+        'half_brick',
+        'one_brick',
+        'one_and_half_bricks',
+        'two_bricks',
+        'two_and_half_bricks',
     ];
 
     private const ALLOWED_MIXTURE_TYPES_FOUNDATION = [
@@ -135,6 +152,36 @@ final class EstimateController
         $useUnifiedConcreteMixtureSettingsRaw = $request->get_param('useUnifiedConcreteMixtureSettings');
         $pileMixtureRaw = $request->get_param('pileMixture');
         $grillageMixtureRaw = $request->get_param('grillageMixture');
+        $brickFormatRaw = $request->get_param('brickFormat');
+        $brickLengthMmRaw = $request->get_param('brickLengthMm');
+        $brickWidthMmRaw = $request->get_param('brickWidthMm');
+        $brickHeightMmRaw = $request->get_param('brickHeightMm');
+        $jointThicknessMmRaw = $request->get_param('jointThicknessMm');
+        $wallThicknessTypeRaw = $request->get_param('wallThicknessType');
+        $wallLengthMRaw = $request->get_param('wallLengthM');
+        $wallHeightMRaw = $request->get_param('wallHeightM');
+        $reservePercentRaw = $request->get_param('reservePercent');
+        $includeOpeningsRaw = $request->get_param('includeOpenings');
+        $windowsRaw = $request->get_param('windows');
+        $doorsRaw = $request->get_param('doors');
+        $includeGablesRaw = $request->get_param('includeGables');
+        $gablesRaw = $request->get_param('gables');
+        $includeMasonryMeshRaw = $request->get_param('includeMasonryMesh');
+        $masonryMeshFrequencyRowsRaw = $request->get_param('masonryMeshFrequencyRows');
+        $useCustomMortarProportionsRaw = $request->get_param('useCustomMortarProportions');
+        $cementShareRaw = $request->get_param('cementShare');
+        $sandShareRaw = $request->get_param('sandShare');
+        $cementPurchaseUnitRaw = $request->get_param('cementPurchaseUnit');
+        $cementUnitWeightKgRaw = $request->get_param('cementUnitWeightKg');
+        $cementUnitPriceRaw = $request->get_param('cementUnitPrice');
+        $sandPurchaseUnitRaw = $request->get_param('sandPurchaseUnit');
+        $sandUnitWeightKgRaw = $request->get_param('sandUnitWeightKg');
+        $sandUnitPriceRaw = $request->get_param('sandUnitPrice');
+        $cementBagWeightKgRaw = $request->get_param('cementBagWeightKg');
+        $brickWeightKgRaw = $request->get_param('brickWeightKg');
+        $brickPricePerUnitRaw = $request->get_param('brickPricePerUnit');
+        $cementBagPriceRaw = $request->get_param('cementBagPrice');
+        $sandPricePerTonneRaw = $request->get_param('sandPricePerTonne');
 
         $errors = $this->validateRequest(
             calculator: $calculatorRaw,
@@ -183,7 +230,37 @@ final class EstimateController
             mixture: $mixtureRaw,
             useUnifiedConcreteMixtureSettings: $useUnifiedConcreteMixtureSettingsRaw,
             pileMixture: $pileMixtureRaw,
-            grillageMixture: $grillageMixtureRaw
+            grillageMixture: $grillageMixtureRaw,
+            brickFormat: $brickFormatRaw,
+            brickLengthMm: $brickLengthMmRaw,
+            brickWidthMm: $brickWidthMmRaw,
+            brickHeightMm: $brickHeightMmRaw,
+            jointThicknessMm: $jointThicknessMmRaw,
+            wallThicknessType: $wallThicknessTypeRaw,
+            wallLengthM: $wallLengthMRaw,
+            wallHeightM: $wallHeightMRaw,
+            reservePercent: $reservePercentRaw,
+            includeOpenings: $includeOpeningsRaw,
+            windows: $windowsRaw,
+            doors: $doorsRaw,
+            includeGables: $includeGablesRaw,
+            gables: $gablesRaw,
+            includeMasonryMesh: $includeMasonryMeshRaw,
+            masonryMeshFrequencyRows: $masonryMeshFrequencyRowsRaw,
+            useCustomMortarProportions: $useCustomMortarProportionsRaw,
+            cementShare: $cementShareRaw,
+            sandShare: $sandShareRaw,
+            cementPurchaseUnit: $cementPurchaseUnitRaw,
+            cementUnitWeightKg: $cementUnitWeightKgRaw,
+            cementUnitPrice: $cementUnitPriceRaw,
+            sandPurchaseUnit: $sandPurchaseUnitRaw,
+            sandUnitWeightKg: $sandUnitWeightKgRaw,
+            sandUnitPrice: $sandUnitPriceRaw,
+            cementBagWeightKg: $cementBagWeightKgRaw,
+            brickWeightKg: $brickWeightKgRaw,
+            brickPricePerUnit: $brickPricePerUnitRaw,
+            cementBagPrice: $cementBagPriceRaw,
+            sandPricePerTonne: $sandPricePerTonneRaw
         );
 
         if ($errors !== []) {
@@ -245,6 +322,36 @@ final class EstimateController
             $useUnifiedConcreteMixtureSettings = is_bool($useUnifiedConcreteMixtureSettingsRaw) ? $useUnifiedConcreteMixtureSettingsRaw : null;
             $pileMixture = is_array($pileMixtureRaw) ? $pileMixtureRaw : null;
             $grillageMixture = is_array($grillageMixtureRaw) ? $grillageMixtureRaw : null;
+            $brickFormat = $this->isNonEmptyString($brickFormatRaw) ? (string) $brickFormatRaw : null;
+            $brickLengthMm = $this->isNumericValue($brickLengthMmRaw) ? (float) $brickLengthMmRaw : null;
+            $brickWidthMm = $this->isNumericValue($brickWidthMmRaw) ? (float) $brickWidthMmRaw : null;
+            $brickHeightMm = $this->isNumericValue($brickHeightMmRaw) ? (float) $brickHeightMmRaw : null;
+            $jointThicknessMm = $this->isNumericValue($jointThicknessMmRaw) ? (float) $jointThicknessMmRaw : null;
+            $wallThicknessType = $this->isNonEmptyString($wallThicknessTypeRaw) ? (string) $wallThicknessTypeRaw : null;
+            $wallLengthM = $this->isNumericValue($wallLengthMRaw) ? (float) $wallLengthMRaw : null;
+            $wallHeightM = $this->isNumericValue($wallHeightMRaw) ? (float) $wallHeightMRaw : null;
+            $reservePercent = $this->isNumericValue($reservePercentRaw) ? (float) $reservePercentRaw : null;
+            $includeOpenings = is_bool($includeOpeningsRaw) ? $includeOpeningsRaw : null;
+            $windows = is_array($windowsRaw) ? $windowsRaw : null;
+            $doors = is_array($doorsRaw) ? $doorsRaw : null;
+            $includeGables = is_bool($includeGablesRaw) ? $includeGablesRaw : null;
+            $gables = is_array($gablesRaw) ? $gablesRaw : null;
+            $includeMasonryMesh = is_bool($includeMasonryMeshRaw) ? $includeMasonryMeshRaw : null;
+            $masonryMeshFrequencyRows = $this->isNumericValue($masonryMeshFrequencyRowsRaw) ? (int) $masonryMeshFrequencyRowsRaw : null;
+            $useCustomMortarProportions = is_bool($useCustomMortarProportionsRaw) ? $useCustomMortarProportionsRaw : null;
+            $cementShare = $this->isNumericValue($cementShareRaw) ? (float) $cementShareRaw : null;
+            $sandShare = $this->isNumericValue($sandShareRaw) ? (float) $sandShareRaw : null;
+            $cementPurchaseUnit = $this->isNonEmptyString($cementPurchaseUnitRaw) ? (string) $cementPurchaseUnitRaw : null;
+            $cementUnitWeightKg = $this->isNumericValue($cementUnitWeightKgRaw) ? (float) $cementUnitWeightKgRaw : null;
+            $cementUnitPrice = $this->isNumericValue($cementUnitPriceRaw) ? (float) $cementUnitPriceRaw : null;
+            $sandPurchaseUnit = $this->isNonEmptyString($sandPurchaseUnitRaw) ? (string) $sandPurchaseUnitRaw : null;
+            $sandUnitWeightKg = $this->isNumericValue($sandUnitWeightKgRaw) ? (float) $sandUnitWeightKgRaw : null;
+            $sandUnitPrice = $this->isNumericValue($sandUnitPriceRaw) ? (float) $sandUnitPriceRaw : null;
+            $cementBagWeightKg = $this->isNumericValue($cementBagWeightKgRaw) ? (float) $cementBagWeightKgRaw : null;
+            $brickWeightKg = $this->isNumericValue($brickWeightKgRaw) ? (float) $brickWeightKgRaw : null;
+            $brickPricePerUnit = $this->isNumericValue($brickPricePerUnitRaw) ? (float) $brickPricePerUnitRaw : null;
+            $cementBagPrice = $this->isNumericValue($cementBagPriceRaw) ? (float) $cementBagPriceRaw : null;
+            $sandPricePerTonne = $this->isNumericValue($sandPricePerTonneRaw) ? (float) $sandPricePerTonneRaw : null;
 
             $result = $this->estimateService->calculate(
                 calculator: $calculator,
@@ -293,7 +400,37 @@ final class EstimateController
                 mixture: $mixture,
                 useUnifiedConcreteMixtureSettings: $useUnifiedConcreteMixtureSettings,
                 pileMixture: $pileMixture,
-                grillageMixture: $grillageMixture
+                grillageMixture: $grillageMixture,
+                brickFormat: $brickFormat,
+                brickLengthMm: $brickLengthMm,
+                brickWidthMm: $brickWidthMm,
+                brickHeightMm: $brickHeightMm,
+                jointThicknessMm: $jointThicknessMm,
+                wallThicknessType: $wallThicknessType,
+                wallLengthM: $wallLengthM,
+                wallHeightM: $wallHeightM,
+                reservePercent: $reservePercent,
+                includeOpenings: $includeOpenings,
+                windows: $windows,
+                doors: $doors,
+                includeGables: $includeGables,
+                gables: $gables,
+                includeMasonryMesh: $includeMasonryMesh,
+                masonryMeshFrequencyRows: $masonryMeshFrequencyRows,
+                useCustomMortarProportions: $useCustomMortarProportions,
+                cementShare: $cementShare,
+                sandShare: $sandShare,
+                cementPurchaseUnit: $cementPurchaseUnit,
+                cementUnitWeightKg: $cementUnitWeightKg,
+                cementUnitPrice: $cementUnitPrice,
+                sandPurchaseUnit: $sandPurchaseUnit,
+                sandUnitWeightKg: $sandUnitWeightKg,
+                sandUnitPrice: $sandUnitPrice,
+                cementBagWeightKg: $cementBagWeightKg,
+                brickWeightKg: $brickWeightKg,
+                brickPricePerUnit: $brickPricePerUnit,
+                cementBagPrice: $cementBagPrice,
+                sandPricePerTonne: $sandPricePerTonne
             );
 
             $response = [
@@ -377,7 +514,37 @@ final class EstimateController
         mixed $mixture,
         mixed $useUnifiedConcreteMixtureSettings,
         mixed $pileMixture,
-        mixed $grillageMixture
+        mixed $grillageMixture,
+        mixed $brickFormat,
+        mixed $brickLengthMm,
+        mixed $brickWidthMm,
+        mixed $brickHeightMm,
+        mixed $jointThicknessMm,
+        mixed $wallThicknessType,
+        mixed $wallLengthM,
+        mixed $wallHeightM,
+        mixed $reservePercent,
+        mixed $includeOpenings,
+        mixed $windows,
+        mixed $doors,
+        mixed $includeGables,
+        mixed $gables,
+        mixed $includeMasonryMesh,
+        mixed $masonryMeshFrequencyRows,
+        mixed $useCustomMortarProportions,
+        mixed $cementShare,
+        mixed $sandShare,
+        mixed $cementPurchaseUnit,
+        mixed $cementUnitWeightKg,
+        mixed $cementUnitPrice,
+        mixed $sandPurchaseUnit,
+        mixed $sandUnitWeightKg,
+        mixed $sandUnitPrice,
+        mixed $cementBagWeightKg,
+        mixed $brickWeightKg,
+        mixed $brickPricePerUnit,
+        mixed $cementBagPrice,
+        mixed $sandPricePerTonne
     ): array
     {
         $errors = [];
@@ -390,6 +557,10 @@ final class EstimateController
 
         if (!$this->isNonEmptyString($mode)) {
             $errors['mode'][] = 'The mode field is required and must be a string.';
+        } elseif ($calculator === EstimateService::CALCULATOR_BRICK) {
+            if (!in_array($mode, self::ALLOWED_BRICK_MODES, true)) {
+                $errors['mode'][] = 'The mode field for brick must be one of: dimensions, area.';
+            }
         } elseif ($calculator === EstimateService::CALCULATOR_SLAB_FOUNDATION || $calculator === EstimateService::CALCULATOR_SCREED) {
             if (!in_array($mode, self::ALLOWED_SLAB_FOUNDATION_MODES, true)) {
                 $errors['mode'][] = sprintf('The mode field for %s must be one of: dimensions, area.', (string) $calculator);
@@ -407,13 +578,41 @@ final class EstimateController
         }
 
         if ($calculator === EstimateService::CALCULATOR_BRICK) {
-            $this->validatePositiveNumericField($errors, 'area', $area, 'The area field is required and must be numeric for brick.');
-
-            if (!$this->isNonEmptyString($subType)) {
-                $errors['subType'][] = 'The subType field is required for brick.';
-            } elseif (!in_array($subType, self::BRICK_SUBTYPES, true)) {
-                $errors['subType'][] = 'The subType field for brick must be one of: bricks, mortar.';
-            }
+            $this->validateBrickPayload(
+                errors: $errors,
+                mode: $mode,
+                area: $area,
+                brickFormat: $brickFormat,
+                brickLengthMm: $brickLengthMm,
+                brickWidthMm: $brickWidthMm,
+                brickHeightMm: $brickHeightMm,
+                jointThicknessMm: $jointThicknessMm,
+                wallThicknessType: $wallThicknessType,
+                wallLengthM: $wallLengthM,
+                wallHeightM: $wallHeightM,
+                reservePercent: $reservePercent,
+                includeOpenings: $includeOpenings,
+                windows: $windows,
+                doors: $doors,
+                includeGables: $includeGables,
+                gables: $gables,
+                includeMasonryMesh: $includeMasonryMesh,
+                masonryMeshFrequencyRows: $masonryMeshFrequencyRows,
+                useCustomMortarProportions: $useCustomMortarProportions,
+                cementShare: $cementShare,
+                sandShare: $sandShare,
+                cementPurchaseUnit: $cementPurchaseUnit,
+                cementUnitWeightKg: $cementUnitWeightKg,
+                cementUnitPrice: $cementUnitPrice,
+                sandPurchaseUnit: $sandPurchaseUnit,
+                sandUnitWeightKg: $sandUnitWeightKg,
+                sandUnitPrice: $sandUnitPrice,
+                cementBagWeightKg: $cementBagWeightKg,
+                brickWeightKg: $brickWeightKg,
+                brickPricePerUnit: $brickPricePerUnit,
+                cementBagPrice: $cementBagPrice,
+                sandPricePerTonne: $sandPricePerTonne
+            );
         }
 
         if ($calculator === EstimateService::CALCULATOR_DRYWALL) {
@@ -657,7 +856,7 @@ final class EstimateController
      */
     private function validateOptionalPositiveNumericField(array &$errors, string $field, mixed $value): void
     {
-        if ($value === null) {
+        if ($value === null || (is_string($value) && trim($value) === '')) {
             return;
         }
 
@@ -682,6 +881,152 @@ final class EstimateController
 
         if (!is_bool($value)) {
             $errors[$field][] = sprintf('The %s field must be a boolean.', $field);
+        }
+    }
+
+    /**
+     * @param array<string, array<int, string>> $errors
+     */
+    private function validateBrickPayload(
+        array &$errors,
+        mixed $mode,
+        mixed $area,
+        mixed $brickFormat,
+        mixed $brickLengthMm,
+        mixed $brickWidthMm,
+        mixed $brickHeightMm,
+        mixed $jointThicknessMm,
+        mixed $wallThicknessType,
+        mixed $wallLengthM,
+        mixed $wallHeightM,
+        mixed $reservePercent,
+        mixed $includeOpenings,
+        mixed $windows,
+        mixed $doors,
+        mixed $includeGables,
+        mixed $gables,
+        mixed $includeMasonryMesh,
+        mixed $masonryMeshFrequencyRows,
+        mixed $useCustomMortarProportions,
+        mixed $cementShare,
+        mixed $sandShare,
+        mixed $cementPurchaseUnit,
+        mixed $cementUnitWeightKg,
+        mixed $cementUnitPrice,
+        mixed $sandPurchaseUnit,
+        mixed $sandUnitWeightKg,
+        mixed $sandUnitPrice,
+        mixed $cementBagWeightKg,
+        mixed $brickWeightKg,
+        mixed $brickPricePerUnit,
+        mixed $cementBagPrice,
+        mixed $sandPricePerTonne
+    ): void {
+        if ($mode === EstimateInput::MODE_DIMENSIONS) {
+            $this->validatePositiveNumericField($errors, 'wallLengthM', $wallLengthM, 'The wallLengthM field is required and must be numeric for brick in dimensions mode.');
+        }
+
+        if ($mode === EstimateInput::MODE_AREA) {
+            $this->validatePositiveNumericField($errors, 'area', $area, 'The area field is required and must be numeric for brick in area mode.');
+        }
+
+        $this->validatePositiveNumericField($errors, 'wallHeightM', $wallHeightM, 'The wallHeightM field is required and must be numeric for brick.');
+        $this->validatePositiveNumericField($errors, 'brickLengthMm', $brickLengthMm, 'The brickLengthMm field is required and must be numeric for brick.');
+        $this->validatePositiveNumericField($errors, 'brickWidthMm', $brickWidthMm, 'The brickWidthMm field is required and must be numeric for brick.');
+        $this->validatePositiveNumericField($errors, 'brickHeightMm', $brickHeightMm, 'The brickHeightMm field is required and must be numeric for brick.');
+        $this->validatePositiveNumericField($errors, 'jointThicknessMm', $jointThicknessMm, 'The jointThicknessMm field is required and must be numeric for brick.');
+        $this->validatePositiveNumericField($errors, 'reservePercent', $reservePercent, 'The reservePercent field is required and must be numeric for brick.');
+
+        if (!$this->isNonEmptyString($brickFormat)) {
+            $errors['brickFormat'][] = 'The brickFormat field is required for brick.';
+        } elseif (!in_array((string) $brickFormat, self::ALLOWED_BRICK_FORMATS, true)) {
+            $errors['brickFormat'][] = 'The brickFormat field must be one of: single_nf, one_and_half_nf, double_nf, euro_nf, custom.';
+        }
+
+        if (!$this->isNonEmptyString($wallThicknessType)) {
+            $errors['wallThicknessType'][] = 'The wallThicknessType field is required for brick.';
+        } elseif (!in_array((string) $wallThicknessType, self::ALLOWED_BRICK_WALL_THICKNESS, true)) {
+            $errors['wallThicknessType'][] = 'The wallThicknessType field must be one of: half_brick, one_brick, one_and_half_bricks, two_bricks, two_and_half_bricks.';
+        }
+
+        $this->validateStrictBooleanField($errors, 'includeOpenings', $includeOpenings);
+        $this->validateStrictBooleanField($errors, 'includeGables', $includeGables);
+        $this->validateStrictBooleanField($errors, 'includeMasonryMesh', $includeMasonryMesh);
+        $this->validateOptionalPositiveNumericField($errors, 'brickWeightKg', $brickWeightKg);
+        $this->validateOptionalPositiveNumericField($errors, 'brickPricePerUnit', $brickPricePerUnit);
+        $this->validateOptionalPositiveNumericField($errors, 'cementBagWeightKg', $cementBagWeightKg);
+        $this->validateOptionalPositiveNumericField($errors, 'cementBagPrice', $cementBagPrice);
+        $this->validateOptionalPositiveNumericField($errors, 'sandPricePerTonne', $sandPricePerTonne);
+        $this->validatePositiveNumericField($errors, 'cementShare', $cementShare, 'The cementShare field is required and must be numeric for brick.');
+        $this->validatePositiveNumericField($errors, 'sandShare', $sandShare, 'The sandShare field is required and must be numeric for brick.');
+        $this->validatePurchaseUnitField($errors, 'cementPurchaseUnit', $cementPurchaseUnit);
+        $this->validatePositiveNumericField($errors, 'cementUnitWeightKg', $cementUnitWeightKg, 'The cementUnitWeightKg field is required and must be numeric for brick.');
+        $this->validateOptionalPositiveNumericField($errors, 'cementUnitPrice', $cementUnitPrice);
+        $this->validatePurchaseUnitField($errors, 'sandPurchaseUnit', $sandPurchaseUnit);
+        $this->validatePositiveNumericField($errors, 'sandUnitWeightKg', $sandUnitWeightKg, 'The sandUnitWeightKg field is required and must be numeric for brick.');
+        $this->validateOptionalPositiveNumericField($errors, 'sandUnitPrice', $sandUnitPrice);
+
+        if (is_bool($includeOpenings) && $includeOpenings) {
+            $this->validateBrickElements($errors, 'windows', $windows, 'window');
+            $this->validateBrickElements($errors, 'doors', $doors, 'door');
+        }
+
+        if (is_bool($includeGables) && $includeGables) {
+            $this->validateBrickElements($errors, 'gables', $gables, 'gable');
+        }
+
+        if (is_bool($includeMasonryMesh) && $includeMasonryMesh) {
+            $this->validatePositiveNumericField($errors, 'masonryMeshFrequencyRows', $masonryMeshFrequencyRows, 'The masonryMeshFrequencyRows field is required and must be numeric when includeMasonryMesh is true.');
+            if ($this->isNumericValue($masonryMeshFrequencyRows) && !$this->isIntegerNumber($masonryMeshFrequencyRows)) {
+                $errors['masonryMeshFrequencyRows'][] = 'The masonryMeshFrequencyRows field must be an integer.';
+            }
+        }
+
+    }
+
+    /**
+     * @param array<string, array<int, string>> $errors
+     */
+    private function validateBrickElements(array &$errors, string $field, mixed $items, string $type): void
+    {
+        if ($items === null) {
+            return;
+        }
+
+        if (!is_array($items)) {
+            $errors[$field][] = sprintf('The %s field must be an array.', $field);
+            return;
+        }
+
+        foreach ($items as $index => $item) {
+            if (!is_array($item)) {
+                $errors[$field][] = sprintf('The %s[%d] value must be an object.', $field, $index);
+                continue;
+            }
+
+            $this->validatePositiveNumericField(
+                $errors,
+                sprintf('%s.%d.widthM', $field, $index),
+                $item['widthM'] ?? null,
+                sprintf('The widthM field is required in %s[%d].', $field, $index)
+            );
+            $this->validatePositiveNumericField(
+                $errors,
+                sprintf('%s.%d.heightM', $field, $index),
+                $item['heightM'] ?? null,
+                sprintf('The heightM field is required in %s[%d].', $field, $index)
+            );
+            $this->validatePositiveNumericField(
+                $errors,
+                sprintf('%s.%d.count', $field, $index),
+                $item['count'] ?? null,
+                sprintf('The count field is required in %s[%d].', $field, $index)
+            );
+
+            if (isset($item['count']) && $this->isNumericValue($item['count']) && !$this->isIntegerNumber($item['count'])) {
+                $errors[sprintf('%s.%d.count', $field, $index)][] = 'The count field must be an integer.';
+            }
+
         }
     }
 

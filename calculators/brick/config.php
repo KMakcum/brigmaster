@@ -6,12 +6,7 @@ return [
     'slug' => 'brick',
     'name' => 'Brick Calculator',
     'modes' => [
-        'normative',
-        'reserve',
-        'beginner',
-    ],
-    'subTypes' => [
-        'bricks',
-        'mortar',
+        'dimensions',
+        'area',
     ],
 ];

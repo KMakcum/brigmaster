@@ -78,7 +78,40 @@ final class EstimateInput
         /** @var array<string, mixed>|null */
         public readonly ?array $pileMixture = null,
         /** @var array<string, mixed>|null */
-        public readonly ?array $grillageMixture = null
+        public readonly ?array $grillageMixture = null,
+        public readonly ?string $brickFormat = null,
+        public readonly ?float $brickLengthMm = null,
+        public readonly ?float $brickWidthMm = null,
+        public readonly ?float $brickHeightMm = null,
+        public readonly ?float $jointThicknessMm = null,
+        public readonly ?string $wallThicknessType = null,
+        public readonly ?float $wallLengthM = null,
+        public readonly ?float $wallHeightM = null,
+        public readonly ?float $reservePercent = null,
+        public readonly ?bool $includeOpenings = null,
+        /** @var array<int, array<string, mixed>>|null */
+        public readonly ?array $windows = null,
+        /** @var array<int, array<string, mixed>>|null */
+        public readonly ?array $doors = null,
+        public readonly ?bool $includeGables = null,
+        /** @var array<int, array<string, mixed>>|null */
+        public readonly ?array $gables = null,
+        public readonly ?bool $includeMasonryMesh = null,
+        public readonly ?int $masonryMeshFrequencyRows = null,
+        public readonly ?bool $useCustomMortarProportions = null,
+        public readonly ?float $cementShare = null,
+        public readonly ?float $sandShare = null,
+        public readonly ?string $cementPurchaseUnit = null,
+        public readonly ?float $cementUnitWeightKg = null,
+        public readonly ?float $cementUnitPrice = null,
+        public readonly ?string $sandPurchaseUnit = null,
+        public readonly ?float $sandUnitWeightKg = null,
+        public readonly ?float $sandUnitPrice = null,
+        public readonly ?float $cementBagWeightKg = null,
+        public readonly ?float $brickWeightKg = null,
+        public readonly ?float $brickPricePerUnit = null,
+        public readonly ?float $cementBagPrice = null,
+        public readonly ?float $sandPricePerTonne = null
     ) {
         if ($this->mode === '') {
             throw new InvalidArgumentException('Field "mode" is required.');
