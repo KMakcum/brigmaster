@@ -6,8 +6,7 @@ return [
     'slug' => 'drywall',
     'name' => 'Drywall Calculator',
     'modes' => [
-        'normative',
-        'reserve',
-        'beginner',
+        'dimensions',
+        'area',
     ],
 ];

@@ -13,12 +13,6 @@ use Brigmaster\Domain\Calculator\SlabFoundationCalculator;
 use Brigmaster\Domain\Calculator\StripFoundationCalculator;
 use Brigmaster\Domain\Calculator\TileCalculator;
 use Brigmaster\Domain\DTO\EstimateInput;
-use Brigmaster\Domain\Strategy\DrywallBeginnerStrategy;
-use Brigmaster\Domain\Strategy\DrywallNormativeStrategy;
-use Brigmaster\Domain\Strategy\DrywallReserveStrategy;
-use Brigmaster\Domain\Strategy\TileBeginnerStrategy;
-use Brigmaster\Domain\Strategy\TileNormativeStrategy;
-use Brigmaster\Domain\Strategy\TileReserveStrategy;
 use InvalidArgumentException;
 
 final class CalculatorRegistry
@@ -38,14 +32,12 @@ final class CalculatorRegistry
                 EstimateInput::MODE_AREA => static fn (): CalculatorInterface => new BrickCalculator(),
             ],
             EstimateService::CALCULATOR_DRYWALL => [
-                EstimateInput::MODE_NORMATIVE => static fn (): CalculatorInterface => new DrywallCalculator(new DrywallNormativeStrategy()),
-                EstimateInput::MODE_RESERVE => static fn (): CalculatorInterface => new DrywallCalculator(new DrywallReserveStrategy()),
-                EstimateInput::MODE_BEGINNER => static fn (): CalculatorInterface => new DrywallCalculator(new DrywallBeginnerStrategy()),
+                EstimateInput::MODE_DIMENSIONS => static fn (): CalculatorInterface => new DrywallCalculator(),
+                EstimateInput::MODE_AREA => static fn (): CalculatorInterface => new DrywallCalculator(),
             ],
             EstimateService::CALCULATOR_TILE => [
-                EstimateInput::MODE_NORMATIVE => static fn (): CalculatorInterface => new TileCalculator(new TileNormativeStrategy()),
-                EstimateInput::MODE_RESERVE => static fn (): CalculatorInterface => new TileCalculator(new TileReserveStrategy()),
-                EstimateInput::MODE_BEGINNER => static fn (): CalculatorInterface => new TileCalculator(new TileBeginnerStrategy()),
+                EstimateInput::MODE_DIMENSIONS => static fn (): CalculatorInterface => new TileCalculator(),
+                EstimateInput::MODE_AREA => static fn (): CalculatorInterface => new TileCalculator(),
             ],
             EstimateService::CALCULATOR_SLAB_FOUNDATION => [
                 EstimateInput::MODE_DIMENSIONS => static fn (): CalculatorInterface => new SlabFoundationCalculator(),

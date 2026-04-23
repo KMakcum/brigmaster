@@ -22,10 +22,14 @@ final class EstimateController
         EstimateService::CALCULATOR_PILE_FOUNDATION,
     ];
 
-    private const ALLOWED_MODES = [
-        'normative',
-        'reserve',
-        'beginner',
+    private const ALLOWED_TILE_MODES = [
+        'dimensions',
+        'area',
+    ];
+
+    private const ALLOWED_DRYWALL_MODES = [
+        'dimensions',
+        'area',
     ];
 
     private const ALLOWED_BRICK_MODES = [
@@ -81,6 +85,27 @@ final class EstimateController
         'bag',
         'tonne',
     ];
+
+    private const ALLOWED_TILE_TARGETS = [
+        'floor',
+        'wall',
+    ];
+
+    private const ALLOWED_TILE_PATTERNS = [
+        'direct',
+        'offset',
+        'diagonal',
+    ];
+
+    private const ALLOWED_DRYWALL_TARGETS = [
+        'wall',
+        'ceiling',
+        'partition',
+    ];
+
+    private const ALLOWED_DRYWALL_PROFILE_WIDTHS = [50, 75, 100];
+    private const ALLOWED_DRYWALL_FRAME_STEPS = [400, 600];
+    private const ALLOWED_DRYWALL_LAYERS = [1, 2];
 
     /** @var array<int> */
     private const ALLOWED_REBAR_LAYERS = [1, 2];
@@ -182,6 +207,45 @@ final class EstimateController
         $brickPricePerUnitRaw = $request->get_param('brickPricePerUnit');
         $cementBagPriceRaw = $request->get_param('cementBagPrice');
         $sandPricePerTonneRaw = $request->get_param('sandPricePerTonne');
+        $tileTargetRaw = $request->get_param('tileTarget');
+        $tileLengthMmRaw = $request->get_param('tileLengthMm');
+        $tileWidthMmRaw = $request->get_param('tileWidthMm');
+        $tileThicknessMmRaw = $request->get_param('tileThicknessMm');
+        $tileJointMmRaw = $request->get_param('tileJointMm');
+        $tileLayingPatternRaw = $request->get_param('tileLayingPattern');
+        $tileOffsetPercentRaw = $request->get_param('tileOffsetPercent');
+        $tileIncludeOpeningsRaw = $request->get_param('tileIncludeOpenings');
+        $tileOpeningsRaw = $request->get_param('tileOpenings');
+        $tileIncludeCutoutsRaw = $request->get_param('tileIncludeCutouts');
+        $tileCutoutsRaw = $request->get_param('tileCutouts');
+        $tileIncludeAdhesiveRaw = $request->get_param('tileIncludeAdhesive');
+        $tileAdhesiveConsumptionKgPerM2Raw = $request->get_param('tileAdhesiveConsumptionKgPerM2');
+        $tileAdhesiveLayerMmRaw = $request->get_param('tileAdhesiveLayerMm');
+        $tileAdhesiveBagWeightKgRaw = $request->get_param('tileAdhesiveBagWeightKg');
+        $tileAdhesiveBagPriceRaw = $request->get_param('tileAdhesiveBagPrice');
+        $tileIncludeGroutRaw = $request->get_param('tileIncludeGrout');
+        $tileGroutDensityKgPerM3Raw = $request->get_param('tileGroutDensityKgPerM3');
+        $tileGroutPackWeightKgRaw = $request->get_param('tileGroutPackWeightKg');
+        $tileGroutPackPriceRaw = $request->get_param('tileGroutPackPrice');
+        $tilePricePerM2Raw = $request->get_param('tilePricePerM2');
+        $drywallTargetRaw = $request->get_param('drywallTarget');
+        $drywallSheetLengthMmRaw = $request->get_param('drywallSheetLengthMm');
+        $drywallSheetWidthMmRaw = $request->get_param('drywallSheetWidthMm');
+        $drywallSheetThicknessMmRaw = $request->get_param('drywallSheetThicknessMm');
+        $drywallLayersRaw = $request->get_param('drywallLayers');
+        $drywallFrameStepMmRaw = $request->get_param('drywallFrameStepMm');
+        $drywallProfileWidthMmRaw = $request->get_param('drywallProfileWidthMm');
+        $drywallFastenerReservePercentRaw = $request->get_param('drywallFastenerReservePercent');
+        $drywallIncludeEndCladdingRaw = $request->get_param('drywallIncludeEndCladding');
+        $drywallIncludeFinishingRaw = $request->get_param('drywallIncludeFinishing');
+        $drywallIncludeCostsRaw = $request->get_param('drywallIncludeCosts');
+        $drywallSheetPriceRaw = $request->get_param('drywallSheetPrice');
+        $drywallProfilePricePerLmRaw = $request->get_param('drywallProfilePricePerLm');
+        $drywallFastenerPricePer100Raw = $request->get_param('drywallFastenerPricePer100');
+        $drywallPrimerPricePerKgRaw = $request->get_param('drywallPrimerPricePerKg');
+        $drywallJointPuttyPricePerKgRaw = $request->get_param('drywallJointPuttyPricePerKg');
+        $drywallFinishPuttyPricePerKgRaw = $request->get_param('drywallFinishPuttyPricePerKg');
+        $drywallTapePricePerLmRaw = $request->get_param('drywallTapePricePerLm');
 
         $errors = $this->validateRequest(
             calculator: $calculatorRaw,
@@ -260,7 +324,46 @@ final class EstimateController
             brickWeightKg: $brickWeightKgRaw,
             brickPricePerUnit: $brickPricePerUnitRaw,
             cementBagPrice: $cementBagPriceRaw,
-            sandPricePerTonne: $sandPricePerTonneRaw
+            sandPricePerTonne: $sandPricePerTonneRaw,
+            tileTarget: $tileTargetRaw,
+            tileLengthMm: $tileLengthMmRaw,
+            tileWidthMm: $tileWidthMmRaw,
+            tileThicknessMm: $tileThicknessMmRaw,
+            tileJointMm: $tileJointMmRaw,
+            tileLayingPattern: $tileLayingPatternRaw,
+            tileOffsetPercent: $tileOffsetPercentRaw,
+            tileIncludeOpenings: $tileIncludeOpeningsRaw,
+            tileOpenings: $tileOpeningsRaw,
+            tileIncludeCutouts: $tileIncludeCutoutsRaw,
+            tileCutouts: $tileCutoutsRaw,
+            tileIncludeAdhesive: $tileIncludeAdhesiveRaw,
+            tileAdhesiveConsumptionKgPerM2: $tileAdhesiveConsumptionKgPerM2Raw,
+            tileAdhesiveLayerMm: $tileAdhesiveLayerMmRaw,
+            tileAdhesiveBagWeightKg: $tileAdhesiveBagWeightKgRaw,
+            tileAdhesiveBagPrice: $tileAdhesiveBagPriceRaw,
+            tileIncludeGrout: $tileIncludeGroutRaw,
+            tileGroutDensityKgPerM3: $tileGroutDensityKgPerM3Raw,
+            tileGroutPackWeightKg: $tileGroutPackWeightKgRaw,
+            tileGroutPackPrice: $tileGroutPackPriceRaw,
+            tilePricePerM2: $tilePricePerM2Raw,
+            drywallTarget: $drywallTargetRaw,
+            drywallSheetLengthMm: $drywallSheetLengthMmRaw,
+            drywallSheetWidthMm: $drywallSheetWidthMmRaw,
+            drywallSheetThicknessMm: $drywallSheetThicknessMmRaw,
+            drywallLayers: $drywallLayersRaw,
+            drywallFrameStepMm: $drywallFrameStepMmRaw,
+            drywallProfileWidthMm: $drywallProfileWidthMmRaw,
+            drywallFastenerReservePercent: $drywallFastenerReservePercentRaw,
+            drywallIncludeEndCladding: $drywallIncludeEndCladdingRaw,
+            drywallIncludeFinishing: $drywallIncludeFinishingRaw,
+            drywallIncludeCosts: $drywallIncludeCostsRaw,
+            drywallSheetPrice: $drywallSheetPriceRaw,
+            drywallProfilePricePerLm: $drywallProfilePricePerLmRaw,
+            drywallFastenerPricePer100: $drywallFastenerPricePer100Raw,
+            drywallPrimerPricePerKg: $drywallPrimerPricePerKgRaw,
+            drywallJointPuttyPricePerKg: $drywallJointPuttyPricePerKgRaw,
+            drywallFinishPuttyPricePerKg: $drywallFinishPuttyPricePerKgRaw,
+            drywallTapePricePerLm: $drywallTapePricePerLmRaw
         );
 
         if ($errors !== []) {
@@ -352,6 +455,45 @@ final class EstimateController
             $brickPricePerUnit = $this->isNumericValue($brickPricePerUnitRaw) ? (float) $brickPricePerUnitRaw : null;
             $cementBagPrice = $this->isNumericValue($cementBagPriceRaw) ? (float) $cementBagPriceRaw : null;
             $sandPricePerTonne = $this->isNumericValue($sandPricePerTonneRaw) ? (float) $sandPricePerTonneRaw : null;
+            $tileTarget = $this->isNonEmptyString($tileTargetRaw) ? (string) $tileTargetRaw : null;
+            $tileLengthMm = $this->isNumericValue($tileLengthMmRaw) ? (float) $tileLengthMmRaw : null;
+            $tileWidthMm = $this->isNumericValue($tileWidthMmRaw) ? (float) $tileWidthMmRaw : null;
+            $tileThicknessMm = $this->isNumericValue($tileThicknessMmRaw) ? (float) $tileThicknessMmRaw : null;
+            $tileJointMm = $this->isNumericValue($tileJointMmRaw) ? (float) $tileJointMmRaw : null;
+            $tileLayingPattern = $this->isNonEmptyString($tileLayingPatternRaw) ? (string) $tileLayingPatternRaw : null;
+            $tileOffsetPercent = $this->isNumericValue($tileOffsetPercentRaw) ? (float) $tileOffsetPercentRaw : null;
+            $tileIncludeOpenings = is_bool($tileIncludeOpeningsRaw) ? $tileIncludeOpeningsRaw : null;
+            $tileOpenings = is_array($tileOpeningsRaw) ? $tileOpeningsRaw : null;
+            $tileIncludeCutouts = is_bool($tileIncludeCutoutsRaw) ? $tileIncludeCutoutsRaw : null;
+            $tileCutouts = is_array($tileCutoutsRaw) ? $tileCutoutsRaw : null;
+            $tileIncludeAdhesive = is_bool($tileIncludeAdhesiveRaw) ? $tileIncludeAdhesiveRaw : null;
+            $tileAdhesiveConsumptionKgPerM2 = $this->isNumericValue($tileAdhesiveConsumptionKgPerM2Raw) ? (float) $tileAdhesiveConsumptionKgPerM2Raw : null;
+            $tileAdhesiveLayerMm = $this->isNumericValue($tileAdhesiveLayerMmRaw) ? (float) $tileAdhesiveLayerMmRaw : null;
+            $tileAdhesiveBagWeightKg = $this->isNumericValue($tileAdhesiveBagWeightKgRaw) ? (float) $tileAdhesiveBagWeightKgRaw : null;
+            $tileAdhesiveBagPrice = $this->isNumericValue($tileAdhesiveBagPriceRaw) ? (float) $tileAdhesiveBagPriceRaw : null;
+            $tileIncludeGrout = is_bool($tileIncludeGroutRaw) ? $tileIncludeGroutRaw : null;
+            $tileGroutDensityKgPerM3 = $this->isNumericValue($tileGroutDensityKgPerM3Raw) ? (float) $tileGroutDensityKgPerM3Raw : null;
+            $tileGroutPackWeightKg = $this->isNumericValue($tileGroutPackWeightKgRaw) ? (float) $tileGroutPackWeightKgRaw : null;
+            $tileGroutPackPrice = $this->isNumericValue($tileGroutPackPriceRaw) ? (float) $tileGroutPackPriceRaw : null;
+            $tilePricePerM2 = $this->isNumericValue($tilePricePerM2Raw) ? (float) $tilePricePerM2Raw : null;
+            $drywallTarget = $this->isNonEmptyString($drywallTargetRaw) ? (string) $drywallTargetRaw : null;
+            $drywallSheetLengthMm = $this->isNumericValue($drywallSheetLengthMmRaw) ? (float) $drywallSheetLengthMmRaw : null;
+            $drywallSheetWidthMm = $this->isNumericValue($drywallSheetWidthMmRaw) ? (float) $drywallSheetWidthMmRaw : null;
+            $drywallSheetThicknessMm = $this->isNumericValue($drywallSheetThicknessMmRaw) ? (float) $drywallSheetThicknessMmRaw : null;
+            $drywallLayers = $this->isNumericValue($drywallLayersRaw) ? (int) $drywallLayersRaw : null;
+            $drywallFrameStepMm = $this->isNumericValue($drywallFrameStepMmRaw) ? (float) $drywallFrameStepMmRaw : null;
+            $drywallProfileWidthMm = $this->isNumericValue($drywallProfileWidthMmRaw) ? (float) $drywallProfileWidthMmRaw : null;
+            $drywallFastenerReservePercent = $this->isNumericValue($drywallFastenerReservePercentRaw) ? (float) $drywallFastenerReservePercentRaw : null;
+            $drywallIncludeEndCladding = is_bool($drywallIncludeEndCladdingRaw) ? $drywallIncludeEndCladdingRaw : null;
+            $drywallIncludeFinishing = is_bool($drywallIncludeFinishingRaw) ? $drywallIncludeFinishingRaw : null;
+            $drywallIncludeCosts = is_bool($drywallIncludeCostsRaw) ? $drywallIncludeCostsRaw : null;
+            $drywallSheetPrice = $this->isNumericValue($drywallSheetPriceRaw) ? (float) $drywallSheetPriceRaw : null;
+            $drywallProfilePricePerLm = $this->isNumericValue($drywallProfilePricePerLmRaw) ? (float) $drywallProfilePricePerLmRaw : null;
+            $drywallFastenerPricePer100 = $this->isNumericValue($drywallFastenerPricePer100Raw) ? (float) $drywallFastenerPricePer100Raw : null;
+            $drywallPrimerPricePerKg = $this->isNumericValue($drywallPrimerPricePerKgRaw) ? (float) $drywallPrimerPricePerKgRaw : null;
+            $drywallJointPuttyPricePerKg = $this->isNumericValue($drywallJointPuttyPricePerKgRaw) ? (float) $drywallJointPuttyPricePerKgRaw : null;
+            $drywallFinishPuttyPricePerKg = $this->isNumericValue($drywallFinishPuttyPricePerKgRaw) ? (float) $drywallFinishPuttyPricePerKgRaw : null;
+            $drywallTapePricePerLm = $this->isNumericValue($drywallTapePricePerLmRaw) ? (float) $drywallTapePricePerLmRaw : null;
 
             $result = $this->estimateService->calculate(
                 calculator: $calculator,
@@ -430,7 +572,46 @@ final class EstimateController
                 brickWeightKg: $brickWeightKg,
                 brickPricePerUnit: $brickPricePerUnit,
                 cementBagPrice: $cementBagPrice,
-                sandPricePerTonne: $sandPricePerTonne
+                sandPricePerTonne: $sandPricePerTonne,
+                tileTarget: $tileTarget,
+                tileLengthMm: $tileLengthMm,
+                tileWidthMm: $tileWidthMm,
+                tileThicknessMm: $tileThicknessMm,
+                tileJointMm: $tileJointMm,
+                tileLayingPattern: $tileLayingPattern,
+                tileOffsetPercent: $tileOffsetPercent,
+                tileIncludeOpenings: $tileIncludeOpenings,
+                tileOpenings: $tileOpenings,
+                tileIncludeCutouts: $tileIncludeCutouts,
+                tileCutouts: $tileCutouts,
+                tileIncludeAdhesive: $tileIncludeAdhesive,
+                tileAdhesiveConsumptionKgPerM2: $tileAdhesiveConsumptionKgPerM2,
+                tileAdhesiveLayerMm: $tileAdhesiveLayerMm,
+                tileAdhesiveBagWeightKg: $tileAdhesiveBagWeightKg,
+                tileAdhesiveBagPrice: $tileAdhesiveBagPrice,
+                tileIncludeGrout: $tileIncludeGrout,
+                tileGroutDensityKgPerM3: $tileGroutDensityKgPerM3,
+                tileGroutPackWeightKg: $tileGroutPackWeightKg,
+                tileGroutPackPrice: $tileGroutPackPrice,
+                tilePricePerM2: $tilePricePerM2,
+                drywallTarget: $drywallTarget,
+                drywallSheetLengthMm: $drywallSheetLengthMm,
+                drywallSheetWidthMm: $drywallSheetWidthMm,
+                drywallSheetThicknessMm: $drywallSheetThicknessMm,
+                drywallLayers: $drywallLayers,
+                drywallFrameStepMm: $drywallFrameStepMm,
+                drywallProfileWidthMm: $drywallProfileWidthMm,
+                drywallFastenerReservePercent: $drywallFastenerReservePercent,
+                drywallIncludeEndCladding: $drywallIncludeEndCladding,
+                drywallIncludeFinishing: $drywallIncludeFinishing,
+                drywallIncludeCosts: $drywallIncludeCosts,
+                drywallSheetPrice: $drywallSheetPrice,
+                drywallProfilePricePerLm: $drywallProfilePricePerLm,
+                drywallFastenerPricePer100: $drywallFastenerPricePer100,
+                drywallPrimerPricePerKg: $drywallPrimerPricePerKg,
+                drywallJointPuttyPricePerKg: $drywallJointPuttyPricePerKg,
+                drywallFinishPuttyPricePerKg: $drywallFinishPuttyPricePerKg,
+                drywallTapePricePerLm: $drywallTapePricePerLm
             );
 
             $response = [
@@ -544,7 +725,46 @@ final class EstimateController
         mixed $brickWeightKg,
         mixed $brickPricePerUnit,
         mixed $cementBagPrice,
-        mixed $sandPricePerTonne
+        mixed $sandPricePerTonne,
+        mixed $tileTarget,
+        mixed $tileLengthMm,
+        mixed $tileWidthMm,
+        mixed $tileThicknessMm,
+        mixed $tileJointMm,
+        mixed $tileLayingPattern,
+        mixed $tileOffsetPercent,
+        mixed $tileIncludeOpenings,
+        mixed $tileOpenings,
+        mixed $tileIncludeCutouts,
+        mixed $tileCutouts,
+        mixed $tileIncludeAdhesive,
+        mixed $tileAdhesiveConsumptionKgPerM2,
+        mixed $tileAdhesiveLayerMm,
+        mixed $tileAdhesiveBagWeightKg,
+        mixed $tileAdhesiveBagPrice,
+        mixed $tileIncludeGrout,
+        mixed $tileGroutDensityKgPerM3,
+        mixed $tileGroutPackWeightKg,
+        mixed $tileGroutPackPrice,
+        mixed $tilePricePerM2,
+        mixed $drywallTarget,
+        mixed $drywallSheetLengthMm,
+        mixed $drywallSheetWidthMm,
+        mixed $drywallSheetThicknessMm,
+        mixed $drywallLayers,
+        mixed $drywallFrameStepMm,
+        mixed $drywallProfileWidthMm,
+        mixed $drywallFastenerReservePercent,
+        mixed $drywallIncludeEndCladding,
+        mixed $drywallIncludeFinishing,
+        mixed $drywallIncludeCosts,
+        mixed $drywallSheetPrice,
+        mixed $drywallProfilePricePerLm,
+        mixed $drywallFastenerPricePer100,
+        mixed $drywallPrimerPricePerKg,
+        mixed $drywallJointPuttyPricePerKg,
+        mixed $drywallFinishPuttyPricePerKg,
+        mixed $drywallTapePricePerLm
     ): array
     {
         $errors = [];
@@ -561,6 +781,14 @@ final class EstimateController
             if (!in_array($mode, self::ALLOWED_BRICK_MODES, true)) {
                 $errors['mode'][] = 'The mode field for brick must be one of: dimensions, area.';
             }
+        } elseif ($calculator === EstimateService::CALCULATOR_TILE) {
+            if (!in_array($mode, self::ALLOWED_TILE_MODES, true)) {
+                $errors['mode'][] = 'The mode field for tile must be one of: dimensions, area.';
+            }
+        } elseif ($calculator === EstimateService::CALCULATOR_DRYWALL) {
+            if (!in_array($mode, self::ALLOWED_DRYWALL_MODES, true)) {
+                $errors['mode'][] = 'The mode field for drywall must be one of: dimensions, area.';
+            }
         } elseif ($calculator === EstimateService::CALCULATOR_SLAB_FOUNDATION || $calculator === EstimateService::CALCULATOR_SCREED) {
             if (!in_array($mode, self::ALLOWED_SLAB_FOUNDATION_MODES, true)) {
                 $errors['mode'][] = sprintf('The mode field for %s must be one of: dimensions, area.', (string) $calculator);
@@ -573,8 +801,6 @@ final class EstimateController
             if (!in_array($mode, self::ALLOWED_PILE_FOUNDATION_MODES, true)) {
                 $errors['mode'][] = 'The mode field for pile_foundation must be one of: perimeter, house, segments.';
             }
-        } elseif (!in_array($mode, self::ALLOWED_MODES, true)) {
-            $errors['mode'][] = 'The mode field must be one of: normative, reserve, beginner.';
         }
 
         if ($calculator === EstimateService::CALCULATOR_BRICK) {
@@ -616,13 +842,69 @@ final class EstimateController
         }
 
         if ($calculator === EstimateService::CALCULATOR_DRYWALL) {
-            $this->validatePositiveNumericField($errors, 'area', $area, 'The area field is required and must be numeric for drywall.');
+            $this->validateDrywallPayload(
+                errors: $errors,
+                mode: $mode,
+                area: $area,
+                length: $length,
+                width: $width,
+                height: $height,
+                drywallTarget: $drywallTarget,
+                drywallSheetLengthMm: $drywallSheetLengthMm,
+                drywallSheetWidthMm: $drywallSheetWidthMm,
+                drywallSheetThicknessMm: $drywallSheetThicknessMm,
+                drywallLayers: $drywallLayers,
+                drywallFrameStepMm: $drywallFrameStepMm,
+                drywallProfileWidthMm: $drywallProfileWidthMm,
+                reservePercent: $reservePercent,
+                includeOpenings: $includeOpenings,
+                windows: $windows,
+                doors: $doors,
+                drywallFastenerReservePercent: $drywallFastenerReservePercent,
+                drywallIncludeEndCladding: $drywallIncludeEndCladding,
+                drywallIncludeFinishing: $drywallIncludeFinishing,
+                drywallIncludeCosts: $drywallIncludeCosts,
+                drywallSheetPrice: $drywallSheetPrice,
+                drywallProfilePricePerLm: $drywallProfilePricePerLm,
+                drywallFastenerPricePer100: $drywallFastenerPricePer100,
+                drywallPrimerPricePerKg: $drywallPrimerPricePerKg,
+                drywallJointPuttyPricePerKg: $drywallJointPuttyPricePerKg,
+                drywallFinishPuttyPricePerKg: $drywallFinishPuttyPricePerKg,
+                drywallTapePricePerLm: $drywallTapePricePerLm
+            );
         }
 
         if ($calculator === EstimateService::CALCULATOR_TILE) {
-            $this->validatePositiveNumericField($errors, 'area', $area, 'The area field is required and must be numeric for tile.');
-            $this->validatePositiveNumericField($errors, 'tileLengthCm', $tileLengthCm, 'The tileLengthCm field is required and must be numeric for tile.');
-            $this->validatePositiveNumericField($errors, 'tileWidthCm', $tileWidthCm, 'The tileWidthCm field is required and must be numeric for tile.');
+            $this->validateTilePayload(
+                errors: $errors,
+                mode: $mode,
+                area: $area,
+                length: $length,
+                width: $width,
+                height: $height,
+                tileTarget: $tileTarget,
+                tileLengthMm: $tileLengthMm,
+                tileWidthMm: $tileWidthMm,
+                tileThicknessMm: $tileThicknessMm,
+                tileJointMm: $tileJointMm,
+                tileLayingPattern: $tileLayingPattern,
+                tileOffsetPercent: $tileOffsetPercent,
+                reservePercent: $reservePercent,
+                tileIncludeOpenings: $tileIncludeOpenings,
+                tileOpenings: $tileOpenings,
+                tileIncludeCutouts: $tileIncludeCutouts,
+                tileCutouts: $tileCutouts,
+                tileIncludeAdhesive: $tileIncludeAdhesive,
+                tileAdhesiveConsumptionKgPerM2: $tileAdhesiveConsumptionKgPerM2,
+                tileAdhesiveLayerMm: $tileAdhesiveLayerMm,
+                tileAdhesiveBagWeightKg: $tileAdhesiveBagWeightKg,
+                tileAdhesiveBagPrice: $tileAdhesiveBagPrice,
+                tileIncludeGrout: $tileIncludeGrout,
+                tileGroutDensityKgPerM3: $tileGroutDensityKgPerM3,
+                tileGroutPackWeightKg: $tileGroutPackWeightKg,
+                tileGroutPackPrice: $tileGroutPackPrice,
+                tilePricePerM2: $tilePricePerM2
+            );
         }
 
         if ($calculator === EstimateService::CALCULATOR_SLAB_FOUNDATION) {
@@ -1027,6 +1309,281 @@ final class EstimateController
                 $errors[sprintf('%s.%d.count', $field, $index)][] = 'The count field must be an integer.';
             }
 
+        }
+    }
+
+    /**
+     * @param array<string, array<int, string>> $errors
+     */
+    private function validateDrywallPayload(
+        array &$errors,
+        mixed $mode,
+        mixed $area,
+        mixed $length,
+        mixed $width,
+        mixed $height,
+        mixed $drywallTarget,
+        mixed $drywallSheetLengthMm,
+        mixed $drywallSheetWidthMm,
+        mixed $drywallSheetThicknessMm,
+        mixed $drywallLayers,
+        mixed $drywallFrameStepMm,
+        mixed $drywallProfileWidthMm,
+        mixed $reservePercent,
+        mixed $includeOpenings,
+        mixed $windows,
+        mixed $doors,
+        mixed $drywallFastenerReservePercent,
+        mixed $drywallIncludeEndCladding,
+        mixed $drywallIncludeFinishing,
+        mixed $drywallIncludeCosts,
+        mixed $drywallSheetPrice,
+        mixed $drywallProfilePricePerLm,
+        mixed $drywallFastenerPricePer100,
+        mixed $drywallPrimerPricePerKg,
+        mixed $drywallJointPuttyPricePerKg,
+        mixed $drywallFinishPuttyPricePerKg,
+        mixed $drywallTapePricePerLm
+    ): void {
+        if (!$this->isNonEmptyString($drywallTarget) || !in_array((string) $drywallTarget, self::ALLOWED_DRYWALL_TARGETS, true)) {
+            $errors['drywallTarget'][] = 'The drywallTarget field must be one of: wall, ceiling, partition.';
+        }
+
+        if ($mode === EstimateInput::MODE_DIMENSIONS) {
+            if ($drywallTarget === 'ceiling') {
+                $this->validatePositiveNumericField($errors, 'length', $length, 'The length field is required and must be numeric for drywall ceilings in dimensions mode.');
+                $this->validatePositiveNumericField($errors, 'width', $width, 'The width field is required and must be numeric for drywall ceilings in dimensions mode.');
+            } else {
+                $this->validatePositiveNumericField($errors, 'length', $length, 'The length field is required and must be numeric for drywall in dimensions mode.');
+                $this->validatePositiveNumericField($errors, 'height', $height, 'The height field is required and must be numeric for drywall in dimensions mode.');
+            }
+        }
+
+        if ($mode === EstimateInput::MODE_AREA) {
+            $this->validatePositiveNumericField($errors, 'area', $area, 'The area field is required and must be numeric for drywall in area mode.');
+        }
+
+        $this->validatePositiveNumericField($errors, 'drywallSheetLengthMm', $drywallSheetLengthMm, 'The drywallSheetLengthMm field is required and must be numeric for drywall.');
+        $this->validatePositiveNumericField($errors, 'drywallSheetWidthMm', $drywallSheetWidthMm, 'The drywallSheetWidthMm field is required and must be numeric for drywall.');
+        $this->validatePositiveNumericField($errors, 'drywallSheetThicknessMm', $drywallSheetThicknessMm, 'The drywallSheetThicknessMm field is required and must be numeric for drywall.');
+        $this->validatePositiveNumericField($errors, 'reservePercent', $reservePercent, 'The reservePercent field is required and must be numeric for drywall.');
+        $this->validatePositiveNumericField($errors, 'drywallFastenerReservePercent', $drywallFastenerReservePercent, 'The drywallFastenerReservePercent field is required and must be numeric for drywall.');
+        $this->validateStrictBooleanField($errors, 'includeOpenings', $includeOpenings);
+        $this->validateStrictBooleanField($errors, 'drywallIncludeEndCladding', $drywallIncludeEndCladding);
+        $this->validateStrictBooleanField($errors, 'drywallIncludeFinishing', $drywallIncludeFinishing);
+        $this->validateStrictBooleanField($errors, 'drywallIncludeCosts', $drywallIncludeCosts);
+        $this->validateOptionalPositiveNumericField($errors, 'drywallSheetPrice', $drywallSheetPrice);
+        $this->validateOptionalPositiveNumericField($errors, 'drywallProfilePricePerLm', $drywallProfilePricePerLm);
+        $this->validateOptionalPositiveNumericField($errors, 'drywallFastenerPricePer100', $drywallFastenerPricePer100);
+        $this->validateOptionalPositiveNumericField($errors, 'drywallPrimerPricePerKg', $drywallPrimerPricePerKg);
+        $this->validateOptionalPositiveNumericField($errors, 'drywallJointPuttyPricePerKg', $drywallJointPuttyPricePerKg);
+        $this->validateOptionalPositiveNumericField($errors, 'drywallFinishPuttyPricePerKg', $drywallFinishPuttyPricePerKg);
+        $this->validateOptionalPositiveNumericField($errors, 'drywallTapePricePerLm', $drywallTapePricePerLm);
+
+        if ($this->isNumericValue($drywallLayers) && !in_array((int) $drywallLayers, self::ALLOWED_DRYWALL_LAYERS, true)) {
+            $errors['drywallLayers'][] = 'The drywallLayers field must be one of: 1, 2.';
+        } elseif (!$this->isNumericValue($drywallLayers)) {
+            $errors['drywallLayers'][] = 'The drywallLayers field is required and must be numeric.';
+        }
+
+        if ($this->isNumericValue($drywallFrameStepMm) && !in_array((int) $drywallFrameStepMm, self::ALLOWED_DRYWALL_FRAME_STEPS, true)) {
+            $errors['drywallFrameStepMm'][] = 'The drywallFrameStepMm field must be one of: 400, 600.';
+        } elseif (!$this->isNumericValue($drywallFrameStepMm)) {
+            $errors['drywallFrameStepMm'][] = 'The drywallFrameStepMm field is required and must be numeric.';
+        }
+
+        if ($drywallTarget === 'partition') {
+            if ($this->isNumericValue($drywallProfileWidthMm) && !in_array((int) $drywallProfileWidthMm, self::ALLOWED_DRYWALL_PROFILE_WIDTHS, true)) {
+                $errors['drywallProfileWidthMm'][] = 'The drywallProfileWidthMm field must be one of: 50, 75, 100.';
+            } elseif (!$this->isNumericValue($drywallProfileWidthMm)) {
+                $errors['drywallProfileWidthMm'][] = 'The drywallProfileWidthMm field is required for partitions.';
+            }
+        }
+
+        if ($drywallTarget !== 'ceiling' && is_bool($includeOpenings) && $includeOpenings) {
+            $this->validateBrickElements($errors, 'windows', $windows, 'window');
+            $this->validateBrickElements($errors, 'doors', $doors, 'door');
+        }
+    }
+
+    /**
+     * @param array<string, array<int, string>> $errors
+     */
+    private function validateTilePayload(
+        array &$errors,
+        mixed $mode,
+        mixed $area,
+        mixed $length,
+        mixed $width,
+        mixed $height,
+        mixed $tileTarget,
+        mixed $tileLengthMm,
+        mixed $tileWidthMm,
+        mixed $tileThicknessMm,
+        mixed $tileJointMm,
+        mixed $tileLayingPattern,
+        mixed $tileOffsetPercent,
+        mixed $reservePercent,
+        mixed $tileIncludeOpenings,
+        mixed $tileOpenings,
+        mixed $tileIncludeCutouts,
+        mixed $tileCutouts,
+        mixed $tileIncludeAdhesive,
+        mixed $tileAdhesiveConsumptionKgPerM2,
+        mixed $tileAdhesiveLayerMm,
+        mixed $tileAdhesiveBagWeightKg,
+        mixed $tileAdhesiveBagPrice,
+        mixed $tileIncludeGrout,
+        mixed $tileGroutDensityKgPerM3,
+        mixed $tileGroutPackWeightKg,
+        mixed $tileGroutPackPrice,
+        mixed $tilePricePerM2
+    ): void {
+        if (!$this->isNonEmptyString($tileTarget) || !in_array((string) $tileTarget, self::ALLOWED_TILE_TARGETS, true)) {
+            $errors['tileTarget'][] = 'The tileTarget field must be one of: floor, wall.';
+        }
+
+        if (!$this->isNonEmptyString($tileLayingPattern) || !in_array((string) $tileLayingPattern, self::ALLOWED_TILE_PATTERNS, true)) {
+            $errors['tileLayingPattern'][] = 'The tileLayingPattern field must be one of: direct, offset, diagonal.';
+        }
+
+        if ($mode === EstimateInput::MODE_DIMENSIONS) {
+            $this->validatePositiveNumericField($errors, 'length', $length, 'The length field is required and must be numeric for tile in dimensions mode.');
+            $this->validatePositiveNumericField($errors, 'width', $width, 'The width field is required and must be numeric for tile in dimensions mode.');
+            if ($tileTarget === 'wall') {
+                $this->validatePositiveNumericField($errors, 'height', $height, 'The height field is required and must be numeric for tile walls in dimensions mode.');
+            }
+        }
+
+        if ($mode === EstimateInput::MODE_AREA) {
+            $this->validatePositiveNumericField($errors, 'area', $area, 'The area field is required and must be numeric for tile in area mode.');
+        }
+
+        $this->validatePositiveNumericField($errors, 'tileLengthMm', $tileLengthMm, 'The tileLengthMm field is required and must be numeric for tile.');
+        $this->validatePositiveNumericField($errors, 'tileWidthMm', $tileWidthMm, 'The tileWidthMm field is required and must be numeric for tile.');
+        $this->validateOptionalPositiveNumericField($errors, 'tileThicknessMm', $tileThicknessMm);
+        $this->validateOptionalPositiveNumericField($errors, 'tileJointMm', $tileJointMm);
+        $this->validateOptionalPositiveNumericField($errors, 'tileOffsetPercent', $tileOffsetPercent);
+        $this->validateOptionalPositiveNumericField($errors, 'reservePercent', $reservePercent);
+        $this->validateOptionalPositiveNumericField($errors, 'tilePricePerM2', $tilePricePerM2);
+        $this->validateStrictBooleanField($errors, 'tileIncludeOpenings', $tileIncludeOpenings);
+        $this->validateStrictBooleanField($errors, 'tileIncludeCutouts', $tileIncludeCutouts);
+        $this->validateStrictBooleanField($errors, 'tileIncludeAdhesive', $tileIncludeAdhesive);
+        $this->validateStrictBooleanField($errors, 'tileIncludeGrout', $tileIncludeGrout);
+
+        if ($tileLayingPattern === 'offset') {
+            $this->validateOptionalPositiveNumericField($errors, 'tileOffsetPercent', $tileOffsetPercent);
+        }
+
+        if ($tileTarget === 'wall' && is_bool($tileIncludeOpenings) && $tileIncludeOpenings) {
+            $this->validateTileOpenings($errors, 'tileOpenings', $tileOpenings);
+        }
+
+        if (is_bool($tileIncludeCutouts) && $tileIncludeCutouts) {
+            $this->validateTileCutouts($errors, 'tileCutouts', $tileCutouts);
+        }
+
+        if (is_bool($tileIncludeAdhesive) && $tileIncludeAdhesive) {
+            $this->validateOptionalPositiveNumericField($errors, 'tileAdhesiveConsumptionKgPerM2', $tileAdhesiveConsumptionKgPerM2);
+            $this->validateOptionalPositiveNumericField($errors, 'tileAdhesiveLayerMm', $tileAdhesiveLayerMm);
+            $this->validateOptionalPositiveNumericField($errors, 'tileAdhesiveBagWeightKg', $tileAdhesiveBagWeightKg);
+            $this->validateOptionalPositiveNumericField($errors, 'tileAdhesiveBagPrice', $tileAdhesiveBagPrice);
+        }
+
+        if (is_bool($tileIncludeGrout) && $tileIncludeGrout) {
+            $this->validateOptionalPositiveNumericField($errors, 'tileGroutDensityKgPerM3', $tileGroutDensityKgPerM3);
+            $this->validateOptionalPositiveNumericField($errors, 'tileGroutPackWeightKg', $tileGroutPackWeightKg);
+            $this->validateOptionalPositiveNumericField($errors, 'tileGroutPackPrice', $tileGroutPackPrice);
+        }
+    }
+
+    /**
+     * @param array<string, array<int, string>> $errors
+     */
+    private function validateTileOpenings(array &$errors, string $field, mixed $items): void
+    {
+        if (!is_array($items) || $items === []) {
+            $errors[$field][] = sprintf('The %s field must contain at least one opening.', $field);
+            return;
+        }
+
+        foreach ($items as $index => $item) {
+            if (!is_array($item)) {
+                $errors[$field][] = sprintf('The %s[%d] value must be an object.', $field, $index);
+                continue;
+            }
+
+            $this->validatePositiveNumericField(
+                $errors,
+                sprintf('%s.%d.widthM', $field, $index),
+                $item['widthM'] ?? null,
+                sprintf('The widthM field is required in %s[%d].', $field, $index)
+            );
+            $this->validatePositiveNumericField(
+                $errors,
+                sprintf('%s.%d.heightM', $field, $index),
+                $item['heightM'] ?? null,
+                sprintf('The heightM field is required in %s[%d].', $field, $index)
+            );
+            $this->validatePositiveNumericField(
+                $errors,
+                sprintf('%s.%d.count', $field, $index),
+                $item['count'] ?? null,
+                sprintf('The count field is required in %s[%d].', $field, $index)
+            );
+        }
+    }
+
+    /**
+     * @param array<string, array<int, string>> $errors
+     */
+    private function validateTileCutouts(array &$errors, string $field, mixed $items): void
+    {
+        if (!is_array($items) || $items === []) {
+            $errors[$field][] = sprintf('The %s field must contain at least one cutout.', $field);
+            return;
+        }
+
+        foreach ($items as $index => $item) {
+            if (!is_array($item)) {
+                $errors[$field][] = sprintf('The %s[%d] value must be an object.', $field, $index);
+                continue;
+            }
+
+            $shape = $item['shape'] ?? null;
+            if (!$this->isNonEmptyString($shape) || !in_array((string) $shape, ['circle', 'rect'], true)) {
+                $errors[sprintf('%s.%d.shape', $field, $index)][] = 'The shape field must be one of: circle, rect.';
+            }
+
+            $this->validatePositiveNumericField(
+                $errors,
+                sprintf('%s.%d.count', $field, $index),
+                $item['count'] ?? null,
+                sprintf('The count field is required in %s[%d].', $field, $index)
+            );
+
+            if ($shape === 'circle') {
+                $this->validatePositiveNumericField(
+                    $errors,
+                    sprintf('%s.%d.diameterMm', $field, $index),
+                    $item['diameterMm'] ?? null,
+                    sprintf('The diameterMm field is required in %s[%d].', $field, $index)
+                );
+                continue;
+            }
+
+            $this->validatePositiveNumericField(
+                $errors,
+                sprintf('%s.%d.widthMm', $field, $index),
+                $item['widthMm'] ?? null,
+                sprintf('The widthMm field is required in %s[%d].', $field, $index)
+            );
+            $this->validatePositiveNumericField(
+                $errors,
+                sprintf('%s.%d.heightMm', $field, $index),
+                $item['heightMm'] ?? null,
+                sprintf('The heightMm field is required in %s[%d].', $field, $index)
+            );
         }
     }
 

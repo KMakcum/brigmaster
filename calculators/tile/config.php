@@ -6,12 +6,12 @@ return [
     'slug' => 'tile',
     'name' => 'Tile Calculator',
     'modes' => [
-        'normative',
-        'reserve',
-        'beginner',
+        'dimensions',
+        'area',
     ],
     'requires' => [
-        'tileLengthCm',
-        'tileWidthCm',
+        'tileTarget',
+        'tileLengthMm',
+        'tileWidthMm',
     ],
 ];

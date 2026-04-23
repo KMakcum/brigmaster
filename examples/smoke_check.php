@@ -102,26 +102,40 @@ $runSuccessCase(
 );
 
 $runSuccessCase(
-    'drywall normative works',
-    10.00,
-    10.50,
+    'drywall dimensions works',
+    16.20,
+    5.94,
     static fn () => $service->calculate(
         calculator: 'drywall',
-        mode: 'normative',
-        area: 10.0
+        mode: 'dimensions',
+        drywallTarget: 'wall',
+        length: 6.0,
+        height: 2.7,
+        drywallSheetLengthMm: 2500.0,
+        drywallSheetWidthMm: 1200.0,
+        drywallSheetThicknessMm: 12.5,
+        drywallLayers: 1,
+        drywallFrameStepMm: 600.0,
+        reservePercent: 10.0,
+        drywallFastenerReservePercent: 10.0
     )
 );
 
 $runSuccessCase(
-    'tile normative works',
+    'tile area works',
     10.00,
-    111.11,
+    115.13,
     static fn () => $service->calculate(
         calculator: 'tile',
-        mode: 'normative',
+        mode: 'area',
         area: 10.0,
-        tileLengthCm: 30.0,
-        tileWidthCm: 30.0
+        tileTarget: 'floor',
+        tileLengthMm: 300.0,
+        tileWidthMm: 300.0,
+        tileThicknessMm: 9.0,
+        tileJointMm: 2.0,
+        tileLayingPattern: 'direct',
+        reservePercent: 5.0
     )
 );
 
