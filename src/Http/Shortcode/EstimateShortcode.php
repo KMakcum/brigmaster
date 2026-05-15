@@ -72,8 +72,8 @@ final class EstimateShortcode
 
     public function renderFoundationHubShortcode(array $attributes = [], ?string $content = null, string $shortcodeTag = ''): string
     {
-        if (wp_style_is('constructly-core-hub', 'registered')) {
-            wp_enqueue_style('constructly-core-hub');
+        if (wp_style_is('bm-core-hub', 'registered')) {
+            wp_enqueue_style('bm-core-hub');
         }
 
         return (string) apply_filters('constructly_render_foundation_hub', '');
@@ -162,7 +162,7 @@ final class EstimateShortcode
             return '';
         }
 
-        $this->enqueueAssets();
+        $this->enqueueAssets($calculator);
 
         $heading = trim($title);
 
@@ -2267,19 +2267,41 @@ final class EstimateShortcode
             . '</svg></span>';
     }
 
-    private function enqueueAssets(): void
+    private function enqueueAssets(string $calculator): void
     {
-        $scriptHandle = 'brigmaster-estimate-form';
-        $assetVersion = '1.3.0';
         $baseUrl = plugin_dir_url($this->pluginFilePath);
+        $basePath = plugin_dir_path($this->pluginFilePath);
+        $calculatorEntryMap = [
+            'slab_foundation' => 'slab',
+            'strip_foundation' => 'strip',
+            'pile_foundation' => 'pile',
+            'brick' => 'brick',
+            'screed' => 'screed',
+            'drywall' => 'drywall',
+            'tile' => 'tile',
+        ];
+        $entryName = $calculatorEntryMap[$calculator] ?? null;
+        if (!is_string($entryName) || $entryName === '') {
+            return;
+        }
+
+        $scriptRelativePath = 'assets/dist/calculators/' . $entryName . '.js';
+        $scriptAbsolutePath = $basePath . $scriptRelativePath;
+        if (!file_exists($scriptAbsolutePath)) {
+            return;
+        }
+        $scriptHandle = 'brigmaster-estimate-form-' . $entryName;
+        $assetVersion = (string) filemtime($scriptAbsolutePath);
 
         wp_register_script(
             $scriptHandle,
-            $baseUrl . 'assets/js/estimate-form.js',
+            $baseUrl . $scriptRelativePath,
             [],
             $assetVersion,
             true
         );
+        wp_script_add_data($scriptHandle, 'type', 'module');
+        add_filter('script_loader_tag', [$this, 'renderEstimateModuleScriptTag'], 10, 3);
 
         $metrika = $this->getYandexMetrikaFrontendConfig();
 
@@ -2297,58 +2319,40 @@ final class EstimateShortcode
         wp_enqueue_script($scriptHandle);
     }
 
+    public function renderEstimateModuleScriptTag(string $tag, string $handle, string $src): string
+    {
+        if (!str_starts_with($handle, 'brigmaster-estimate-form-')) {
+            return $tag;
+        }
+
+        return '<script type="module" src="' . esc_url($src) . '" id="' . esc_attr($handle) . '-js"></script>' . "\n";
+    }
+
     /**
-     * Yandex Metrika reachGoal is enabled only on production host and when counter ID is set.
-     * Counter ID resolution: wp-config constant → official plugin option yam_options → filter.
+     * Yandex Metrika reachGoal when production (child theme {@see constructly_is_production_site()} if present)
+     * and {@see BRIGMASTER_YANDEX_METRIKA_COUNTER_ID} is set. Counter ID: wp-config constant + filter.
      *
      * @return array{counterId: int, enabled: bool}
      */
     private function getYandexMetrikaFrontendConfig(): array
     {
-        $host = wp_parse_url(home_url(), PHP_URL_HOST);
-        $host = is_string($host) ? strtolower($host) : '';
-        $productionHosts = ['brigmaster.ru', 'www.brigmaster.ru'];
-        $isProductionHost = in_array($host, $productionHosts, true);
+        $isProduction = function_exists('constructly_is_production_site')
+            ? constructly_is_production_site()
+            : wp_get_environment_type() === 'production';
+        $isProduction = (bool) apply_filters('brigmaster_is_production_for_yandex_goals', $isProduction);
 
         $counterId = 0;
         if (defined('BRIGMASTER_YANDEX_METRIKA_COUNTER_ID')) {
             $counterId = (int) BRIGMASTER_YANDEX_METRIKA_COUNTER_ID;
         }
 
-        if ($counterId <= 0) {
-            $counterId = $this->resolveYandexMetrikaCounterIdFromYamPluginOptions();
-        }
-
         $counterId = (int) apply_filters('brigmaster_yandex_metrika_counter_id', $counterId);
 
-        $enabled = $isProductionHost && $counterId > 0;
+        $enabled = $isProduction && $counterId > 0;
 
         return [
             'counterId' => $enabled ? $counterId : 0,
             'enabled' => $enabled,
         ];
-    }
-
-    /**
-     * Reads first valid tag number from Yandex.Metrica WordPress plugin (wp-yandex-metrika) option yam_options.
-     */
-    private function resolveYandexMetrikaCounterIdFromYamPluginOptions(): int
-    {
-        $options = get_option('yam_options', null);
-        if (!is_array($options) || empty($options['counters']) || !is_array($options['counters'])) {
-            return 0;
-        }
-
-        foreach ($options['counters'] as $row) {
-            if (!is_array($row)) {
-                continue;
-            }
-            $number = isset($row['number']) ? trim((string) $row['number']) : '';
-            if ($number !== '' && preg_match('/^\d+$/', $number) === 1) {
-                return (int) $number;
-            }
-        }
-
-        return 0;
     }
 }
