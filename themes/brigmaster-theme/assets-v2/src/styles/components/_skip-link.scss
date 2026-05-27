@@ -1,0 +1,21 @@
+@use '../abstracts/mixins' as mixins;
+
+.bm-skip-link {
+  @include mixins.interactive-transition;
+
+  position: absolute;
+  top: 0;
+  left: var(--bm-space-4);
+  transform: translateY(-120%);
+  z-index: var(--bm-z-toast);
+  padding: var(--bm-space-2) var(--bm-space-4);
+  border-radius: var(--bm-radius-md);
+  color: var(--bm-color-surface);
+  background: var(--bm-color-brand);
+  font-size: var(--bm-text-sm);
+  font-weight: var(--bm-font-medium);
+}
+
+.bm-skip-link:focus {
+  transform: translateY(var(--bm-space-2));
+}

@@ -1,0 +1,33 @@
+<article class="bm-card bm-card-article">
+  <a class="bm-card-article__link" href="{{href}}" aria-label="{{title}}">
+    <div class="bm-card-article__media">
+      <img
+        src="{{image}}"
+        alt="{{imageAlt}}"
+        width="400"
+        height="240"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <div class="bm-card-article__body">
+      <span class="bm-chip bm-chip--category">{{tag}}</span>
+      <h3 class="bm-card-article__title">{{title}}</h3>
+      <p class="bm-card-article__excerpt">{{excerpt}}</p>
+      <div class="bm-card-article__meta">
+        <span class="bm-card-article__meta-item">
+          <svg class="bm-icon bm-card-article__meta-icon" aria-hidden="true">
+            <use href="#bm-icon-clock" />
+          </svg>
+          <span>{{readTime}}</span>
+        </span>
+        <span class="bm-card-article__meta-item">
+          <svg class="bm-icon bm-card-article__meta-icon" aria-hidden="true">
+            <use href="#bm-icon-calendar" />
+          </svg>
+          <span>{{date}}</span>
+        </span>
+      </div>
+    </div>
+  </a>
+</article>

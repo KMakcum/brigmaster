@@ -1,0 +1,22 @@
+.bm-articles-strip__track {
+  display: grid;
+  gap: var(--bm-space-4);
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(16rem, 18rem);
+  overflow-x: auto;
+  padding-bottom: var(--bm-space-2);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bm-articles-strip__track > .bm-card-article {
+  scroll-snap-align: start;
+}
+
+.bm-articles-strip__footer {
+  margin-top: var(--bm-space-6);
+}
+
+.bm-articles-strip__footer a {
+  font-weight: var(--bm-font-medium);
+}

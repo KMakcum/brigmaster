@@ -1,0 +1,36 @@
+// Color tokens. Source of truth: docs/design/NEW_DESIGN_SYSTEM.md (section 2).
+// Visual reference: docs/design/palette-preview.html.
+
+:root {
+  // Brand
+  --bm-color-brand: #5b7c99;
+  --bm-color-brand-hover: #4a6a85;
+  --bm-color-brand-active: #3f576c;
+  --bm-color-brand-emphasis: #4a7fb0;
+  --bm-color-brand-soft: #f1f5f9;
+
+  // Text
+  --bm-color-text-strong: #1e293b;
+  --bm-color-text: #374151;
+  --bm-color-text-muted: #6b7280;
+  --bm-color-text-placeholder: #9ca3af;
+
+  // Borders + surfaces
+  --bm-color-border: #e5e7eb;
+  --bm-color-border-strong: #d1d5db;
+  --bm-color-surface: #fff;
+  --bm-color-surface-muted: #f9fafb;
+  --bm-color-bg: #f4f6fa;
+
+  // Dark CTA
+  --bm-color-cta-dark: #2d3e57;
+  --bm-color-cta-dark-text-muted: rgb(255 255 255 / 0.72);
+
+  // Status
+  --bm-color-success: #10b981;
+  --bm-color-success-soft: #d1fae5;
+  --bm-color-warning: #f59e0b;
+  --bm-color-warning-soft: #fef3c7;
+  --bm-color-danger: #ef4444;
+  --bm-color-danger-soft: #fee2e2;
+}

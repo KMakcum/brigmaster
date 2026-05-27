@@ -1,0 +1,122 @@
+@use '../abstracts/media' as media;
+
+.bm-prose {
+  font-size: var(--bm-text-base);
+  line-height: 1.6;
+  color: var(--bm-color-text);
+  overflow-x: clip;
+}
+
+.bm-prose > :first-child {
+  margin-top: 0;
+}
+
+.bm-prose :where(h2, h3, h4) {
+  margin: var(--bm-space-10) 0 var(--bm-space-4);
+  font-weight: var(--bm-font-semibold);
+  line-height: 1.25;
+  color: var(--bm-color-text-strong);
+  scroll-margin-top: calc(var(--bm-header-height) + var(--bm-space-4));
+}
+
+.bm-prose :where(h2) {
+  font-size: var(--bm-text-xl);
+}
+
+.bm-prose :where(h3) {
+  font-size: var(--bm-text-lg);
+}
+
+.bm-prose :where(h4) {
+  font-size: var(--bm-text-md);
+}
+
+.bm-prose :where(p) {
+  margin: 0 0 var(--bm-space-4);
+}
+
+.bm-prose :where(ul, ol) {
+  margin: 0 0 var(--bm-space-4);
+  padding-left: 1.25rem;
+}
+
+.bm-prose :where(li + li) {
+  margin-top: var(--bm-space-2);
+}
+
+.bm-prose :where(a) {
+  color: var(--bm-color-brand-emphasis);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.bm-prose :where(a:hover) {
+  color: var(--bm-color-brand);
+}
+
+// Table layout must stay `display: table`; scroll lives on the wrapper (or page overflows).
+.bm-prose :where(table) {
+  width: max-content;
+  min-width: 100%;
+  margin: 0 0 var(--bm-space-6);
+  border-collapse: collapse;
+  font-size: var(--bm-text-sm);
+}
+
+.bm-prose__table-scroll {
+  margin: 0 0 var(--bm-space-6);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bm-prose__table-scroll > table {
+  margin: 0;
+}
+
+.bm-prose :where(th, td) {
+  padding: var(--bm-space-3) var(--bm-space-4);
+  border: 1px solid var(--bm-color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.bm-prose :where(th) {
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+  background: var(--bm-color-surface-muted);
+}
+
+.bm-prose :where(blockquote) {
+  margin: 0 0 var(--bm-space-6);
+  padding: var(--bm-space-4) var(--bm-space-5);
+  border-left: 3px solid var(--bm-color-brand);
+  border-radius: 0 var(--bm-radius-md) var(--bm-radius-md) 0;
+  color: var(--bm-color-text-muted);
+  background: var(--bm-color-brand-soft);
+}
+
+.bm-prose :where(img, figure) {
+  max-width: 100%;
+  margin: 0 0 var(--bm-space-6);
+}
+
+.bm-prose :where(figcaption) {
+  margin-top: var(--bm-space-2);
+  font-size: var(--bm-text-sm);
+  color: var(--bm-color-text-muted);
+}
+
+.bm-prose :where(pre) {
+  overflow-x: auto;
+  margin: 0 0 var(--bm-space-6);
+  padding: var(--bm-space-4);
+  border-radius: var(--bm-radius-md);
+  font-size: var(--bm-text-sm);
+  background: var(--bm-color-surface-muted);
+}
+
+.bm-prose :where(hr) {
+  margin: var(--bm-space-8) 0;
+  border: 0;
+  border-top: 1px solid var(--bm-color-border);
+}

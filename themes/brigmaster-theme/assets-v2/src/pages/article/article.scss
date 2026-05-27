@@ -1,0 +1,27 @@
+@use '../../styles/components/page-hero';
+@use '../../styles/components/hero';
+@use '../../styles/components/meta';
+@use '../../styles/components/content-layout';
+@use '../../styles/components/toc';
+@use '../../styles/components/prose';
+@use '../../styles/components/article-criteria';
+@use '../../styles/components/article-mistakes';
+@use '../../styles/components/info-block';
+@use '../../styles/components/card';
+@use '../../styles/components/card-grid';
+@use '../../styles/components/card-calculator';
+@use '../../styles/components/faq-grid';
+@use '../../styles/components/accordion';
+@use '../../styles/components/article-feedback';
+@use '../../styles/components/sidebar-card';
+@use '../../styles/components/card-popular-article';
+@use '../../styles/components/button';
+@use '../../styles/components/link';
+@use '../../styles/components/chip';
+@use '../../styles/abstracts/media' as media;
+
+@include media.bp(lg) {
+  .bm-prose .bm-faq-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

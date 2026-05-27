@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>О проекте Brigmaster — Brigmaster</title>
+    <script type="module" src="./about.js"></script>
+  </head>
+  <body>
+    <a class="bm-skip-link" href="#main">Перейти к содержимому</a>
+    <header class="bm-header" data-bm-component="header-menu">
+      <div class="bm-container bm-header__row">
+        <a href="/" class="bm-header__brand">
+          <img
+            class="bm-header__logo"
+            src="../../images/logo_header.png"
+            width="168"
+            height="40"
+            alt="Brigmaster"
+          />
+        </a>
+        <button
+          type="button"
+          class="bm-header__toggle"
+          aria-expanded="false"
+          aria-controls="bm-header-panel"
+          aria-label="Открыть меню"
+        >
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+        </button>
+        <div id="bm-header-panel" class="bm-header__panel">
+          <nav class="bm-nav-primary" aria-label="Primary" data-bm-component="nav-dropdown">
+            <ul id="primary-navigation" class="menu">
+              <li class="menu-item menu-item-has-children">
+                <a href="/kalkulyatory/">Калькуляторы</a>
+                <ul class="sub-menu">
+                  <li class="menu-item menu-item-has-children">
+                    <a href="/kalkulyatory/fundament/">Фундаменты</a>
+                    <ul class="sub-menu">
+                      <li class="menu-item"><a href="#">Плитный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Ленточный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Свайно-ростверковый фундамент</a></li>
+                      <li class="menu-item"><a href="#">Столбчатый фундамент</a></li>
+                    </ul>
+                  </li>
+                  <li class="menu-item"><a href="#">Стяжка</a></li>
+                  <li class="menu-item"><a href="#">Стены</a></li>
+                  <li class="menu-item"><a href="#">Пол</a></li>
+                  <li class="menu-item"><a href="#">Кровля</a></li>
+                  <li class="menu-item"><a href="#">Отделка</a></li>
+                </ul>
+              </li>
+              <li class="menu-item menu-item--disabled">
+                <span class="bm-nav-primary__label">Проекты <span class="bm-badge">скоро</span></span>
+              </li>
+              <li class="menu-item"><a href="/materialy/">Материалы</a></li>
+              <li class="menu-item"><a href="/stati/">Статьи</a></li>
+              <li class="menu-item"><a href="/o-proekte/">О проекте</a></li>
+            </ul>
+          </nav>
+          <div class="bm-header__actions">
+            <a href="/kalkulyatory/" class="bm-button bm-button--primary">Открыть калькуляторы</a>
+            <a href="#" class="bm-button bm-button--ghost">Войти</a>
+          </div>
+        </div>
+      </div>
+      <div class="bm-header__overlay" aria-hidden="true"></div>
+    </header>
+
+    <main id="main">
+      <section class="bm-page-hero" aria-labelledby="about-hero-title">
+        <img
+          class="bm-page-hero__image"
+          src="../../images/illustrations/hero-about.jpg"
+          alt=""
+          loading="eager"
+          decoding="async"
+        />
+        <div class="bm-container bm-page-hero__container">
+          <nav
+            class="bm-breadcrumbs bm-breadcrumbs--chevron bm-breadcrumbs--link-brand bm-page-hero__breadcrumbs"
+            aria-label="Хлебные крошки"
+          >
+            <ol class="bm-breadcrumbs__list">
+              <li class="bm-breadcrumbs__item"><a href="/">Главная</a></li>
+              <li class="bm-breadcrumbs__item" aria-current="page">О проекте</li>
+            </ol>
+          </nav>
+          <div class="bm-hero">
+            <h1 id="about-hero-title" class="bm-hero__title">О проекте Brigmaster</h1>
+            <p class="bm-hero__lead">
+              Мы создаём понятные и точные инструменты для расчётов в строительстве и ремонте.
+            </p>
+            <p class="bm-about-hero__text">
+              Brigmaster — это онлайн-платформа строительных калькуляторов и информационных
+              материалов, где каждый пользователь и профессионал найдёт полезные инструменты и
+              рекомендации.
+            </p>
+            <p class="bm-about-hero__text">
+              Наша цель — помочь вам принимать обоснованные решения, избегать ошибок и экономить
+              время на каждом этапе строительства.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section" aria-labelledby="about-mission-title">
+        <div class="bm-container">
+          <div class="bm-section-toolbar">
+            <div class="bm-section-toolbar__main">
+              <h2 id="about-mission-title" class="bm-section-toolbar__title">Наша миссия</h2>
+            </div>
+          </div>
+          <div class="bm-card-grid bm-card-grid--cols-3">
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-card-feature__icon-svg">
+                  <use href="#bm-icon-shield-check" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Доступность</h3>
+                <p class="bm-card-feature__text">
+                  Делаем сложные расчёты простыми и понятными для каждого.
+                </p>
+              </div>
+            </article>
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-card-feature__icon-svg">
+                  <use href="#bm-icon-calculator" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Точность</h3>
+                <p class="bm-card-feature__text">
+                  Расчеты основаны на актуальных номах и проверены формулах
+                </p>
+              </div>
+            </article>
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-card-feature__icon-svg">
+                  <use href="#bm-icon-briefcase" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Практичность</h3>
+                <p class="bm-card-feature__text">
+                  Наши инструменты помогают в реальных задачах на стройке и в ремонте.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section bm-section--tight" aria-labelledby="about-story-title">
+        <div class="bm-container">
+          <div class="bm-about-story">
+            <div class="bm-about-story__content">
+              <h2 id="about-story-title" class="bm-about-story__title">Как всё начиналось</h2>
+              <p class="bm-about-story__text">
+                Brigmaster появился из практики. Мы часто сталкивались с трудностями в расчётах и
+                понимали, как важно иметь под рукой надёжный инструмент.
+              </p>
+              <p class="bm-about-story__text">
+                Так родилась идея собрать лучшие подходы и сделать их доступными онлайн.
+              </p>
+            </div>
+            <img
+              class="bm-about-story__image"
+              src="../../images/illustrations/hero-article.jpg"
+              alt="Рабочий стол с чертежами и калькулятором"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section" aria-labelledby="about-principles-title">
+        <div class="bm-container">
+          <div class="bm-section-toolbar">
+            <div class="bm-section-toolbar__main">
+              <h2 id="about-principles-title" class="bm-section-toolbar__title">Наши принципы</h2>
+            </div>
+          </div>
+          <div class="bm-card-grid bm-card-grid--cols-4 bm-card-grid--feature-stacked">
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-card-feature__icon-svg">
+                  <use href="#bm-icon-check-circle" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Честность</h3>
+                <p class="bm-card-feature__text">
+                  Мы открыто показываем, как работает расчёт и на каких данных основан расчёт.
+                </p>
+              </div>
+            </article>
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-card-feature__icon-svg">
+                  <use href="#bm-icon-document-add" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Прозрачность</h3>
+                <p class="bm-card-feature__text">
+                  Пишем короткие формулы и открыто говорим об ограничениях.
+                </p>
+              </div>
+            </article>
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-card-feature__icon-svg">
+                  <use href="#bm-icon-shield-check" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Надёжность</h3>
+                <p class="bm-card-feature__text">
+                  Постоянно обновляем данные и улучшаем сервис на основе обратной связи.
+                </p>
+              </div>
+            </article>
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-card-feature__icon-svg">
+                  <use href="#bm-icon-target" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Развитие</h3>
+                <p class="bm-card-feature__text">
+                  Расширяем возможности платформы и создаём новые полезные инструменты.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section bm-section--tight" aria-labelledby="about-cta-title">
+        <div class="bm-container">
+          <aside class="bm-cta-block bm-cta-block--soft">
+            <div class="bm-cta-block__content">
+              <h2 id="about-cta-title" class="bm-cta-block__title">Мы на связи</h2>
+              <p class="bm-cta-block__lead">
+                Есть идея, предложение или вопрос? Напишите нам — мы всегда открыты к диалогу.
+              </p>
+              <div class="bm-cta-block__actions">
+                <a href="/kontakty/" class="bm-button bm-button--secondary">Перейти к контактам</a>
+              </div>
+            </div>
+            <img
+              src="../../images/illustrations/cta-house-blueprint.svg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bm-footer">
+      <div class="bm-container">
+        <div class="bm-footer__grid">
+          <div class="bm-footer__brand">
+            <a href="/">
+              <img
+                class="bm-footer__logo"
+                src="../../images/logo_footer.png"
+                width="152"
+                height="36"
+                alt="Brigmaster"
+              />
+            </a>
+            <p class="bm-footer__desc">
+              Онлайн-калькуляторы для строительства и ремонта. Понятные расчёты и полезный контент
+              для любых задач.
+            </p>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">Калькуляторы</div>
+            <ul class="bm-footer__links">
+              <li><a href="#">Фундамент</a></li>
+              <li><a href="#">Стяжка пола</a></li>
+              <li><a href="#">Кирпич</a></li>
+              <li><a href="#">Плитка</a></li>
+              <li><a href="#">Гипсокартон</a></li>
+              <li><a href="#">Отделка</a></li>
+              <li><a href="/kalkulyatory/">Все калькуляторы</a></li>
+            </ul>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">Информация</div>
+            <ul class="bm-footer__links">
+              <li><a href="/kak-eto-rabotaet/">Как это работает</a></li>
+              <li><a href="/metodologiya/">Методология расчётов</a></li>
+              <li><a href="#">Ограничения</a></li>
+              <li><a href="#">Вопросы и ответы</a></li>
+              <li><a href="/stati/">Статьи</a></li>
+            </ul>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">О проекте</div>
+            <ul class="bm-footer__links">
+              <li><a href="/o-proekte/">О проекте</a></li>
+              <li><a href="/kontakty/">Контакты</a></li>
+              <li><a href="/privacy-policy/">Политика конфиденциальности</a></li>
+              <li><a href="#">Пользовательское соглашение</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="bm-footer__bottom">© 2024 Brigmaster.ru — все права защищены.</p>
+      </div>
+    </footer>
+  </body>
+</html>

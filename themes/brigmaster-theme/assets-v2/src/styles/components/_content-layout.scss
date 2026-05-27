@@ -1,0 +1,101 @@
+@use '../abstracts/media' as media;
+
+.bm-content-layout {
+  display: grid;
+  gap: var(--bm-space-8);
+}
+
+.bm-content-layout__main {
+  min-width: 0;
+}
+
+.bm-content-layout__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bm-space-4);
+  min-width: 0;
+}
+
+.bm-content-layout__sidebar-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bm-space-4);
+  min-width: 0;
+}
+
+// Mobile: TOC first, then main, then other sidebar cards (archive-like flow).
+.bm-content-layout--article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bm-space-8);
+}
+
+.bm-content-layout--article .bm-content-layout__main {
+  order: 2;
+}
+
+.bm-content-layout--article .bm-content-layout__sidebar {
+  display: contents;
+  width: 100%;
+}
+
+.bm-content-layout--article .bm-content-layout__sidebar > .bm-toc {
+  order: 1;
+  width: 100%;
+}
+
+.bm-content-layout--article .bm-content-layout__sidebar-body {
+  order: 3;
+  width: 100%;
+}
+
+.bm-content-layout--with-both .bm-content-layout__aside-left,
+.bm-content-layout--with-both .bm-content-layout__sidebar {
+  display: none;
+}
+
+@include media.bp(lg) {
+  .bm-content-layout--with-right-sidebar,
+  .bm-content-layout--article.bm-content-layout--with-right-sidebar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+    align-items: start;
+  }
+
+  .bm-content-layout--article {
+    display: grid;
+  }
+
+  .bm-content-layout--article .bm-content-layout__main,
+  .bm-content-layout--article .bm-content-layout__sidebar > .bm-toc,
+  .bm-content-layout--article .bm-content-layout__sidebar-body {
+    order: unset;
+  }
+
+  .bm-content-layout--article .bm-content-layout__sidebar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bm-content-layout--with-left-sidebar {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    gap: var(--bm-space-8);
+    align-items: start;
+  }
+
+  .bm-content-layout--with-both {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr) minmax(0, 20rem);
+    gap: var(--bm-space-6);
+    align-items: start;
+  }
+
+  .bm-content-layout--with-both .bm-content-layout__aside-left,
+  .bm-content-layout--with-both .bm-content-layout__sidebar {
+    display: flex;
+  }
+
+  .bm-content-layout__sidebar {
+    position: sticky;
+    top: calc(var(--bm-header-height) + var(--bm-space-4));
+    align-self: start;
+  }
+}

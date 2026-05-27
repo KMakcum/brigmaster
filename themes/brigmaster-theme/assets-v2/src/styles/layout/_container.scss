@@ -1,0 +1,16 @@
+﻿@use '../abstracts/media' as media;
+
+.bm-container {
+  width: 100%;
+  max-width: var(--bm-container-max);
+  margin-inline: auto;
+  padding-inline: var(--bm-space-4);
+
+  @include media.bp(md) {
+    padding-inline: var(--bm-space-5);
+  }
+}
+
+.bm-container--narrow {
+  max-width: var(--bm-container-narrow);
+}

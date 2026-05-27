@@ -1,0 +1,46 @@
+@use '../abstracts/media' as media;
+@use 'hero';
+
+.bm-home-hero {
+  padding-block: var(--bm-space-10) var(--bm-space-12);
+  background: var(--bm-color-bg);
+}
+
+.bm-home-hero__grid {
+  display: grid;
+  gap: var(--bm-space-10);
+  align-items: start;
+}
+
+.bm-home-hero__visual {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bm-space-6);
+}
+
+.bm-home-hero__note {
+  display: flex;
+  gap: var(--bm-space-2);
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-size: var(--bm-text-sm);
+  color: var(--bm-color-text-muted);
+}
+
+.bm-home-hero__note-icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  color: var(--bm-color-brand);
+}
+
+@include media.bp(lg) {
+  .bm-home-hero__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bm-home-hero__visual {
+    width: 100%;
+  }
+}

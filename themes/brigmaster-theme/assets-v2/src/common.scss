@@ -1,0 +1,13 @@
+// Common stylesheet shared by every page (header, footer, breadcrumbs, base components).
+// Page entries import this via `import './common.scss'` indirectly through page-specific .scss.
+
+@use 'main';
+@use 'styles/layout/container';
+@use 'styles/layout/section';
+@use 'styles/layout/grid';
+@use 'styles/layout/header';
+@use 'styles/layout/footer';
+@use 'styles/components/skip-link';
+@use 'styles/components/breadcrumbs';
+@use 'styles/components/button';
+@use 'styles/components/icon';

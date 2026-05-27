@@ -1,0 +1,103 @@
+@use '../abstracts/media' as media;
+@use '../abstracts/mixins' as mixins;
+
+.bm-toc__title {
+  margin: 0 0 var(--bm-space-4);
+  font-size: var(--bm-text-md);
+  font-weight: var(--bm-font-semibold);
+  line-height: 1.3;
+  color: var(--bm-color-text-strong);
+}
+
+.bm-toc__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bm-toc__item + .bm-toc__item {
+  margin-top: var(--bm-space-2);
+}
+
+.bm-toc__link {
+  display: block;
+  padding: var(--bm-space-1) 0;
+  font-size: var(--bm-text-base);
+  line-height: 1.4;
+  color: var(--bm-color-text-muted);
+  text-decoration: none;
+  transition: color var(--bm-transition);
+}
+
+.bm-toc__link:hover,
+.bm-toc__link:focus-visible {
+  color: var(--bm-color-brand);
+}
+
+.bm-toc--in-sidebar.bm-sidebar-card {
+  padding: var(--bm-space-6);
+}
+
+.bm-toc--collapsible .bm-toc__title {
+  display: none;
+}
+
+.bm-toc--collapsible .bm-toc__toggle {
+  @include mixins.button-reset;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bm-space-3);
+  width: 100%;
+  font-size: var(--bm-text-md);
+  font-weight: var(--bm-font-semibold);
+  line-height: 1.3;
+  text-align: left;
+  color: var(--bm-color-text-strong);
+  cursor: pointer;
+}
+
+.bm-toc--collapsible .bm-toc__toggle-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  transition: transform var(--bm-transition);
+}
+
+.bm-toc--collapsible.is-open .bm-toc__toggle-icon {
+  transform: rotate(180deg);
+}
+
+.bm-toc--collapsible .bm-toc__panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--bm-transition-slow);
+}
+
+.bm-toc--collapsible.is-open .bm-toc__panel {
+  max-height: 40rem;
+}
+
+.bm-toc--collapsible.is-open .bm-toc__panel-inner {
+  padding-top: var(--bm-space-4);
+}
+
+@include media.bp(lg) {
+  .bm-toc--collapsible.bm-toc--in-sidebar .bm-toc__title {
+    display: block;
+  }
+
+  .bm-toc--collapsible.bm-toc--in-sidebar .bm-toc__toggle {
+    display: none;
+  }
+
+  .bm-toc--collapsible.bm-toc--in-sidebar .bm-toc__panel {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .bm-toc--collapsible.bm-toc--in-sidebar .bm-toc__panel-inner {
+    padding-top: 0;
+  }
+}

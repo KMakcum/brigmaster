@@ -1,0 +1,5 @@
+// Global styles entry: tokens + reset + fonts + base typography + utilities.
+// All page-specific entries should @use this once at the top.
+
+@use 'styles/tokens';
+@use 'styles/base';

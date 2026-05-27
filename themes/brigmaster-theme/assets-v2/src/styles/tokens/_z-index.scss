@@ -1,0 +1,11 @@
+// Z-index scale. Reserve numbers explicitly to avoid stacking-context conflicts.
+
+:root {
+  --bm-z-base: 1;
+  --bm-z-sticky: 50;
+  --bm-z-header: 100;
+  --bm-z-dropdown: 200;
+  --bm-z-overlay: 900;
+  --bm-z-modal: 1000;
+  --bm-z-toast: 1100;
+}

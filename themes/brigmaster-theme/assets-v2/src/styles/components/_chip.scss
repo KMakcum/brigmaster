@@ -1,0 +1,32 @@
+.bm-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--bm-radius-full);
+  font-size: var(--bm-text-xs);
+  font-weight: var(--bm-font-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.bm-chip--soft {
+  color: var(--bm-color-brand);
+  background: var(--bm-color-surface);
+  border: 1px solid var(--bm-color-border);
+}
+
+.bm-chip--on-dark {
+  color: rgb(255 255 255 / 0.9);
+  background: rgb(255 255 255 / 0.12);
+}
+
+.bm-chip--category {
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.125rem 0.625rem;
+  font-weight: var(--bm-font-bold);
+  color: var(--bm-color-brand-emphasis);
+  letter-spacing: 0.05em;
+  background: var(--bm-color-brand-soft);
+  border: none;
+}

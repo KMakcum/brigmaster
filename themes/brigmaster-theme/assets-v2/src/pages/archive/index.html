@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>База знаний — статьи Brigmaster</title>
+    <script type="module" src="./archive.js"></script>
+  </head>
+  <body>
+    <a class="bm-skip-link" href="#main">Перейти к содержимому</a>
+    <header class="bm-header" data-bm-component="header-menu">
+      <div class="bm-container bm-header__row">
+        <a href="/" class="bm-header__brand">
+          <img
+            class="bm-header__logo"
+            src="../../images/logo_header.png"
+            width="168"
+            height="40"
+            alt="Brigmaster"
+          />
+        </a>
+        <button
+          type="button"
+          class="bm-header__toggle"
+          aria-expanded="false"
+          aria-controls="bm-header-panel"
+          aria-label="Открыть меню"
+        >
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+        </button>
+        <div id="bm-header-panel" class="bm-header__panel">
+          <nav class="bm-nav-primary" aria-label="Primary" data-bm-component="nav-dropdown">
+            <ul id="primary-navigation" class="menu">
+              <li class="menu-item menu-item-has-children">
+                <a href="/kalkulyatory/">Калькуляторы</a>
+                <ul class="sub-menu">
+                  <li class="menu-item menu-item-has-children">
+                    <a href="/kalkulyatory/fundament/">Фундаменты</a>
+                    <ul class="sub-menu">
+                      <li class="menu-item"><a href="#">Плитный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Ленточный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Свайно-ростверковый фундамент</a></li>
+                      <li class="menu-item"><a href="#">Столбчатый фундамент</a></li>
+                    </ul>
+                  </li>
+                  <li class="menu-item"><a href="#">Стяжка</a></li>
+                  <li class="menu-item"><a href="#">Стены</a></li>
+                  <li class="menu-item"><a href="#">Пол</a></li>
+                  <li class="menu-item"><a href="#">Кровля</a></li>
+                  <li class="menu-item"><a href="#">Отделка</a></li>
+                </ul>
+              </li>
+              <li class="menu-item menu-item--disabled">
+                <span class="bm-nav-primary__label"
+                  >Проекты <span class="bm-badge">скоро</span></span
+                >
+              </li>
+              <li class="menu-item"><a href="/materialy/">Материалы</a></li>
+              <li class="menu-item"><a href="/stati/" aria-current="page">Статьи</a></li>
+              <li class="menu-item"><a href="/o-proekte/">О проекте</a></li>
+            </ul>
+          </nav>
+          <div class="bm-header__actions">
+            <a href="/kalkulyatory/" class="bm-button bm-button--primary">Открыть калькуляторы</a>
+            <a href="#" class="bm-button bm-button--ghost">Войти</a>
+          </div>
+        </div>
+      </div>
+      <div class="bm-header__overlay" aria-hidden="true"></div>
+    </header>
+
+    <main id="main">
+      <section class="bm-page-hero" aria-labelledby="archive-hero-title">
+        <img
+          class="bm-page-hero__image"
+          src="../../images/illustrations/hero-archive.jpg"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="bm-container bm-page-hero__container">
+          <nav
+            class="bm-breadcrumbs bm-breadcrumbs--chevron bm-breadcrumbs--link-brand bm-page-hero__breadcrumbs"
+            aria-label="Breadcrumb"
+          >
+            <ol>
+              <li><a href="/">Главная</a></li>
+              <li><span aria-current="page">База знаний</span></li>
+            </ol>
+          </nav>
+          <div class="bm-hero">
+            <h1 id="archive-hero-title" class="bm-hero__title">База знаний</h1>
+            <p class="bm-hero__lead">
+              Полезные статьи, инструкции и рекомендации по строительству и ремонту — от выбора
+              материалов до практических расчётов.
+            </p>
+            <ul class="bm-hero__features bm-hero__features--cols-4">
+              <li class="bm-hero__feature">
+                <svg class="bm-icon bm-hero__feature-icon" aria-hidden="true">
+                  <use href="#bm-icon-shield-check" />
+                </svg>
+                <span class="bm-hero__feature-copy">
+                  <span class="bm-hero__feature-title">Проверенная информация</span>
+                  <span class="bm-hero__feature-text">от экспертов отрасли</span>
+                </span>
+              </li>
+              <li class="bm-hero__feature">
+                <svg class="bm-icon bm-hero__feature-icon" aria-hidden="true">
+                  <use href="#bm-icon-briefcase" />
+                </svg>
+                <span class="bm-hero__feature-copy">
+                  <span class="bm-hero__feature-title">Практические советы</span>
+                  <span class="bm-hero__feature-text">и рекомендации</span>
+                </span>
+              </li>
+              <li class="bm-hero__feature">
+                <svg class="bm-icon bm-hero__feature-icon" aria-hidden="true">
+                  <use href="#bm-icon-interface" />
+                </svg>
+                <span class="bm-hero__feature-copy">
+                  <span class="bm-hero__feature-title">Пошаговые инструкции</span>
+                  <span class="bm-hero__feature-text">и примеры</span>
+                </span>
+              </li>
+              <li class="bm-hero__feature">
+                <svg class="bm-icon bm-hero__feature-icon" aria-hidden="true">
+                  <use href="#bm-icon-reload" />
+                </svg>
+                <span class="bm-hero__feature-copy">
+                  <span class="bm-hero__feature-title">Актуальные данные</span>
+                  <span class="bm-hero__feature-text">и нормативы</span>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section" aria-labelledby="archive-list-title">
+        <div class="bm-container">
+          <h2 id="archive-list-title" class="bm-visually-hidden">Список статей</h2>
+
+          <div class="bm-content-layout bm-content-layout--with-right-sidebar">
+            <div class="bm-content-layout__main">
+              <div class="bm-archive-toolbar">
+                <div class="bm-archive-toolbar__filters">
+                  <label class="bm-search">
+                    <span class="bm-visually-hidden">Поиск по статьям</span>
+                    <svg class="bm-icon bm-search__icon" aria-hidden="true">
+                      <use href="#bm-icon-search" />
+                    </svg>
+                    <input
+                      class="bm-search__input"
+                      type="search"
+                      name="q"
+                      placeholder="Поиск по статьям"
+                      autocomplete="off"
+                    />
+                  </label>
+                  <div data-bm-component="select">
+                    <label class="bm-visually-hidden" for="archive-topic">Тема</label>
+                    <select id="archive-topic" name="topic">
+                      <option value="">Все темы</option>
+                      <option value="foundation">Фундамент</option>
+                      <option value="walls">Стены</option>
+                      <option value="floors">Полы</option>
+                      <option value="roof">Кровля</option>
+                      <option value="finish">Отделка</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="bm-archive-toolbar__sort" data-bm-component="select">
+                  <label class="bm-visually-hidden" for="archive-sort">Сортировка</label>
+                  <select id="archive-sort" name="sort">
+                    <option value="newest">Сортировка: сначала новые</option>
+                    <option value="oldest">Сначала старые</option>
+                    <option value="popular">По популярности</option>
+                  </select>
+                </div>
+              </div>
+
+              <p class="bm-archive-found">Найдено 48 статей</p>
+              <div class="bm-card-grid bm-card-grid--cols-3">
+                <!-- @cards archive-articles -->
+              </div>
+              <nav class="bm-pagination" aria-label="Страницы списка статей">
+                <ul class="bm-pagination__list">
+                  <li>
+                    <a class="bm-pagination__link is-active" href="#" aria-current="page">1</a>
+                  </li>
+                  <li><a class="bm-pagination__link" href="#">2</a></li>
+                  <li><a class="bm-pagination__link" href="#">3</a></li>
+                  <li>
+                    <span class="bm-pagination__link bm-pagination__link--ellipsis">…</span>
+                  </li>
+                  <li><a class="bm-pagination__link" href="#">8</a></li>
+                  <li>
+                    <a class="bm-pagination__link" href="#" aria-label="Следующая страница">
+                      <svg class="bm-icon bm-pagination__icon" aria-hidden="true">
+                        <use href="#bm-icon-arrow-right" />
+                      </svg>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+            <aside class="bm-content-layout__sidebar" aria-label="Дополнительные материалы">
+              <div class="bm-sidebar-card">
+                <h3 class="bm-sidebar-card__title">Темы</h3>
+                <ul class="bm-tag-list">
+                  <li class="bm-tag-list__item">
+                    <a class="bm-tag-list__link" href="#">
+                      <span>Фундамент</span>
+                      <span class="bm-tag-list__count">42</span>
+                    </a>
+                  </li>
+                  <li class="bm-tag-list__item">
+                    <a class="bm-tag-list__link" href="#">
+                      <span>Стены</span>
+                      <span class="bm-tag-list__count">18</span>
+                    </a>
+                  </li>
+                  <li class="bm-tag-list__item">
+                    <a class="bm-tag-list__link" href="#">
+                      <span>Полы</span>
+                      <span class="bm-tag-list__count">12</span>
+                    </a>
+                  </li>
+                  <li class="bm-tag-list__item">
+                    <a class="bm-tag-list__link" href="#">
+                      <span>Кровля</span>
+                      <span class="bm-tag-list__count">9</span>
+                    </a>
+                  </li>
+                  <li class="bm-tag-list__item">
+                    <a class="bm-tag-list__link" href="#">
+                      <span>Отделка</span>
+                      <span class="bm-tag-list__count">15</span>
+                    </a>
+                  </li>
+                  <li class="bm-tag-list__item">
+                    <a class="bm-tag-list__link" href="#">
+                      <span>Материалы</span>
+                      <span class="bm-tag-list__count">22</span>
+                    </a>
+                  </li>
+                  <li class="bm-tag-list__item">
+                    <a class="bm-tag-list__link" href="#">
+                      <span>Ремонт</span>
+                      <span class="bm-tag-list__count">14</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bm-sidebar-card bm-sidebar-card--soft bm-sidebar-card--center">
+                <h3 class="bm-sidebar-card__title">Не нашли нужную тему?</h3>
+                <p class="bm-sidebar-card__text">
+                  Предложите тему для новой статьи — мы рассмотрим вашу идею.
+                </p>
+                <div class="bm-sidebar-card__action">
+                  <a href="/kontakty/" class="bm-button bm-button--secondary bm-button--full"
+                    >Предложить тему</a
+                  >
+                </div>
+              </div>
+
+              <div class="bm-sidebar-card">
+                <h3 class="bm-sidebar-card__title">Популярные статьи</h3>
+                <article class="bm-card-popular-article">
+                  <a class="bm-card-popular-article__link" href="./article/">
+                    <div class="bm-card-popular-article__media">
+                      <img
+                        src="../../images/illustrations/article-cover-1.svg"
+                        alt=""
+                        width="64"
+                        height="64"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div>
+                      <h4 class="bm-card-popular-article__title">
+                        Как выбрать тип фундамента для частного дома
+                      </h4>
+                      <p class="bm-card-popular-article__meta">
+                        <span class="bm-card-popular-article__tag">Фундамент</span>
+                        <span>12 мин</span>
+                      </p>
+                    </div>
+                  </a>
+                </article>
+                <article class="bm-card-popular-article">
+                  <a class="bm-card-popular-article__link" href="#">
+                    <div class="bm-card-popular-article__media">
+                      <img
+                        src="../../images/illustrations/article-cover-2.svg"
+                        alt=""
+                        width="64"
+                        height="64"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div>
+                      <h4 class="bm-card-popular-article__title">
+                        Толщина стяжки пола: какая должна быть и почему
+                      </h4>
+                      <p class="bm-card-popular-article__meta">
+                        <span class="bm-card-popular-article__tag">Стяжка</span>
+                        <span>8 мин</span>
+                      </p>
+                    </div>
+                  </a>
+                </article>
+                <article class="bm-card-popular-article">
+                  <a class="bm-card-popular-article__link" href="#">
+                    <div class="bm-card-popular-article__media">
+                      <img
+                        src="../../images/illustrations/article-cover-3.svg"
+                        alt=""
+                        width="64"
+                        height="64"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div>
+                      <h4 class="bm-card-popular-article__title">
+                        Как рассчитать плитку на пол и стены без ошибок
+                      </h4>
+                      <p class="bm-card-popular-article__meta">
+                        <span class="bm-card-popular-article__tag">Плитка</span>
+                        <span>10 мин</span>
+                      </p>
+                    </div>
+                  </a>
+                </article>
+                <article class="bm-card-popular-article">
+                  <a class="bm-card-popular-article__link" href="#">
+                    <div class="bm-card-popular-article__media">
+                      <img
+                        src="../../images/illustrations/article-cover-4.svg"
+                        alt=""
+                        width="64"
+                        height="64"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div>
+                      <h4 class="bm-card-popular-article__title">С чего начать ремонт в новостройке</h4>
+                      <p class="bm-card-popular-article__meta">
+                        <span class="bm-card-popular-article__tag">Ремонт</span>
+                        <span>15 мин</span>
+                      </p>
+                    </div>
+                  </a>
+                </article>
+                <article class="bm-card-popular-article">
+                  <a class="bm-card-popular-article__link" href="#">
+                    <div class="bm-card-popular-article__media">
+                      <img
+                        src="../../images/illustrations/article-cover-1.svg"
+                        alt=""
+                        width="64"
+                        height="64"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div>
+                      <h4 class="bm-card-popular-article__title">
+                        Кирпичная кладка: расчёт материалов на стену
+                      </h4>
+                      <p class="bm-card-popular-article__meta">
+                        <span class="bm-card-popular-article__tag">Стены</span>
+                        <span>9 мин</span>
+                      </p>
+                    </div>
+                  </a>
+                </article>
+                <div class="bm-sidebar-card__footer">
+                  <a href="/stati/" class="bm-sidebar-card__link">Все популярные статьи →</a>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bm-footer">
+      <div class="bm-container">
+        <div class="bm-footer__grid">
+          <div class="bm-footer__brand">
+            <a href="/">
+              <img
+                class="bm-footer__logo"
+                src="../../images/logo_footer.png"
+                width="152"
+                height="36"
+                alt="Brigmaster"
+              />
+            </a>
+            <p class="bm-footer__desc">
+              Онлайн-калькуляторы для строительства и ремонта. Понятные расчёты и полезный контент
+              для любых задач.
+            </p>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">Калькуляторы</div>
+            <ul class="bm-footer__links">
+              <li><a href="#">Фундамент</a></li>
+              <li><a href="#">Стяжка пола</a></li>
+              <li><a href="#">Кирпич</a></li>
+              <li><a href="#">Плитка</a></li>
+              <li><a href="#">Гипсокартон</a></li>
+              <li><a href="#">Отделка</a></li>
+              <li><a href="/kalkulyatory/">Все калькуляторы</a></li>
+            </ul>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">Информация</div>
+            <ul class="bm-footer__links">
+              <li><a href="#">Как это работает</a></li>
+              <li><a href="#">Методология расчётов</a></li>
+              <li><a href="#">Ограничения</a></li>
+              <li><a href="#">Вопросы и ответы</a></li>
+              <li><a href="/stati/">Статьи</a></li>
+            </ul>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">О проекте</div>
+            <ul class="bm-footer__links">
+              <li><a href="/o-proekte/">О проекте</a></li>
+              <li><a href="/kontakty/">Контакты</a></li>
+              <li><a href="#">Политика конфиденциальности</a></li>
+              <li><a href="#">Пользовательское соглашение</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="bm-footer__bottom">© 2024 Brigmaster.ru — все права защищены.</p>
+      </div>
+    </footer>
+  </body>
+</html>

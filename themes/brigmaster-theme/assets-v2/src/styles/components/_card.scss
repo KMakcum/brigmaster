@@ -1,0 +1,60 @@
+.bm-card > img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.bm-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: var(--bm-text-base);
+  line-height: 1.5;
+  text-size-adjust: 100%;
+  background: var(--bm-color-surface);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-lg);
+}
+
+// Fixed card typography — not tied to card width; overrides global h3/p scales.
+.bm-card :where(
+  .bm-card-calculator__title,
+  .bm-card-task__title,
+  .bm-card-feature__title,
+  .bm-card-article__title
+) {
+  font-size: var(--bm-text-lg);
+  font-weight: var(--bm-font-semibold);
+  line-height: var(--bm-leading-snug);
+  letter-spacing: var(--bm-tracking-normal);
+  color: var(--bm-color-text-strong);
+}
+
+.bm-card :where(
+  .bm-card-calculator__text,
+  .bm-card-task__text,
+  .bm-card-feature__text,
+  .bm-card-article__excerpt
+) {
+  font-size: var(--bm-text-base);
+  font-weight: var(--bm-font-regular);
+  line-height: 1.5;
+  color: var(--bm-color-text-muted);
+}
+
+.bm-card :where(.bm-card-calculator__meta) {
+  font-size: var(--bm-text-sm);
+  font-weight: var(--bm-font-regular);
+  line-height: 1.5;
+  color: var(--bm-color-text-muted);
+}
+
+.bm-card--soft {
+  background: var(--bm-color-surface-muted);
+  border-color: transparent;
+}
+
+.bm-card--elevated {
+  border-color: transparent;
+  box-shadow: var(--bm-shadow-sm);
+}

@@ -1,0 +1,107 @@
+.bm-card-calculator {
+  padding: var(--bm-space-5);
+  gap: var(--bm-space-3);
+}
+
+.bm-card-calculator__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6.25rem;
+  height: 6.25rem;
+  margin-inline: auto;
+  border-radius: var(--bm-radius-md);
+  color: var(--bm-color-brand);
+  background: var(--bm-color-brand-soft);
+}
+
+.bm-card-calculator__icon img {
+  width: 6.25rem;
+  height: 6.25rem;
+  object-fit: contain;
+}
+
+.bm-card-calculator__title {
+  margin: 0;
+}
+
+.bm-card-calculator__text {
+  margin: 0;
+  flex: 1;
+  min-height: 4.5em;
+}
+
+.bm-card-calculator__meta {
+  margin: 0;
+}
+
+.bm-card-calculator .bm-button {
+  width: 100%;
+  margin-top: var(--bm-space-2);
+}
+
+.bm-card-calculator .bm-button--secondary {
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-brand-emphasis);
+  background: var(--bm-color-brand-soft);
+  border-color: var(--bm-color-brand-emphasis);
+}
+
+.bm-card-calculator .bm-button--secondary:hover {
+  color: var(--bm-color-surface);
+  background: var(--bm-color-brand-emphasis);
+  border-color: var(--bm-color-brand-emphasis);
+}
+
+// Hub catalog: photo cover + body (reusable on any calculator hub)
+.bm-card-calculator--cover {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.bm-card-calculator--cover .bm-card-calculator__media {
+  aspect-ratio: 290 / 160;
+  overflow: hidden;
+  background: var(--bm-color-bg);
+  border-bottom: 1px solid var(--bm-color-border);
+}
+
+.bm-card-calculator--cover .bm-card-calculator__media img,
+.bm-card-calculator--cover > .bm-card-calculator__cover,
+.bm-card-calculator--cover > img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 290 / 160;
+  object-fit: cover;
+}
+
+.bm-card-calculator--cover .bm-card-calculator__media img {
+  height: 100%;
+}
+
+.bm-card-calculator--cover .bm-card-calculator__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--bm-space-3);
+  padding: var(--bm-space-4);
+}
+
+.bm-card-calculator--cover .bm-card-calculator__title {
+  font-size: 1.125rem;
+  line-height: 1.35;
+}
+
+.bm-card-calculator--cover .bm-card-calculator__text {
+  min-height: 0;
+  line-height: 1.43;
+}
+
+.bm-card-calculator--cover .bm-button {
+  margin-top: auto;
+}
+
+.bm-card-calculator--cover .bm-button .bm-icon {
+  font-size: 1rem;
+}

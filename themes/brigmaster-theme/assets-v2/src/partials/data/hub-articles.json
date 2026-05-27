@@ -1,0 +1,42 @@
+[
+  {
+    "href": "/stati/fundament/vybor-tipa/",
+    "image": "../../images/illustrations/article-cover-1.svg",
+    "imageAlt": "",
+    "tag": "Фундамент",
+    "title": "Как выбрать тип фундамента для частного дома",
+    "excerpt": "Разбираем основные типы фундаментов и критерии выбора под разные условия.",
+    "readTime": "12 мин",
+    "date": "15.04.2024"
+  },
+  {
+    "href": "/stati/fundament/armirovanie/",
+    "image": "../../images/illustrations/article-cover-2.svg",
+    "imageAlt": "",
+    "tag": "Фундамент",
+    "title": "Армирование фундамента: полное руководство",
+    "excerpt": "Схемы армирования, выбор арматуры и правила вязки каркаса.",
+    "readTime": "10 мин",
+    "date": "12.04.2024"
+  },
+  {
+    "href": "/stati/styazhka/tolshchina/",
+    "image": "../../images/illustrations/article-cover-3.svg",
+    "imageAlt": "",
+    "tag": "Стяжка пола",
+    "title": "Толщина стяжки пола: как не ошибиться",
+    "excerpt": "От чего зависит толщина стяжки и как рассчитать оптимальный слой.",
+    "readTime": "8 мин",
+    "date": "10.04.2024"
+  },
+  {
+    "href": "/stati/plitka/ukladka-pola/",
+    "image": "../../images/illustrations/article-cover-4.svg",
+    "imageAlt": "",
+    "tag": "Плитка",
+    "title": "Укладка плитки на пол: пошаговая инструкция",
+    "excerpt": "Подготовка основания, выбор клея и технология укладки плитки.",
+    "readTime": "15 мин",
+    "date": "08.04.2024"
+  }
+]

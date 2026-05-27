@@ -1,0 +1,63 @@
+@use '../abstracts/mixins' as mixins;
+
+.bm-button {
+  @include mixins.button-reset;
+  @include mixins.interactive-transition;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bm-space-2);
+  min-height: 2.5rem;
+  padding-inline: var(--bm-space-4);
+  border: 1px solid transparent;
+  border-radius: var(--bm-radius-md);
+  font-size: var(--bm-text-base);
+  font-weight: var(--bm-font-medium);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.bm-button:focus-visible {
+  @include mixins.focus-ring;
+}
+
+.bm-button--primary {
+  color: var(--bm-color-surface);
+  background: var(--bm-color-brand);
+}
+
+.bm-button--primary:hover,
+a.bm-button--primary:hover {
+  color: var(--bm-color-surface);
+  background: var(--bm-color-brand-hover);
+}
+
+.bm-button--primary:active {
+  background: var(--bm-color-brand-active);
+}
+
+.bm-button--secondary {
+  color: var(--bm-color-text);
+  background: var(--bm-color-surface);
+  border-color: var(--bm-color-border-strong);
+}
+
+.bm-button--secondary:hover {
+  background: var(--bm-color-surface-muted);
+}
+
+.bm-button--ghost {
+  color: var(--bm-color-brand);
+  background: transparent;
+}
+
+.bm-button--ghost:hover,
+a.bm-button--ghost:hover {
+  color: var(--bm-color-brand);
+  background: var(--bm-color-brand-soft);
+}
+
+.bm-button--full {
+  width: 100%;
+}

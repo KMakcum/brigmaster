@@ -1,0 +1,23 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "plugins": ["stylelint-order"],
+  "rules": {
+    "order/properties-alphabetical-order": null,
+    "selector-class-pattern": [
+      "^bm-[a-z0-9]+(?:-[a-z0-9]+)*(?:__[a-z0-9]+(?:-[a-z0-9]+)*)?(?:--[a-z0-9]+(?:-[a-z0-9]+)*)?$|^is-[a-z0-9-]+$|^has-[a-z0-9-]+$|^menu-item(?:-[a-z0-9-]+)*$|^sub-menu$|^menu$",
+      {
+        "message": "Use bm-block__elem--mod, is-*/has-* state, or WordPress menu classes."
+      }
+    ],
+    "no-descending-specificity": null,
+    "scss/at-mixin-pattern": "^[a-z][a-z0-9-]*$",
+    "scss/dollar-variable-pattern": "^[a-z][a-z0-9-]*$",
+    "scss/no-global-function-names": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      { "ignorePseudoClasses": ["global"] }
+    ],
+    "color-function-notation": "modern",
+    "alpha-value-notation": "number"
+  }
+}

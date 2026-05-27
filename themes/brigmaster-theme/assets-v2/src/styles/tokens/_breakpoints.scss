@@ -1,0 +1,13 @@
+// Breakpoint tokens. SCSS-only — used by mixin `bp()` in abstracts/_media.scss.
+// Source: docs/design/NEW_DESIGN_SYSTEM.md (section 3.2).
+// Minimum supported width is 360px; we don't define a `sm` breakpoint because
+// mobile-first base styles cover 360–767 by default.
+
+$bm-bp-md: 768px;
+$bm-bp-lg: 1024px;
+$bm-bp-xl: 1280px;
+$bm-breakpoints: (
+  md: $bm-bp-md,
+  lg: $bm-bp-lg,
+  xl: $bm-bp-xl,
+);

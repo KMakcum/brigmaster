@@ -1,0 +1,27 @@
+// Root + body baseline. Tokens are injected by tokens/*.scss into :root.
+
+html {
+  font-size: 16px; // base rem
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--bm-header-height) + var(--bm-space-4));
+}
+
+body {
+  font-family: var(--bm-font-family-sans);
+  font-size: var(--bm-text-md);
+  font-weight: var(--bm-font-regular);
+  line-height: var(--bm-leading-normal);
+  color: var(--bm-color-text);
+  background: var(--bm-color-surface);
+  text-rendering: optimizelegibility;
+}
+
+::selection {
+  color: var(--bm-color-surface);
+  background: var(--bm-color-brand);
+}
+
+::placeholder {
+  color: var(--bm-color-text-placeholder);
+  opacity: 1;
+}

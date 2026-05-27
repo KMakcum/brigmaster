@@ -1,0 +1,12 @@
+.bm-faq-section {
+  background: var(--bm-color-surface);
+}
+
+.bm-faq-section .bm-section-toolbar__link {
+  font-weight: var(--bm-font-regular);
+  color: var(--bm-color-brand);
+}
+
+.bm-faq-section .bm-section-toolbar__link:hover {
+  color: var(--bm-color-brand-hover);
+}

@@ -1,0 +1,67 @@
+// Baseline typography. Component-level styles can override.
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--bm-color-text-strong);
+  font-weight: var(--bm-font-bold);
+  line-height: var(--bm-leading-tight);
+  letter-spacing: var(--bm-tracking-tight);
+}
+
+h1 {
+  font-size: var(--bm-text-3xl);
+}
+
+h2 {
+  font-size: var(--bm-text-2xl);
+}
+
+h3 {
+  font-size: var(--bm-text-xl);
+}
+
+h4 {
+  font-size: var(--bm-text-lg);
+}
+
+h5 {
+  font-size: var(--bm-text-md);
+}
+
+h6 {
+  font-size: var(--bm-text-base);
+}
+
+p {
+  font-size: var(--bm-text-md);
+  line-height: var(--bm-leading-relaxed);
+  color: var(--bm-color-text);
+}
+
+small {
+  font-size: var(--bm-text-sm);
+  color: var(--bm-color-text-muted);
+}
+
+strong,
+b {
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+a {
+  color: var(--bm-color-brand);
+  transition: color var(--bm-transition);
+}
+
+a:hover {
+  color: var(--bm-color-brand-hover);
+}
+
+a:active {
+  color: var(--bm-color-brand-active);
+}

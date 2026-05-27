@@ -1,0 +1,66 @@
+.bm-breadcrumbs {
+  // 14px / 20px — Figma hub hero breadcrumb; px matches design (not --bm-text-sm = 12px)
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--bm-color-text-muted);
+}
+
+.bm-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bm-space-2);
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bm-breadcrumbs a {
+  color: inherit;
+}
+
+.bm-breadcrumbs a:hover {
+  color: var(--bm-color-brand);
+}
+
+.bm-breadcrumbs--link-brand a {
+  color: var(--bm-color-brand);
+}
+
+.bm-breadcrumbs--link-brand a:hover {
+  color: var(--bm-color-brand-hover);
+}
+
+.bm-breadcrumbs--link-brand [aria-current='page'] {
+  color: var(--bm-color-text-muted);
+}
+
+.bm-breadcrumbs li:not(:last-child)::after {
+  content: '/';
+  margin-inline-start: var(--bm-space-2);
+  color: var(--bm-color-text-placeholder);
+}
+
+.bm-breadcrumbs--chevron ol {
+  gap: 0;
+}
+
+.bm-breadcrumbs--chevron li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.bm-breadcrumbs--chevron li:not(:last-child)::after {
+  content: '';
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-inline: var(--bm-space-2);
+  background-color: var(--bm-color-text-placeholder);
+  transform: rotate(-90deg);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}

@@ -1,0 +1,75 @@
+@use '../abstracts/media' as media;
+
+.bm-how-it-works__steps {
+  display: grid;
+  gap: var(--bm-space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bm-how-it-works__step {
+  position: relative;
+  width: 100%;
+  max-width: 14.375rem; // ~230px
+  margin-inline: auto;
+  padding: 0;
+  text-align: center;
+}
+
+.bm-how-it-works__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5rem;
+  height: 5rem;
+  margin: 0 auto var(--bm-space-3);
+  color: var(--bm-color-brand);
+  background: var(--bm-color-brand-soft);
+  border: 1px solid rgb(216 226 236 / 0.9);
+  border-radius: 50%;
+}
+
+.bm-how-it-works__icon-svg {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.bm-how-it-works__step-title {
+  margin: var(--bm-space-2) 0 0;
+  font-size: 0.9375rem; // 15px — slightly above UI body
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+.bm-how-it-works__step-text {
+  margin: var(--bm-space-2) 0 0;
+  font-size: var(--bm-text-base);
+  line-height: 1.55;
+  color: var(--bm-color-text-muted);
+}
+
+@include media.bp(md) {
+  .bm-how-it-works__steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include media.bp(lg) {
+  .bm-how-it-works__steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--bm-space-10);
+    align-items: start;
+  }
+
+  .bm-how-it-works__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 2.5rem;
+    right: calc(-1 * 170px);
+    left: calc(50% + 2.5rem);
+    height: 0;
+    border-top: 2px dotted var(--bm-color-border-strong);
+    pointer-events: none;
+  }
+}

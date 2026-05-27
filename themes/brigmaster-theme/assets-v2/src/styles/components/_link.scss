@@ -1,0 +1,19 @@
+.bm-link {
+  display: inline-flex;
+  gap: var(--bm-space-1);
+  align-items: center;
+  font-size: var(--bm-text-base);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-brand-emphasis);
+  text-decoration: none;
+  transition: color var(--bm-transition);
+}
+
+.bm-link:hover,
+.bm-link:focus-visible {
+  color: var(--bm-color-brand);
+}
+
+.bm-link--arrow::after {
+  content: '→';
+}

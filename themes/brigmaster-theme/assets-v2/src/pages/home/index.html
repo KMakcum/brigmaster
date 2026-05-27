@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Brigmaster — строительные калькуляторы онлайн</title>
+    <script type="module" src="./home.js"></script>
+  </head>
+  <body>
+    <a class="bm-skip-link" href="#main">Перейти к содержимому</a>
+    <header class="bm-header" data-bm-component="header-menu">
+      <div class="bm-container bm-header__row">
+        <a href="/" class="bm-header__brand">
+          <img
+            class="bm-header__logo"
+            src="../../images/logo_header.png"
+            width="168"
+            height="40"
+            alt="Brigmaster"
+          />
+        </a>
+        <button
+          type="button"
+          class="bm-header__toggle"
+          aria-expanded="false"
+          aria-controls="bm-header-panel"
+          aria-label="Открыть меню"
+        >
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+        </button>
+        <div id="bm-header-panel" class="bm-header__panel">
+          <nav class="bm-nav-primary" aria-label="Primary" data-bm-component="nav-dropdown">
+            <ul id="primary-navigation" class="menu">
+              <li class="menu-item menu-item-has-children">
+                <a href="/kalkulyatory/">Калькуляторы</a>
+                <ul class="sub-menu">
+                  <li class="menu-item menu-item-has-children">
+                    <a href="/kalkulyatory/fundament/">Фундаменты</a>
+                    <ul class="sub-menu">
+                      <li class="menu-item"><a href="#">Плитный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Ленточный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Свайно-ростверковый фундамент</a></li>
+                      <li class="menu-item"><a href="#">Столбчатый фундамент</a></li>
+                    </ul>
+                  </li>
+                  <li class="menu-item"><a href="#">Стяжка</a></li>
+                  <li class="menu-item"><a href="#">Стены</a></li>
+                  <li class="menu-item"><a href="#">Пол</a></li>
+                  <li class="menu-item"><a href="#">Кровля</a></li>
+                  <li class="menu-item"><a href="#">Отделка</a></li>
+                </ul>
+              </li>
+              <li class="menu-item menu-item--disabled">
+                <span class="bm-nav-primary__label"
+                  >Проекты <span class="bm-badge">скоро</span></span
+                >
+              </li>
+              <li class="menu-item"><a href="/materialy/">Материалы</a></li>
+              <li class="menu-item"><a href="/stati/">Статьи</a></li>
+              <li class="menu-item"><a href="/o-proekte/">О проекте</a></li>
+            </ul>
+          </nav>
+          <div class="bm-header__actions">
+            <a href="#calculators" class="bm-button bm-button--primary">Открыть калькуляторы</a>
+            <a href="#" class="bm-button bm-button--ghost">Войти</a>
+          </div>
+        </div>
+      </div>
+      <div class="bm-header__overlay" aria-hidden="true"></div>
+    </header>
+
+    <main id="main">
+      <section class="bm-home-hero" aria-labelledby="home-hero-title">
+        <div class="bm-container">
+          <div class="bm-home-hero__grid">
+            <div class="bm-hero">
+              <h1 id="home-hero-title" class="bm-hero__title">
+                Рассчитайте материалы для строительства и ремонта за минуты
+              </h1>
+              <p class="bm-hero__lead">
+                Точные ориентировочные расчёты по проверенным формулам. Понятная логика, прозрачные
+                допущения и результаты, которым можно доверять.
+              </p>
+              <div class="bm-hero__actions">
+                <a href="#calculators" class="bm-button bm-button--primary">Открыть калькуляторы</a>
+                <a href="#how-it-works" class="bm-button bm-button--secondary">Как это работает?</a>
+              </div>
+              <ul class="bm-hero__features">
+                <li class="bm-hero__feature">
+                  <svg class="bm-icon bm-hero__feature-icon" aria-hidden="true">
+                    <use href="#bm-icon-clock-check" />
+                  </svg>
+                  <span class="bm-hero__feature-copy">
+                    <span class="bm-hero__feature-title">Быстро</span>
+                    <span class="bm-hero__feature-text">Результат за несколько минут</span>
+                  </span>
+                </li>
+                <li class="bm-hero__feature">
+                  <svg class="bm-icon bm-hero__feature-icon" aria-hidden="true">
+                    <use href="#bm-icon-interface" />
+                  </svg>
+                  <span class="bm-hero__feature-copy">
+                    <span class="bm-hero__feature-title">Понятно</span>
+                    <span class="bm-hero__feature-text">Простой интерфейс без лишнего</span>
+                  </span>
+                </li>
+                <li class="bm-hero__feature">
+                  <svg class="bm-icon bm-hero__feature-icon" aria-hidden="true">
+                    <use href="#bm-icon-briefcase" />
+                  </svg>
+                  <span class="bm-hero__feature-copy">
+                    <span class="bm-hero__feature-title">Практично</span>
+                    <span class="bm-hero__feature-text"
+                      >Для частных и профессиональных задач</span
+                    >
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div class="bm-home-hero__visual">
+              <article class="bm-home-hero-demo" aria-label="Пример расчёта: стяжка пола">
+                <h2 class="bm-home-hero-demo__title">Пример расчёта: Стяжка пола</h2>
+                <div class="bm-home-hero-demo__layout">
+                  <div class="bm-home-hero-demo__fields">
+                    <div class="bm-home-hero-demo__field">
+                      <label class="bm-home-hero-demo__label">Площадь помещения</label>
+                      <div class="bm-home-hero-demo__field-value">
+                        <span class="bm-home-hero-demo__field-number">45</span>
+                        <span class="bm-home-hero-demo__field-unit">м²</span>
+                      </div>
+                    </div>
+                    <div class="bm-home-hero-demo__field">
+                      <label class="bm-home-hero-demo__label">Толщина стяжки</label>
+                      <div class="bm-home-hero-demo__field-value">
+                        <span class="bm-home-hero-demo__field-number">50</span>
+                        <span class="bm-home-hero-demo__field-unit">мм</span>
+                      </div>
+                    </div>
+                    <div class="bm-home-hero-demo__field">
+                      <label class="bm-home-hero-demo__label">Тип стяжки</label>
+                      <div
+                        class="bm-home-hero-demo__field-value bm-home-hero-demo__field-value--select"
+                      >
+                        <span class="bm-home-hero-demo__field-number">Цементно-песчаная</span>
+                        <svg
+                          class="bm-icon bm-icon--sm bm-home-hero-demo__select-icon"
+                          aria-hidden="true"
+                        >
+                          <use href="#bm-icon-chevron-down" />
+                        </svg>
+                      </div>
+                    </div>
+                    <span class="bm-home-hero-demo__more-link">Дополнительные параметры</span>
+                  </div>
+                  <div class="bm-home-hero-demo__result">
+                    <p class="bm-home-hero-demo__result-label">Результат</p>
+                    <p class="bm-home-hero-demo__result-main">
+                      <span class="bm-home-hero-demo__result-summary">Объём стяжки</span>
+                      <span class="bm-home-hero-demo__result-value">2.25 м³</span>
+                    </p>
+                    <ul class="bm-home-hero-demo__result-list">
+                      <li class="bm-home-hero-demo__result-item">
+                        <span class="bm-home-hero-demo__result-name">Цемент</span>
+                        <span class="bm-home-hero-demo__result-amount">360 кг</span>
+                      </li>
+                      <li class="bm-home-hero-demo__result-item">
+                        <span class="bm-home-hero-demo__result-name">Песок</span>
+                        <span class="bm-home-hero-demo__result-amount">1.35 м³</span>
+                      </li>
+                      <li class="bm-home-hero-demo__result-item">
+                        <span class="bm-home-hero-demo__result-name">Вода</span>
+                        <span class="bm-home-hero-demo__result-amount">180 л</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </article>
+              <p class="bm-home-hero__note">
+                <svg class="bm-icon bm-home-hero__note-icon" aria-hidden="true">
+                  <use href="#bm-icon-shield-check" />
+                </svg>
+                <span class="bm-home-hero__note-text"
+                  >Используются проверенные строительные нормы и справочные данные</span
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="calculators" class="bm-section" aria-labelledby="calculators-title">
+        <div class="bm-container">
+          <header class="bm-section-toolbar">
+            <div class="bm-section-toolbar__main">
+              <h2 id="calculators-title" class="bm-section-toolbar__title">
+                Быстрый доступ к калькуляторам
+              </h2>
+            </div>
+            <a class="bm-section-toolbar__link" href="/kalkulyatory/">Все калькуляторы →</a>
+          </header>
+          <div class="bm-card-grid bm-card-grid--cols-5">
+            <article class="bm-card bm-card-calculator">
+              <div class="bm-card-calculator__icon">
+                <img
+                  src="../../images/illustrations/calc-icon-foundation.svg"
+                  alt=""
+                  width="100"
+                  height="100"
+                />
+              </div>
+              <h3 class="bm-card-calculator__title">Фундамент</h3>
+              <p class="bm-card-calculator__text">
+                Расчёт объёма бетона, опалубки, арматуры и материалов.
+              </p>
+              <a href="#" class="bm-button bm-button--secondary">Рассчитать</a>
+            </article>
+            <article class="bm-card bm-card-calculator">
+              <div class="bm-card-calculator__icon">
+                <img src="../../images/illustrations/calc-icon-screed.svg" alt="" width="100" height="100" />
+              </div>
+              <h3 class="bm-card-calculator__title">Стяжка пола</h3>
+              <p class="bm-card-calculator__text">
+                Цементно-песчаная стяжка, наливные полы и другие типы.
+              </p>
+              <a href="#" class="bm-button bm-button--secondary">Рассчитать</a>
+            </article>
+            <article class="bm-card bm-card-calculator">
+              <div class="bm-card-calculator__icon">
+                <img src="../../images/illustrations/calc-icon-brick.svg" alt="" width="100" height="100" />
+              </div>
+              <h3 class="bm-card-calculator__title">Кирпич</h3>
+              <p class="bm-card-calculator__text">
+                Количество кирпича и раствора для кладки стен и перегородок.
+              </p>
+              <a href="#" class="bm-button bm-button--secondary">Рассчитать</a>
+            </article>
+            <article class="bm-card bm-card-calculator">
+              <div class="bm-card-calculator__icon">
+                <img src="../../images/illustrations/calc-icon-tile.svg" alt="" width="100" height="100" />
+              </div>
+              <h3 class="bm-card-calculator__title">Плитка</h3>
+              <p class="bm-card-calculator__text">
+                Площадь, клей, затирка и раскладка плитки для стен и пола.
+              </p>
+              <a href="#" class="bm-button bm-button--secondary">Рассчитать</a>
+            </article>
+            <article class="bm-card bm-card-calculator">
+              <div class="bm-card-calculator__icon">
+                <img
+                  src="../../images/illustrations/calc-icon-drywall.svg"
+                  alt=""
+                  width="100"
+                  height="100"
+                />
+              </div>
+              <h3 class="bm-card-calculator__title">Гипсокартон</h3>
+              <p class="bm-card-calculator__text">
+                Расчёт листов, профилей, крепежа и материалов для монтажа.
+              </p>
+              <a href="#" class="bm-button bm-button--secondary">Рассчитать</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section bm-section--bg" aria-labelledby="tasks-title">
+        <div class="bm-container">
+          <header class="bm-section-toolbar">
+            <div class="bm-section-toolbar__main">
+              <h2 id="tasks-title" class="bm-section-toolbar__title">Решите свою задачу</h2>
+              <p class="bm-section-toolbar__lead">
+                Выберите сценарий — подберём нужные расчёты и подскажем порядок работ.
+              </p>
+            </div>
+          </header>
+          <div class="bm-card-grid bm-card-grid--cols-4">
+            <article class="bm-card bm-card-task">
+              <div class="bm-card-task__media">
+                <img
+                  src="../../images/illustrations/task-build-house.svg"
+                  alt=""
+                  width="320"
+                  height="200"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bm-card-task__body">
+                <h3 class="bm-card-task__title">Строю дом</h3>
+                <p class="bm-card-task__text">
+                  Рассчитайте материалы для фундамента, стен, перекрытий и кровли.
+                </p>
+                <a href="#calculators" class="bm-card-task__link">Подобрать расчёты →</a>
+              </div>
+            </article>
+            <article class="bm-card bm-card-task">
+              <div class="bm-card-task__media">
+                <img
+                  src="../../images/illustrations/task-renovate-apartment.svg"
+                  alt=""
+                  width="320"
+                  height="200"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bm-card-task__body">
+                <h3 class="bm-card-task__title">Делаю ремонт в квартире</h3>
+                <p class="bm-card-task__text">
+                  Расчёт стяжки, штукатурки, плитки, отделки и электромонтажа.
+                </p>
+                <a href="#calculators" class="bm-card-task__link">Подобрать расчёты →</a>
+              </div>
+            </article>
+            <article class="bm-card bm-card-task">
+              <div class="bm-card-task__media">
+                <img
+                  src="../../images/illustrations/task-renovate-room.svg"
+                  alt=""
+                  width="320"
+                  height="200"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bm-card-task__body">
+                <h3 class="bm-card-task__title">Ремонт в комнате</h3>
+                <p class="bm-card-task__text">
+                  Рассчитайте материалы для пола, стен, потолка и отделки.
+                </p>
+                <a href="#calculators" class="bm-card-task__link">Подобрать расчёты →</a>
+              </div>
+            </article>
+            <article class="bm-card bm-card-task">
+              <div class="bm-card-task__media">
+                <img
+                  src="../../images/illustrations/task-landscaping.svg"
+                  alt=""
+                  width="320"
+                  height="200"
+                  loading="lazy"
+                />
+              </div>
+              <div class="bm-card-task__body">
+                <h3 class="bm-card-task__title">Благоустройство</h3>
+                <p class="bm-card-task__text">
+                  Плитка, бордюры, отмостка, забор и другие уличные конструкции.
+                </p>
+                <a href="#calculators" class="bm-card-task__link">Подобрать расчёты →</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works" class="bm-section bm-how-it-works" aria-labelledby="how-title">
+        <div class="bm-container">
+          <header class="bm-section-toolbar">
+            <div class="bm-section-toolbar__main">
+              <h2 id="how-title" class="bm-section-toolbar__title">Как это работает</h2>
+            </div>
+          </header>
+          <ol class="bm-how-it-works__steps">
+            <li class="bm-how-it-works__step">
+              <span class="bm-how-it-works__icon" aria-hidden="true">
+                <svg class="bm-icon bm-how-it-works__icon-svg">
+                  <use href="#bm-icon-calculator" />
+                </svg>
+              </span>
+              <h3 class="bm-how-it-works__step-title">1. Выбираете калькулятор</h3>
+              <p class="bm-how-it-works__step-text">Выбираете нужный раздел и тип расчёта.</p>
+            </li>
+            <li class="bm-how-it-works__step">
+              <span class="bm-how-it-works__icon" aria-hidden="true">
+                <svg class="bm-icon bm-how-it-works__icon-svg">
+                  <use href="#bm-icon-document-add" />
+                </svg>
+              </span>
+              <h3 class="bm-how-it-works__step-title">2. Вводите параметры</h3>
+              <p class="bm-how-it-works__step-text">
+                Укажите размеры, материалы и другие исходные данные.
+              </p>
+            </li>
+            <li class="bm-how-it-works__step">
+              <span class="bm-how-it-works__icon" aria-hidden="true">
+                <svg class="bm-icon bm-how-it-works__icon-svg">
+                  <use href="#bm-icon-check-circle" />
+                </svg>
+              </span>
+              <h3 class="bm-how-it-works__step-title">3. Получаете результат</h3>
+              <p class="bm-how-it-works__step-text">
+                Сервис мгновенно выполнит расчёт и покажет результат.
+              </p>
+            </li>
+            <li class="bm-how-it-works__step">
+              <span class="bm-how-it-works__icon" aria-hidden="true">
+                <svg class="bm-icon bm-how-it-works__icon-svg">
+                  <use href="#bm-icon-document-plus" />
+                </svg>
+              </span>
+              <h3 class="bm-how-it-works__step-title">4. Используйте в работе</h3>
+              <p class="bm-how-it-works__step-text">
+                Сохраните, распечатайте или экспортируйте расчёт.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="bm-section bm-section--bg" aria-labelledby="trust-title">
+        <div class="bm-container">
+          <header class="bm-section-toolbar">
+            <div class="bm-section-toolbar__main">
+              <h2 id="trust-title" class="bm-section-toolbar__title">Почему нам можно доверять</h2>
+            </div>
+          </header>
+          <div class="bm-card-grid bm-card-grid--cols-4">
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-card-feature__icon-svg">
+                  <use href="#bm-icon-book" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Проверенные формулы</h3>
+                <p class="bm-card-feature__text">
+                  Расчёты основаны на строительных нормах и справочных данных.
+                </p>
+              </div>
+            </article>
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-card-feature__icon-svg">
+                  <use href="#bm-icon-shield-check" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Прозрачность</h3>
+                <p class="bm-card-feature__text">
+                  Показываем, что учитывается и какие допущения используются.
+                </p>
+              </div>
+            </article>
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-icon--filled bm-card-feature__icon-svg">
+                  <use href="#bm-icon-target" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Практичность</h3>
+                <p class="bm-card-feature__text">
+                  Сервис создан строителями для строителей и частных пользователей.
+                </p>
+              </div>
+            </article>
+            <article class="bm-card bm-card-feature">
+              <span class="bm-card-feature__icon" aria-hidden="true">
+                <svg class="bm-icon bm-icon--filled bm-card-feature__icon-svg">
+                  <use href="#bm-icon-reload" />
+                </svg>
+              </span>
+              <div class="bm-card-feature__content">
+                <h3 class="bm-card-feature__title">Постоянное развитие</h3>
+                <p class="bm-card-feature__text">Мы обновляем данные и добавляем новые расчёты.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section" aria-labelledby="articles-title">
+        <div class="bm-container">
+          <header class="bm-section-toolbar">
+            <div class="bm-section-toolbar__main">
+              <h2 id="articles-title" class="bm-section-toolbar__title">Полезные статьи</h2>
+            </div>
+            <a class="bm-section-toolbar__link" href="/stati/">Все статьи →</a>
+          </header>
+          <div class="bm-card-grid bm-card-grid--cols-4">
+            <!-- @cards home-articles -->
+          </div>
+        </div>
+      </section>
+
+      <!-- @faq-section home-faq -->
+
+      <section class="bm-section bm-section--tight" aria-labelledby="final-cta-title">
+        <div class="bm-container">
+          <aside class="bm-cta-block bm-cta-block--dark">
+            <img
+              src="../../images/illustrations/cta-house-dark.svg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="bm-cta-block__content">
+              <h2 id="final-cta-title" class="bm-cta-block__title">Начните расчёт прямо сейчас</h2>
+              <p class="bm-cta-block__lead">
+                Выберите нужный калькулятор и получите результат за несколько минут.
+              </p>
+              <div class="bm-cta-block__actions">
+                <a href="#calculators" class="bm-button bm-button--inverse">Открыть калькуляторы</a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bm-footer">
+      <div class="bm-container">
+        <div class="bm-footer__grid">
+          <div class="bm-footer__brand">
+            <a href="/">
+              <img
+                class="bm-footer__logo"
+                src="../../images/logo_footer.png"
+                width="152"
+                height="36"
+                alt="Brigmaster"
+              />
+            </a>
+            <p class="bm-footer__desc">
+              Онлайн-калькуляторы для строительства и ремонта. Понятные расчёты и полезный контент
+              для любых задач.
+            </p>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">Калькуляторы</div>
+            <ul class="bm-footer__links">
+              <li><a href="#">Фундамент</a></li>
+              <li><a href="#">Стяжка пола</a></li>
+              <li><a href="#">Кирпич</a></li>
+              <li><a href="#">Плитка</a></li>
+              <li><a href="#">Гипсокартон</a></li>
+              <li><a href="#">Отделка</a></li>
+              <li><a href="/kalkulyatory/">Все калькуляторы</a></li>
+            </ul>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">Информация</div>
+            <ul class="bm-footer__links">
+              <li><a href="#how-it-works">Как это работает</a></li>
+              <li><a href="#">Методология расчётов</a></li>
+              <li><a href="#">Ограничения</a></li>
+              <li><a href="#faq">Вопросы и ответы</a></li>
+              <li><a href="/stati/">Статьи</a></li>
+            </ul>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">О проекте</div>
+            <ul class="bm-footer__links">
+              <li><a href="/o-proekte/">О проекте</a></li>
+              <li><a href="/kontakty/">Контакты</a></li>
+              <li><a href="#">Политика конфиденциальности</a></li>
+              <li><a href="#">Пользовательское соглашение</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="bm-footer__bottom">© 2024 Brigmaster.ru — все права защищены.</p>
+      </div>
+    </footer>
+  </body>
+</html>

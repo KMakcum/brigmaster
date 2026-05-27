@@ -1,0 +1,92 @@
+[
+  {
+    "href": "./article/",
+    "image": "../../images/illustrations/article-cover-1.svg",
+    "imageAlt": "",
+    "tag": "Фундамент",
+    "title": "Как выбрать тип фундамента для частного дома",
+    "excerpt": "Разбираем основные типы фундаментов и критерии выбора под разные условия.",
+    "readTime": "12 мин",
+    "date": "15.04.2024"
+  },
+  {
+    "href": "#",
+    "image": "../../images/illustrations/article-cover-2.svg",
+    "imageAlt": "",
+    "tag": "Стяжка",
+    "title": "Толщина стяжки пола: какая должна быть и почему",
+    "excerpt": "Рекомендации по выбору толщины для разных видов оснований.",
+    "readTime": "8 мин",
+    "date": "10.04.2024"
+  },
+  {
+    "href": "#",
+    "image": "../../images/illustrations/article-cover-3.svg",
+    "imageAlt": "",
+    "tag": "Плитка",
+    "title": "Как рассчитать плитку на пол и стены без ошибок",
+    "excerpt": "Пошаговая инструкция и примеры расчётов с учётом подрезки.",
+    "readTime": "10 мин",
+    "date": "05.04.2024"
+  },
+  {
+    "href": "#",
+    "image": "../../images/illustrations/article-cover-4.svg",
+    "imageAlt": "",
+    "tag": "Ремонт",
+    "title": "С чего начать ремонт в новостройке",
+    "excerpt": "План работ, этапы и полезные советы для новичков.",
+    "readTime": "15 мин",
+    "date": "01.04.2024"
+  },
+  {
+    "href": "#",
+    "image": "../../images/illustrations/article-cover-1.svg",
+    "imageAlt": "",
+    "tag": "Стены",
+    "title": "Кирпичная кладка: расчёт материалов на стену",
+    "excerpt": "Как посчитать количество кирпича и раствора для наружных стен.",
+    "readTime": "9 мин",
+    "date": "28.03.2024"
+  },
+  {
+    "href": "#",
+    "image": "../../images/illustrations/article-cover-2.svg",
+    "imageAlt": "",
+    "tag": "Пол",
+    "title": "Утепление пола по грунту: слои и материалы",
+    "excerpt": "Схема пирога пола и типичные ошибки при устройстве.",
+    "readTime": "11 мин",
+    "date": "22.03.2024"
+  },
+  {
+    "href": "#",
+    "image": "../../images/illustrations/article-cover-3.svg",
+    "imageAlt": "",
+    "tag": "Кровля",
+    "title": "Уклон кровли: нормы и практические рекомендации",
+    "excerpt": "Минимальные уклоны для разных покрытий и как их проверить.",
+    "readTime": "7 мин",
+    "date": "18.03.2024"
+  },
+  {
+    "href": "#",
+    "image": "../../images/illustrations/article-cover-4.svg",
+    "imageAlt": "",
+    "tag": "Отделка",
+    "title": "Штукатурка стен: расход материала на 1 м²",
+    "excerpt": "Факторы, влияющие на расход, и пример расчёта для комнаты.",
+    "readTime": "6 мин",
+    "date": "12.03.2024"
+  },
+  {
+    "href": "#",
+    "image": "../../images/illustrations/article-cover-1.svg",
+    "imageAlt": "",
+    "tag": "Материалы",
+    "title": "Цемент и песок: пропорции для разных растворов",
+    "excerpt": "Таблица соотношений для кладки, стяжки и штукатурки.",
+    "readTime": "8 мин",
+    "date": "08.03.2024"
+  }
+]

@@ -1,0 +1,42 @@
+@use '../abstracts/media' as media;
+
+.bm-article-toc-panel {
+  margin: 0 0 var(--bm-space-8);
+  padding: var(--bm-space-6);
+  border-radius: var(--bm-radius-lg);
+  background: var(--bm-color-brand-soft);
+}
+
+.bm-article-toc-panel__title {
+  margin: 0 0 var(--bm-space-4);
+  font-size: var(--bm-text-md);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+.bm-article-toc-panel__grid {
+  display: grid;
+  gap: var(--bm-space-2) var(--bm-space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bm-article-toc-panel__link {
+  font-size: var(--bm-text-base);
+  line-height: 1.4;
+  color: var(--bm-color-brand-emphasis);
+  text-decoration: none;
+}
+
+.bm-article-toc-panel__link:hover,
+.bm-article-toc-panel__link:focus-visible {
+  color: var(--bm-color-brand);
+  text-decoration: underline;
+}
+
+@include media.bp(md) {
+  .bm-article-toc-panel__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

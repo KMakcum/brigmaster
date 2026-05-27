@@ -1,0 +1,85 @@
+@use '../abstracts/mixins' as mixins;
+
+.bm-accordion__trigger {
+  @include mixins.button-reset;
+  @include mixins.interactive-transition;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bm-space-4);
+  width: 100%;
+  padding: var(--bm-space-4) var(--bm-space-5);
+  font-size: var(--bm-text-base);
+  font-weight: var(--bm-font-medium);
+  line-height: 1.4;
+  text-align: left;
+  color: var(--bm-color-text-strong);
+}
+
+.bm-accordion__trigger:hover {
+  color: var(--bm-color-brand);
+}
+
+.bm-accordion__icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: currentcolor;
+  transition: transform var(--bm-transition);
+}
+
+.bm-accordion__item.is-open .bm-accordion__icon {
+  transform: rotate(180deg);
+}
+
+.bm-accordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--bm-transition-slow);
+}
+
+.bm-accordion__item.is-open .bm-accordion__panel {
+  grid-template-rows: 1fr;
+}
+
+.bm-accordion__panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.bm-accordion__content {
+  padding: 0 var(--bm-space-5) var(--bm-space-4);
+  font-size: var(--bm-text-base);
+  line-height: 1.55;
+  color: var(--bm-color-text-muted);
+}
+
+.bm-accordion__content p {
+  margin: 0;
+}
+
+// FAQ grid: flat rows per Figma (border-bottom, no card chrome).
+.bm-faq-grid .bm-accordion__trigger {
+  padding: var(--bm-space-4) 0;
+  font-weight: var(--bm-font-regular);
+}
+
+.bm-faq-grid .bm-accordion__trigger:hover {
+  color: var(--bm-color-text-strong);
+}
+
+.bm-faq-grid .bm-accordion__icon {
+  color: var(--bm-color-text-muted);
+}
+
+.bm-faq-grid .bm-accordion__content {
+  padding: 0 0 var(--bm-space-4);
+}
+
+.bm-faq-grid .bm-accordion__text {
+  margin: 0;
+  font-size: var(--bm-text-base);
+  line-height: 1.43;
+  color: var(--bm-color-text-muted);
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "image": "../../images/cards/calc-cover-strip.svg",
+    "title": "Ленточный фундамент",
+    "text": "Расчёт размеров ленты, объёма бетона и количества материалов",
+    "href": "/kalkulyatory/fundament/lentochnyj/",
+    "cta": "Рассчитать"
+  },
+  {
+    "image": "../../images/cards/calc-cover-pile.svg",
+    "title": "Свайный фундамент",
+    "text": "Количество свай, длина, шаг и объём материалов",
+    "href": "/kalkulyatory/fundament/svajnyj/",
+    "cta": "Рассчитать"
+  },
+  {
+    "image": "../../images/cards/calc-cover-slab.svg",
+    "title": "Плитный фундамент",
+    "text": "Толщина плиты, объём бетона, арматура и материалы",
+    "href": "/kalkulyatory/fundament/plitnyj/",
+    "cta": "Рассчитать"
+  },
+  {
+    "image": "../../images/cards/calc-cover-pier.svg",
+    "title": "Буронабивные сваи",
+    "text": "Расчёт количества и объёма буронабивных свай",
+    "href": "/kalkulyatory/fundament/buronabivnye/",
+    "cta": "Рассчитать"
+  }
+]

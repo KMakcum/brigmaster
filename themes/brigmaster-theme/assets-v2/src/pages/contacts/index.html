@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Контакты — Brigmaster</title>
+    <script type="module" src="./contacts.js"></script>
+  </head>
+  <body>
+    <a class="bm-skip-link" href="#main">Перейти к содержимому</a>
+    <header class="bm-header" data-bm-component="header-menu">
+      <div class="bm-container bm-header__row">
+        <a href="/" class="bm-header__brand">
+          <img
+            class="bm-header__logo"
+            src="../../images/logo_header.png"
+            width="168"
+            height="40"
+            alt="Brigmaster"
+          />
+        </a>
+        <button
+          type="button"
+          class="bm-header__toggle"
+          aria-expanded="false"
+          aria-controls="bm-header-panel"
+          aria-label="Открыть меню"
+        >
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+        </button>
+        <div id="bm-header-panel" class="bm-header__panel">
+          <nav class="bm-nav-primary" aria-label="Primary" data-bm-component="nav-dropdown">
+            <ul id="primary-navigation" class="menu">
+              <li class="menu-item menu-item-has-children">
+                <a href="/kalkulyatory/">Калькуляторы</a>
+                <ul class="sub-menu">
+                  <li class="menu-item menu-item-has-children">
+                    <a href="/kalkulyatory/fundament/">Фундаменты</a>
+                    <ul class="sub-menu">
+                      <li class="menu-item"><a href="#">Плитный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Ленточный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Свайно-ростверковый фундамент</a></li>
+                      <li class="menu-item"><a href="#">Столбчатый фундамент</a></li>
+                    </ul>
+                  </li>
+                  <li class="menu-item"><a href="#">Стяжка</a></li>
+                  <li class="menu-item"><a href="#">Стены</a></li>
+                  <li class="menu-item"><a href="#">Пол</a></li>
+                  <li class="menu-item"><a href="#">Кровля</a></li>
+                  <li class="menu-item"><a href="#">Отделка</a></li>
+                </ul>
+              </li>
+              <li class="menu-item menu-item--disabled">
+                <span class="bm-nav-primary__label">Проекты <span class="bm-badge">скоро</span></span>
+              </li>
+              <li class="menu-item"><a href="/materialy/">Материалы</a></li>
+              <li class="menu-item"><a href="/stati/">Статьи</a></li>
+              <li class="menu-item"><a href="/o-proekte/">О проекте</a></li>
+            </ul>
+          </nav>
+          <div class="bm-header__actions">
+            <a href="/kalkulyatory/" class="bm-button bm-button--primary">Открыть калькуляторы</a>
+            <a href="#" class="bm-button bm-button--ghost">Войти</a>
+          </div>
+        </div>
+      </div>
+      <div class="bm-header__overlay" aria-hidden="true"></div>
+    </header>
+
+    <main id="main">
+      <section class="bm-page-hero" aria-labelledby="contacts-hero-title">
+        <img
+          class="bm-page-hero__image"
+          src="../../images/illustrations/hero-contacts.jpg"
+          alt=""
+          loading="eager"
+          decoding="async"
+        />
+        <div class="bm-container bm-page-hero__container">
+          <nav
+            class="bm-breadcrumbs bm-breadcrumbs--chevron bm-breadcrumbs--link-brand bm-page-hero__breadcrumbs"
+            aria-label="Хлебные крошки"
+          >
+            <ol class="bm-breadcrumbs__list">
+              <li class="bm-breadcrumbs__item"><a href="/">Главная</a></li>
+              <li class="bm-breadcrumbs__item" aria-current="page">Контакты</li>
+            </ol>
+          </nav>
+          <div class="bm-hero">
+            <h1 id="contacts-hero-title" class="bm-hero__title">Контакты</h1>
+            <p class="bm-hero__lead">
+              Мы всегда рады вашим вопросам, предложениям и сотрудничеству.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section" aria-labelledby="contacts-form-title">
+        <div class="bm-container">
+          <div class="bm-contact-form-block">
+            <div class="bm-contact-form-block__intro">
+              <h2 id="contacts-form-title" class="bm-contact-form-block__title">Свяжитесь с нами</h2>
+              <p class="bm-contact-form-block__text">
+                Напишите, если хотите уточнить расчёт, предложить улучшение или обсудить
+                сотрудничество. Мы отвечаем по рабочим каналам и стараемся быстро возвращаться с
+                понятным ответом.
+              </p>
+              <article class="bm-contact-channel">
+                <svg class="bm-icon bm-contact-channel__icon" aria-hidden="true">
+                  <use href="#bm-icon-mail" />
+                </svg>
+                <div class="bm-contact-channel__content">
+                  <h3 class="bm-contact-channel__title">Email</h3>
+                  <p class="bm-contact-channel__value">info@brigmaster.ru</p>
+                  <p class="bm-contact-channel__note">Для вопросов, предложений и партнёрств.</p>
+                </div>
+              </article>
+              <article class="bm-contact-channel">
+                <svg class="bm-icon bm-contact-channel__icon" aria-hidden="true">
+                  <use href="#bm-icon-share" />
+                </svg>
+                <div class="bm-contact-channel__content">
+                  <h3 class="bm-contact-channel__title">Telegram</h3>
+                  <p class="bm-contact-channel__value">@brigmaster_support</p>
+                  <p class="bm-contact-channel__note">Для коротких вопросов и быстрой связи.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="wpcf7 no-js" id="wpcf7-f70-p36-o1" lang="ru-RU" dir="ltr" data-wpcf7-id="70">
+              <div class="screen-reader-response">
+                <p role="status" aria-live="polite" aria-atomic="true"></p>
+                <ul></ul>
+              </div>
+              <form
+                action="/kontakty/#wpcf7-f70-p36-o1"
+                method="post"
+                class="wpcf7-form init wpcf7-acceptance-as-validation"
+                aria-label="Контактная форма"
+                novalidate="novalidate"
+                data-status="init"
+              >
+                <fieldset class="hidden-fields-container">
+                  <input type="hidden" name="_wpcf7" value="70" />
+                  <input type="hidden" name="_wpcf7_version" value="6.1.5" />
+                  <input type="hidden" name="_wpcf7_locale" value="ru_RU" />
+                  <input type="hidden" name="_wpcf7_unit_tag" value="wpcf7-f70-p36-o1" />
+                  <input type="hidden" name="_wpcf7_container_post" value="36" />
+                  <input type="hidden" name="_wpcf7_posted_data_hash" value="" />
+                </fieldset>
+                <p>
+                  <label>
+                    Ваше имя<br />
+                    <span class="wpcf7-form-control-wrap" data-name="your-name">
+                      <input
+                        size="40"
+                        maxlength="400"
+                        class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
+                        autocomplete="name"
+                        aria-required="true"
+                        aria-invalid="false"
+                        value=""
+                        type="text"
+                        name="your-name"
+                      />
+                    </span>
+                  </label>
+                </p>
+                <p>
+                  <label>
+                    Ваш e-mail<br />
+                    <span class="wpcf7-form-control-wrap" data-name="your-email">
+                      <input
+                        size="40"
+                        maxlength="400"
+                        class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email"
+                        autocomplete="email"
+                        aria-required="true"
+                        aria-invalid="false"
+                        value=""
+                        type="email"
+                        name="your-email"
+                      />
+                    </span>
+                  </label>
+                </p>
+                <p>
+                  <label>
+                    Тема<br />
+                    <span class="wpcf7-form-control-wrap" data-name="select-851">
+                      <select class="wpcf7-form-control wpcf7-select" aria-invalid="false" name="select-851">
+                        <option value="Ошибка в расчёте">Ошибка в расчёте</option>
+                        <option value="Идея калькулятора">Идея калькулятора</option>
+                        <option value="Техническая проблема сайта">Техническая проблема сайта</option>
+                        <option value="Персональные данные">Персональные данные</option>
+                        <option value="Другое">Другое</option>
+                      </select>
+                    </span>
+                  </label>
+                </p>
+                <p>
+                  <label>
+                    Ваше сообщение<br />
+                    <span class="wpcf7-form-control-wrap" data-name="your-message">
+                      <textarea
+                        cols="40"
+                        rows="10"
+                        maxlength="2000"
+                        class="wpcf7-form-control wpcf7-textarea wpcf7-validates-as-required"
+                        aria-required="true"
+                        aria-invalid="false"
+                        name="your-message"
+                      ></textarea>
+                    </span>
+                  </label>
+                </p>
+                <p>
+                  <span class="wpcf7-form-control-wrap" data-name="acceptance-523">
+                    <span class="wpcf7-form-control wpcf7-acceptance">
+                      <span class="wpcf7-list-item">
+                        <label>
+                          <input type="checkbox" name="acceptance-523" value="1" aria-invalid="false" />
+                          <span class="wpcf7-list-item-label">
+                            Я согласен с обработкой данных в соответствии с
+                            <a href="/privacy-policy/" target="_blank">Политикой конфиденциальности</a>
+                          </span>
+                        </label>
+                      </span>
+                    </span>
+                  </span>
+                </p>
+                <p>
+                  <input class="wpcf7-form-control wpcf7-submit has-spinner" type="submit" value="Отправить" />
+                </p>
+                <div class="wpcf7-response-output" aria-hidden="true"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section bm-section--tight" aria-labelledby="contacts-faq-title">
+        <div class="bm-container">
+          <div class="bm-section-toolbar">
+            <div class="bm-section-toolbar__main">
+              <h2 id="contacts-faq-title" class="bm-section-toolbar__title">Часто задаваемые вопросы</h2>
+            </div>
+          </div>
+          <div class="bm-faq-grid" data-bm-component="accordion">
+            <div class="bm-faq-grid__item bm-accordion__item">
+              <button type="button" class="bm-accordion__trigger" aria-expanded="false">
+                Как быстро вы отвечаете на сообщения?
+                <svg class="bm-icon bm-accordion__icon" aria-hidden="true">
+                  <use href="#bm-icon-chevron-down" />
+                </svg>
+              </button>
+              <div class="bm-accordion__panel">
+                <div class="bm-accordion__panel-inner">
+                  Обычно мы отвечаем в течение рабочего дня, если вопрос не требует дополнительной
+                  проверки.
+                </div>
+              </div>
+            </div>
+            <div class="bm-faq-grid__item bm-accordion__item">
+              <button type="button" class="bm-accordion__trigger" aria-expanded="false">
+                Можно ли предложить новый калькулятор?
+                <svg class="bm-icon bm-accordion__icon" aria-hidden="true">
+                  <use href="#bm-icon-chevron-down" />
+                </svg>
+              </button>
+              <div class="bm-accordion__panel">
+                <div class="bm-accordion__panel-inner">
+                  Да, опишите задачу и пример расчёта. Мы рассмотрим идею при планировании новых
+                  инструментов.
+                </div>
+              </div>
+            </div>
+            <div class="bm-faq-grid__item bm-accordion__item">
+              <button type="button" class="bm-accordion__trigger" aria-expanded="false">
+                Вы работаете с организациями?
+                <svg class="bm-icon bm-accordion__icon" aria-hidden="true">
+                  <use href="#bm-icon-chevron-down" />
+                </svg>
+              </button>
+              <div class="bm-accordion__panel">
+                <div class="bm-accordion__panel-inner">
+                  Да, мы открыты к партнёрствам, экспертным материалам и совместным улучшениям
+                  сервиса.
+                </div>
+              </div>
+            </div>
+            <div class="bm-faq-grid__item bm-accordion__item">
+              <button type="button" class="bm-accordion__trigger" aria-expanded="false">
+                Куда отправить замечание по формуле?
+                <svg class="bm-icon bm-accordion__icon" aria-hidden="true">
+                  <use href="#bm-icon-chevron-down" />
+                </svg>
+              </button>
+              <div class="bm-accordion__panel">
+                <div class="bm-accordion__panel-inner">
+                  Напишите на email или через форму и укажите страницу, входные данные и ожидаемый
+                  результат.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bm-section bm-section--tight" aria-labelledby="contacts-cta-title">
+        <div class="bm-container">
+          <aside class="bm-cta-block bm-cta-block--soft">
+            <div class="bm-cta-block__content">
+              <h2 id="contacts-cta-title" class="bm-cta-block__title">Есть вопрос по расчёту?</h2>
+              <p class="bm-cta-block__lead">
+                Посмотрите методологию — там собраны основные принципы, источники данных и
+                ограничения.
+              </p>
+              <div class="bm-cta-block__actions">
+                <a href="/metodologiya/" class="bm-button bm-button--secondary">Открыть методологию</a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bm-footer">
+      <div class="bm-container">
+        <div class="bm-footer__grid">
+          <div class="bm-footer__brand">
+            <a href="/">
+              <img
+                class="bm-footer__logo"
+                src="../../images/logo_footer.png"
+                width="152"
+                height="36"
+                alt="Brigmaster"
+              />
+            </a>
+            <p class="bm-footer__desc">
+              Онлайн-калькуляторы для строительства и ремонта. Понятные расчёты и полезный контент
+              для любых задач.
+            </p>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">Калькуляторы</div>
+            <ul class="bm-footer__links">
+              <li><a href="#">Фундамент</a></li>
+              <li><a href="#">Стяжка пола</a></li>
+              <li><a href="#">Кирпич</a></li>
+              <li><a href="#">Плитка</a></li>
+              <li><a href="#">Гипсокартон</a></li>
+              <li><a href="#">Отделка</a></li>
+              <li><a href="/kalkulyatory/">Все калькуляторы</a></li>
+            </ul>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">Информация</div>
+            <ul class="bm-footer__links">
+              <li><a href="/kak-eto-rabotaet/">Как это работает</a></li>
+              <li><a href="/metodologiya/">Методология расчётов</a></li>
+              <li><a href="#">Ограничения</a></li>
+              <li><a href="#">Вопросы и ответы</a></li>
+              <li><a href="/stati/">Статьи</a></li>
+            </ul>
+          </div>
+          <div class="bm-footer__column">
+            <div class="bm-footer__title">О проекте</div>
+            <ul class="bm-footer__links">
+              <li><a href="/o-proekte/">О проекте</a></li>
+              <li><a href="/kontakty/">Контакты</a></li>
+              <li><a href="/privacy-policy/">Политика конфиденциальности</a></li>
+              <li><a href="#">Пользовательское соглашение</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="bm-footer__bottom">© 2024 Brigmaster.ru — все права защищены.</p>
+      </div>
+    </footer>
+  </body>
+</html>

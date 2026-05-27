@@ -1,0 +1,29 @@
+.bm-section-header {
+  margin-bottom: var(--bm-space-8);
+  max-width: 42rem;
+}
+
+.bm-section-header--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.bm-section-header__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-weight: var(--bm-font-semibold);
+  line-height: 1.2;
+  color: var(--bm-color-text-strong);
+}
+
+.bm-section-header__lead {
+  margin: var(--bm-space-3) 0 0;
+  font-size: var(--bm-text-lg);
+  line-height: 1.55;
+  color: var(--bm-color-text-muted);
+}
+
+.bm-section-footer {
+  margin-top: var(--bm-space-8);
+  text-align: center;
+}

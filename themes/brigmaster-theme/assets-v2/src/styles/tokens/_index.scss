@@ -1,0 +1,12 @@
+// Aggregate forward of all token files for easy import.
+// CSS custom properties are auto-injected into :root; SCSS variables become
+// accessible via `@use 'styles/tokens' as tokens;` then `tokens.$bm-bp-md`.
+
+@forward 'colors';
+@forward 'typography';
+@forward 'spacing';
+@forward 'radii';
+@forward 'shadows';
+@forward 'motion';
+@forward 'breakpoints';
+@forward 'z-index';

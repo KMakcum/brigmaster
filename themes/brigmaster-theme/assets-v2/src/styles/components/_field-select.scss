@@ -1,0 +1,50 @@
+.bm-field-select {
+  position: relative;
+  display: block;
+}
+
+.bm-field-select__control {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: var(--bm-space-3) 2.5rem var(--bm-space-3) var(--bm-space-4);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-md);
+  font-family: inherit;
+  font-size: var(--bm-text-base);
+  line-height: 1.4;
+  color: var(--bm-color-text);
+  background: var(--bm-color-surface);
+  appearance: none;
+  cursor: pointer;
+  transition:
+    border-color var(--bm-transition),
+    box-shadow var(--bm-transition);
+}
+
+.bm-field-select__control:hover {
+  border-color: var(--bm-color-border-strong);
+}
+
+.bm-field-select__control:focus {
+  outline: none;
+  border-color: var(--bm-color-brand);
+  box-shadow: 0 0 0 3px rgb(91 124 153 / 0.15);
+}
+
+.bm-field-select__control:focus-visible {
+  outline: none;
+  border-color: var(--bm-color-brand);
+  box-shadow: 0 0 0 3px rgb(91 124 153 / 0.15);
+}
+
+.bm-field-select__chevron {
+  position: absolute;
+  top: 50%;
+  right: var(--bm-space-4);
+  width: 1rem;
+  height: 1rem;
+  color: var(--bm-color-text-muted);
+  pointer-events: none;
+  transform: translateY(-50%);
+}

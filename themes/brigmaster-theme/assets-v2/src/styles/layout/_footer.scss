@@ -1,0 +1,111 @@
+.bm-footer {
+  padding-block: var(--bm-space-10) var(--bm-space-6);
+  background: var(--bm-color-surface-muted);
+  border-top: 1px solid var(--bm-color-border);
+}
+
+.bm-footer__brand {
+  max-width: 18rem;
+}
+
+.bm-footer__brand a {
+  display: inline-block;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.bm-footer__brand a:hover,
+.bm-footer__brand a:focus-visible {
+  opacity: 1;
+}
+
+.bm-footer__logo {
+  display: block;
+  width: auto;
+  height: 3rem;
+}
+
+.bm-footer__desc {
+  margin-top: var(--bm-space-3);
+  font-size: var(--bm-text-base);
+  color: var(--bm-color-text-muted);
+}
+
+.bm-footer__grid {
+  display: grid;
+  gap: var(--bm-space-6);
+  grid-template-columns: 1.5fr repeat(3, 1fr);
+}
+
+.bm-footer__title {
+  margin-bottom: var(--bm-space-3);
+  font-size: var(--bm-text-base);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+.bm-footer__links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bm-footer__links li + li {
+  margin-top: var(--bm-space-2);
+}
+
+.bm-footer__links a {
+  color: var(--bm-color-text-muted);
+  font-size: var(--bm-text-base);
+}
+
+.bm-footer__links a:hover {
+  color: var(--bm-color-brand);
+}
+
+.bm-footer__social {
+  display: flex;
+  gap: var(--bm-space-2);
+  margin-top: var(--bm-space-3);
+}
+
+.bm-footer__social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-full);
+  color: var(--bm-color-text);
+  transition:
+    color var(--bm-transition),
+    border-color var(--bm-transition),
+    background-color var(--bm-transition);
+}
+
+.bm-footer__social a:hover {
+  color: var(--bm-color-brand);
+  border-color: var(--bm-color-brand);
+  background: var(--bm-color-brand-soft);
+}
+
+@media (width <= 1023px) {
+  .bm-footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (width <= 767px) {
+  .bm-footer__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bm-footer__bottom {
+  margin-top: var(--bm-space-8);
+  padding-top: var(--bm-space-6);
+  border-top: 1px solid var(--bm-color-border);
+  font-size: var(--bm-text-sm);
+  color: var(--bm-color-text-muted);
+}

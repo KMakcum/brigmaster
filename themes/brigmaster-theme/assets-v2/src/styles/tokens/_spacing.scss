@@ -1,0 +1,23 @@
+// Spacing tokens (8-base scale). Source: docs/design/NEW_DESIGN_SYSTEM.md (section 3.4).
+
+:root {
+  --bm-space-1: 4px;
+  --bm-space-2: 8px;
+  --bm-space-3: 12px;
+  --bm-space-4: 16px;
+  --bm-space-5: 20px;
+  --bm-space-6: 24px;
+  --bm-space-8: 32px;
+  --bm-space-10: 40px;
+  --bm-space-12: 48px;
+  --bm-space-16: 64px;
+  --bm-space-20: 80px;
+  --bm-space-24: 96px;
+
+  // Container
+  --bm-container-max: 1280px;
+  --bm-container-narrow: 960px;
+
+  // Documented default; responsive padding is set in layout/_container.scss
+  --bm-container-padding-x: 16px;
+}

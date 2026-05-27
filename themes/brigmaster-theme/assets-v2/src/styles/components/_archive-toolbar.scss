@@ -1,0 +1,39 @@
+@use '../abstracts/media' as media;
+
+.bm-archive-toolbar {
+  display: grid;
+  gap: var(--bm-space-4);
+  margin-bottom: var(--bm-space-8);
+}
+
+.bm-archive-toolbar__filters {
+  display: grid;
+  gap: var(--bm-space-3);
+}
+
+.bm-archive-toolbar__sort {
+  min-width: 0;
+}
+
+.bm-archive-found {
+  margin: 0 0 var(--bm-space-6);
+  font-size: var(--bm-text-base);
+  color: var(--bm-color-text-muted);
+}
+
+@include media.bp(md) {
+  .bm-archive-toolbar__filters {
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 16rem);
+  }
+}
+
+@include media.bp(lg) {
+  .bm-archive-toolbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .bm-archive-toolbar__sort {
+    min-width: 17.5rem;
+  }
+}

@@ -1,0 +1,11 @@
+// Small utility classes. Keep this file tiny — prefer component styles.
+
+@use '../abstracts' as a;
+
+.bm-visually-hidden {
+  @include a.visually-hidden;
+}
+
+.bm-scroll-lock {
+  overflow: hidden;
+}

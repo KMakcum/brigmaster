@@ -1,0 +1,9 @@
+// Border-radius tokens. Source: docs/design/NEW_DESIGN_SYSTEM.md (section 3.3).
+
+:root {
+  --bm-radius-sm: 6px; // chips, badges
+  --bm-radius-md: 8px; // buttons, inputs
+  --bm-radius-lg: 12px; // cards
+  --bm-radius-xl: 16px; // big banners / cta blocks
+  --bm-radius-full: 9999px; // pill / circle
+}

@@ -1,0 +1,84 @@
+@use '../abstracts/media' as media;
+
+.bm-card-grid {
+  display: grid;
+  gap: var(--bm-space-4);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.bm-card-grid--gap-sm {
+  gap: var(--bm-space-3);
+}
+
+.bm-card-grid--gap-lg {
+  gap: var(--bm-space-6);
+}
+
+// Foundation calculator cards: hub 1 → 2 → 4.
+// Article (.bm-prose): fluid 1–3 cols from content width (min card ~260px, Figma cover 290px).
+.bm-card-grid--foundation-types {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.bm-prose .bm-card-grid--foundation-types {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16.25rem), 1fr));
+}
+
+.bm-card-grid--foundation-types > .bm-card-calculator--cover {
+  height: 100%;
+}
+
+@include media.bp(md) {
+  .bm-card-grid--foundation-types {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bm-prose .bm-card-grid--foundation-types {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16.25rem), 1fr));
+  }
+}
+
+@include media.bp(xl) {
+  .bm-card-grid--foundation-types {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .bm-prose .bm-card-grid--foundation-types {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16.25rem), 1fr));
+  }
+}
+
+@include media.bp(md) {
+  .bm-card-grid--cols-2,
+  .bm-card-grid--cols-4,
+  .bm-card-grid--cols-5,
+  .bm-card-grid--cols-6 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include media.bp(lg) {
+  .bm-card-grid--cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .bm-card-grid--cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@include media.bp(xl) {
+  .bm-card-grid--cols-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (width >= 1200px) {
+  .bm-card-grid--cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .bm-card-grid--cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}

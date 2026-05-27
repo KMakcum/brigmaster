@@ -1,0 +1,17 @@
+// Media-query mixin built on top of $bm-breakpoints from tokens/_breakpoints.scss.
+// Usage: @include media.bp(md) { ... } // applies at min-width: 768px
+
+@use '../tokens/breakpoints' as bp;
+@use 'sass:map';
+
+@mixin bp($name) {
+  $value: map.get(bp.$bm-breakpoints, $name);
+
+  @if not $value {
+    @error "Unknown breakpoint '#{$name}'. Available: #{map.keys(bp.$bm-breakpoints)}.";
+  }
+
+  @media (min-width: $value) {
+    @content;
+  }
+}

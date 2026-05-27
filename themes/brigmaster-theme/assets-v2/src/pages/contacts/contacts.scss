@@ -1,0 +1,209 @@
+@use '../../styles/components/page-hero';
+@use '../../styles/components/hero';
+@use '../../styles/components/card';
+@use '../../styles/components/card-grid';
+@use '../../styles/components/faq-grid';
+@use '../../styles/components/accordion';
+@use '../../styles/components/cta-block';
+@use '../../styles/components/button';
+@use '../../styles/components/link';
+@use '../../styles/components/section-toolbar';
+@use '../../styles/components/select';
+@use '../../styles/abstracts/media' as media;
+
+.bm-contact-form-block {
+  display: grid;
+  gap: var(--bm-space-8);
+  align-items: start;
+}
+
+.bm-contact-form-block__intro {
+  max-width: 32rem;
+}
+
+.bm-contact-form-block__title {
+  margin: 0 0 var(--bm-space-4);
+  font-size: var(--bm-text-2xl);
+  font-weight: var(--bm-font-semibold);
+  line-height: 1.2;
+  color: var(--bm-color-text-strong);
+}
+
+.bm-contact-form-block__text {
+  margin: 0 0 var(--bm-space-5);
+  font-size: var(--bm-text-base);
+  line-height: 1.6;
+  color: var(--bm-color-text-muted);
+}
+
+.bm-contact-channel {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--bm-space-4);
+  align-items: start;
+  padding: var(--bm-space-5);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-lg);
+  background: var(--bm-color-surface);
+}
+
+.bm-contact-channel + .bm-contact-channel {
+  margin-top: var(--bm-space-3);
+}
+
+.bm-contact-channel__icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--bm-color-brand);
+}
+
+.bm-contact-channel__title {
+  margin: 0;
+  font-size: var(--bm-text-base);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+.bm-contact-channel__value {
+  margin: var(--bm-space-1) 0 0;
+  font-size: var(--bm-text-base);
+  color: var(--bm-color-text);
+}
+
+.bm-contact-channel__note {
+  margin: var(--bm-space-1) 0 0;
+  font-size: var(--bm-text-sm);
+  line-height: 1.5;
+  color: var(--bm-color-text-muted);
+}
+
+/* stylelint-disable selector-class-pattern -- CF7 markup comes from the plugin and cannot be renamed. */
+.bm-contact-form-block .wpcf7 {
+  display: grid;
+  padding: var(--bm-space-6);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-lg);
+  background: var(--bm-color-surface);
+  box-shadow: var(--bm-shadow-sm);
+}
+
+.bm-contact-form-block .screen-reader-response,
+.bm-contact-form-block .hidden-fields-container {
+  display: none;
+}
+
+.bm-contact-form-block .wpcf7-form {
+  display: grid;
+  gap: var(--bm-space-4);
+}
+
+.bm-contact-form-block .wpcf7-form > p {
+  margin: 0;
+}
+
+.bm-contact-form-block label {
+  display: grid;
+  gap: var(--bm-space-2);
+  font-size: var(--bm-text-sm);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+}
+
+.bm-contact-form-block .wpcf7-form-control-wrap {
+  display: block;
+}
+
+.bm-contact-form-block
+  :where(input:not([type='submit'], [type='checkbox'], [type='hidden']), textarea) {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6875rem var(--bm-space-3);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-md);
+  color: var(--bm-color-text);
+  background: var(--bm-color-surface);
+}
+
+.bm-contact-form-block .wpcf7-select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6875rem var(--bm-space-3);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-md);
+  color: var(--bm-color-text);
+  background: var(--bm-color-surface);
+}
+
+.bm-contact-form-block
+  :where(input:not([type='submit'], [type='checkbox'], [type='hidden']), textarea):focus,
+.bm-contact-form-block .wpcf7-select:focus {
+  outline: 2px solid rgb(74 127 176 / 0.3);
+  outline-offset: 2px;
+  border-color: var(--bm-color-brand);
+}
+
+.bm-contact-form-block textarea {
+  min-height: 8.5rem;
+  resize: vertical;
+}
+
+.bm-contact-form-block .wpcf7-acceptance label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--bm-space-2);
+  align-items: start;
+  font-weight: var(--bm-font-regular);
+  line-height: 1.5;
+  color: var(--bm-color-text-muted);
+}
+
+.bm-contact-form-block .wpcf7-acceptance input {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.1875rem;
+  accent-color: var(--bm-color-brand);
+}
+
+.bm-contact-form-block .wpcf7-submit {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid var(--bm-color-brand);
+  border-radius: var(--bm-radius-md);
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-surface);
+  background: var(--bm-color-brand);
+}
+
+.bm-contact-form-block .wpcf7-submit:hover {
+  background: var(--bm-color-brand-hover);
+  border-color: var(--bm-color-brand-hover);
+}
+
+.bm-contact-form-block .wpcf7-response-output {
+  margin: 0;
+  padding: var(--bm-space-3);
+  border: 1px solid var(--bm-color-border);
+  border-radius: var(--bm-radius-md);
+  font-size: var(--bm-text-sm);
+  color: var(--bm-color-text-muted);
+}
+
+.bm-contact-form-block .wpcf7-not-valid-tip {
+  display: block;
+  margin-top: var(--bm-space-1);
+  font-size: var(--bm-text-sm);
+  color: var(--bm-color-danger, #a33a3a);
+}
+/* stylelint-enable selector-class-pattern */
+
+@include media.bp(md) {
+  .bm-contact-form-block {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+}
+
+@include media.bp(lg) {
+  .bm-contact-form-block {
+    gap: var(--bm-space-10);
+  }
+}

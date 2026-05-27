@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Brigmaster — UI Kit</title>
+    <script type="module" src="./ui-kit.js"></script>
+  </head>
+  <body>
+    <a class="bm-skip-link" href="#main">Перейти к содержимому</a>
+    <header class="bm-header" data-bm-component="header-menu">
+      <div class="bm-container bm-header__row">
+        <a href="/" class="bm-header__brand">
+          <img
+            class="bm-header__logo"
+            src="../../images/logo_header.png"
+            width="168"
+            height="40"
+            alt="Brigmaster"
+          />
+        </a>
+        <button
+          type="button"
+          class="bm-header__toggle"
+          aria-expanded="false"
+          aria-controls="bm-header-panel"
+          aria-label="Открыть меню"
+        >
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+          <span class="bm-header__toggle-bar" aria-hidden="true"></span>
+        </button>
+        <div id="bm-header-panel" class="bm-header__panel">
+          <nav class="bm-nav-primary" aria-label="Primary" data-bm-component="nav-dropdown">
+            <ul id="primary-navigation" class="menu">
+              <li class="menu-item menu-item-has-children">
+                <a href="/kalkulyatory/">Калькуляторы</a>
+                <ul class="sub-menu">
+                  <li class="menu-item menu-item-has-children">
+                    <a href="/kalkulyatory/fundament/">Фундаменты</a>
+                    <ul class="sub-menu">
+                      <li class="menu-item"><a href="#">Плитный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Ленточный фундамент</a></li>
+                      <li class="menu-item"><a href="#">Свайно-ростверковый фундамент</a></li>
+                      <li class="menu-item"><a href="#">Столбчатый фундамент</a></li>
+                    </ul>
+                  </li>
+                  <li class="menu-item"><a href="#">Стяжка</a></li>
+                  <li class="menu-item"><a href="#">Стены</a></li>
+                  <li class="menu-item"><a href="#">Пол</a></li>
+                  <li class="menu-item"><a href="#">Кровля</a></li>
+                  <li class="menu-item"><a href="#">Отделка</a></li>
+                </ul>
+              </li>
+              <li class="menu-item menu-item--disabled">
+                <span class="bm-nav-primary__label"
+                  >Проекты <span class="bm-badge">скоро</span></span
+                >
+              </li>
+              <li class="menu-item"><a href="/materialy/">Материалы</a></li>
+              <li class="menu-item"><a href="/stati/">Статьи</a></li>
+              <li class="menu-item"><a href="/o-proekte/">О проекте</a></li>
+            </ul>
+          </nav>
+          <div class="bm-header__actions">
+            <a href="/kalkulyatory/" class="bm-button bm-button--primary">Открыть калькуляторы</a>
+            <a href="#" class="bm-button bm-button--ghost">Войти</a>
+          </div>
+        </div>
+      </div>
+      <div class="bm-header__overlay" aria-hidden="true"></div>
+    </header>
+
+    <main id="main" class="bm-container" style="padding-bottom: 96px">
+      <header style="padding-top: 24px; padding-bottom: 8px">
+        <h1>Brigmaster UI Kit</h1>
+        <p>Песочница базовых токенов и глобальных компонентов.</p>
+      </header>
+      <nav class="bm-breadcrumbs" aria-label="Хлебные крошки">
+        <ol>
+          <li><a href="#">Главная</a></li>
+          <li><a href="#">UI Kit</a></li>
+          <li aria-current="page">Глобальные компоненты</li>
+        </ol>
+      </nav>
+      <section style="margin-top: 32px">
+        <h2>Типографика</h2>
+        <h1>H1 — Заголовок страницы</h1>
+        <h2>H2 — Заголовок секции</h2>
+        <h3>H3 — Подзаголовок</h3>
+        <h4>H4 — Тайтл карточки</h4>
+        <p>
+          Базовый параграф. Это длинный демонстрационный текст для проверки
+          <strong>жирного</strong>, <a href="#">ссылки</a> и <small>малого размера</small>.
+        </p>
+      </section>
+
+      <section style="margin-top: 32px">
+        <h2>Цвета (через CSS-переменные)</h2>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+          "
+        >
+          <div
+            style="
+              padding: 16px;
+              background: var(--bm-color-brand);
+              color: #fff;
+              border-radius: var(--bm-radius-md);
+            "
+          >
+            brand
+          </div>
+          <div
+            style="
+              padding: 16px;
+              background: var(--bm-color-brand-soft);
+              color: var(--bm-color-brand);
+              border-radius: var(--bm-radius-md);
+            "
+          >
+            brand-soft
+          </div>
+          <div
+            style="
+              padding: 16px;
+              background: var(--bm-color-cta-dark);
+              color: #fff;
+              border-radius: var(--bm-radius-md);
+            "
+          >
+            cta-dark
+          </div>
+          <div
+            style="
+              padding: 16px;
+              background: var(--bm-color-bg);
+              color: var(--bm-color-text);
+              border-radius: var(--bm-radius-md);
+            "
+          >
+            bg
+          </div>
+          <div
+            style="
+              padding: 16px;
+              background: var(--bm-color-surface-muted);
+              color: var(--bm-color-text);
+              border-radius: var(--bm-radius-md);
+              border: 1px solid var(--bm-color-border);
+            "
+          >
+            surface-muted
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top: 32px">
+        <h2>Радиусы</h2>
+        <div
+          style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-top: 16px"
+        >
+          <div
+            style="
+              width: 80px;
+              height: 80px;
+              background: var(--bm-color-brand-soft);
+              border-radius: var(--bm-radius-sm);
+            "
+          >
+            sm
+          </div>
+          <div
+            style="
+              width: 80px;
+              height: 80px;
+              background: var(--bm-color-brand-soft);
+              border-radius: var(--bm-radius-md);
+            "
+          >
+            md
+          </div>
+          <div
+            style="
+              width: 80px;
+              height: 80px;
+              background: var(--bm-color-brand-soft);
+              border-radius: var(--bm-radius-lg);
+            "
+          >
+            lg
+          </div>
+          <div
+            style="
+              width: 80px;
+              height: 80px;
+              background: var(--bm-color-brand-soft);
+              border-radius: var(--bm-radius-xl);
+            "
+          >
+            xl
+          </div>
+          <div
+            style="
+              width: 80px;
+              height: 80px;
+              background: var(--bm-color-brand-soft);
+              border-radius: var(--bm-radius-full);
+            "
+          >
+            full
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top: 32px">
+        <h2>Тени</h2>
+        <div
+          style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px"
+        >
+          <div
+            style="
+              padding: 24px;
+              background: var(--bm-color-surface);
+              border-radius: var(--bm-radius-lg);
+              box-shadow: var(--bm-shadow-sm);
+            "
+          >
+            shadow-sm
+          </div>
+          <div
+            style="
+              padding: 24px;
+              background: var(--bm-color-surface);
+              border-radius: var(--bm-radius-lg);
+              box-shadow: var(--bm-shadow-md);
+            "
+          >
+            shadow-md
+          </div>
+          <div
+            style="
+              padding: 24px;
+              background: var(--bm-color-surface);
+              border-radius: var(--bm-radius-lg);
+              box-shadow: var(--bm-shadow-lg);
+            "
+          >
+            shadow-lg
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top: 32px">
+        <h2>Заглушка иллюстрации</h2>
+        <img
+          class="bm-demo-placeholder"
+          src=""
+          alt=""
+          width="320"
+          height="200"
+          style="border-radius: var(--bm-radius-lg)"
+        />
+      </section>
+    </main>
+    <footer class="bm-footer">
+      <div class="bm-container">
+        <div class="bm-footer__grid">
+          <div class="bm-footer__brand">
+            <a href="/">
+              <img
+                class="bm-footer__logo"
+                src="../../images/logo_footer.png"
+                width="152"
+                height="36"
+                alt="Brigmaster"
+              />
+            </a>
+            <p class="bm-footer__desc">
+              Онлайн-калькуляторы для строительства и ремонта. Точные расчёты материалов и сметы для
+              вашего проекта.
+            </p>
+            <div class="bm-footer__social">
+              <a href="#" aria-label="Telegram">Tg</a>
+              <a href="#" aria-label="VK">Vk</a>
+              <a href="#" aria-label="YouTube">Yt</a>
+            </div>
+          </div>
+          <div>
+            <div class="bm-footer__title">Калькуляторы</div>
+            <ul class="bm-footer__links">
+              <li><a href="#">Фундамент</a></li>
+              <li><a href="#">Стяжка</a></li>
+              <li><a href="#">Стены</a></li>
+              <li><a href="#">Пол</a></li>
+              <li><a href="#">Кровля</a></li>
+              <li><a href="#">Отделка</a></li>
+            </ul>
+          </div>
+          <div>
+            <div class="bm-footer__title">Информация</div>
+            <ul class="bm-footer__links">
+              <li><a href="#">Как это работает</a></li>
+              <li><a href="#">Методология расчётов</a></li>
+              <li><a href="#">База знаний</a></li>
+              <li><a href="#">Частые вопросы</a></li>
+            </ul>
+          </div>
+          <div>
+            <div class="bm-footer__title">О проекте</div>
+            <ul class="bm-footer__links">
+              <li><a href="/o-proekte/">О проекте</a></li>
+              <li><a href="/kontakty/">Контакты</a></li>
+              <li><a href="#">Политика конфиденциальности</a></li>
+              <li><a href="#">Пользовательское соглашение</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="bm-footer__bottom">© Brigmaster, 2026. Все права защищены.</p>
+      </div>
+    </footer>
+  </body>
+</html>

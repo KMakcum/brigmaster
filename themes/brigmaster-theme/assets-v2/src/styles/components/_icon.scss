@@ -1,0 +1,25 @@
+.bm-icon {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentcolor;
+}
+
+.bm-icon--sm {
+  font-size: 0.75rem;
+}
+
+.bm-icon--md {
+  font-size: 1rem;
+}
+
+.bm-icon--lg {
+  font-size: 1.25rem;
+}
+
+// Solid glyphs (fill on path); overrides .bm-icon { fill: none } for <use> content.
+.bm-icon--filled {
+  fill: currentcolor;
+  stroke: none;
+}
