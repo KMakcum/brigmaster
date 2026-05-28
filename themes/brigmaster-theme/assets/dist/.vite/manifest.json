@@ -1,32 +1,222 @@
 {
-  "src/editor.js": {
-    "file": "assets/editor-CCZ7PCzi.js",
-    "name": "editor",
-    "src": "src/editor.js",
+  "_modulepreload-polyfill.js": {
+    "file": "js/modulepreload-polyfill.js",
+    "name": "modulepreload-polyfill"
+  },
+  "common.scss": {
+    "file": "js/common.js",
+    "name": "common",
+    "src": "common.scss",
     "isEntry": true,
     "css": [
-      "assets/editor-BOIS4MVv.css"
+      "css/common.css"
+    ],
+    "assets": [
+      "fonts/Inter-Regular.woff2",
+      "fonts/Inter-Medium.woff2",
+      "fonts/Inter-SemiBold.woff2",
+      "fonts/Inter-Bold.woff2",
+      "img/icons/chevron-down.svg"
     ]
   },
-  "src/js/bm-custom-select.js": {
-    "file": "assets/bm-custom-select-1xamdVYY.js",
-    "name": "bm-custom-select",
-    "src": "src/js/bm-custom-select.js",
-    "isEntry": true
+  "fonts/inter/Inter-Bold.woff2": {
+    "file": "fonts/Inter-Bold.woff2",
+    "src": "fonts/inter/Inter-Bold.woff2"
   },
-  "src/js/rank-math-faq.js": {
-    "file": "assets/rank-math-faq-C-LnoAxA.js",
-    "name": "rank-math-faq",
-    "src": "src/js/rank-math-faq.js",
-    "isEntry": true
+  "fonts/inter/Inter-Medium.woff2": {
+    "file": "fonts/Inter-Medium.woff2",
+    "src": "fonts/inter/Inter-Medium.woff2"
   },
-  "src/main.js": {
-    "file": "assets/main-DX2d4lNZ.js",
-    "name": "main",
-    "src": "src/main.js",
+  "fonts/inter/Inter-Regular.woff2": {
+    "file": "fonts/Inter-Regular.woff2",
+    "src": "fonts/inter/Inter-Regular.woff2"
+  },
+  "fonts/inter/Inter-SemiBold.woff2": {
+    "file": "fonts/Inter-SemiBold.woff2",
+    "src": "fonts/inter/Inter-SemiBold.woff2"
+  },
+  "icons/sprite/chevron-down.svg": {
+    "file": "img/icons/chevron-down.svg",
+    "src": "icons/sprite/chevron-down.svg"
+  },
+  "images/cards/calc-cover-pier.svg": {
+    "file": "img/image/calc-cover-pier.svg",
+    "src": "images/cards/calc-cover-pier.svg"
+  },
+  "images/cards/calc-cover-pile.svg": {
+    "file": "img/image/calc-cover-pile.svg",
+    "src": "images/cards/calc-cover-pile.svg"
+  },
+  "images/cards/calc-cover-slab.svg": {
+    "file": "img/image/calc-cover-slab.svg",
+    "src": "images/cards/calc-cover-slab.svg"
+  },
+  "images/cards/calc-cover-strip.svg": {
+    "file": "img/image/calc-cover-strip.svg",
+    "src": "images/cards/calc-cover-strip.svg"
+  },
+  "images/illustrations/_placeholder.svg": {
+    "file": "img/image/_placeholder.svg",
+    "src": "images/illustrations/_placeholder.svg"
+  },
+  "images/illustrations/article-cover-1.svg": {
+    "file": "img/image/article-cover-1.svg",
+    "src": "images/illustrations/article-cover-1.svg"
+  },
+  "images/illustrations/article-cover-2.svg": {
+    "file": "img/image/article-cover-2.svg",
+    "src": "images/illustrations/article-cover-2.svg"
+  },
+  "images/illustrations/article-cover-3.svg": {
+    "file": "img/image/article-cover-3.svg",
+    "src": "images/illustrations/article-cover-3.svg"
+  },
+  "images/illustrations/article-cover-4.svg": {
+    "file": "img/image/article-cover-4.svg",
+    "src": "images/illustrations/article-cover-4.svg"
+  },
+  "images/illustrations/calc-icon-brick.svg": {
+    "file": "img/image/calc-icon-brick.svg",
+    "src": "images/illustrations/calc-icon-brick.svg"
+  },
+  "images/illustrations/calc-icon-drywall.svg": {
+    "file": "img/image/calc-icon-drywall.svg",
+    "src": "images/illustrations/calc-icon-drywall.svg"
+  },
+  "images/illustrations/calc-icon-foundation.svg": {
+    "file": "img/image/calc-icon-foundation.svg",
+    "src": "images/illustrations/calc-icon-foundation.svg"
+  },
+  "images/illustrations/calc-icon-screed.svg": {
+    "file": "img/image/calc-icon-screed.svg",
+    "src": "images/illustrations/calc-icon-screed.svg"
+  },
+  "images/illustrations/calc-icon-tile.svg": {
+    "file": "img/image/calc-icon-tile.svg",
+    "src": "images/illustrations/calc-icon-tile.svg"
+  },
+  "images/illustrations/cta-house-blueprint.svg": {
+    "file": "img/image/cta-house-blueprint.svg",
+    "src": "images/illustrations/cta-house-blueprint.svg"
+  },
+  "images/illustrations/cta-house-dark.svg": {
+    "file": "img/image/cta-house-dark.svg",
+    "src": "images/illustrations/cta-house-dark.svg"
+  },
+  "images/illustrations/hero-about.jpg": {
+    "file": "img/image/hero-about.jpg",
+    "src": "images/illustrations/hero-about.jpg"
+  },
+  "images/illustrations/hero-archive.jpg": {
+    "file": "img/image/hero-archive.jpg",
+    "src": "images/illustrations/hero-archive.jpg"
+  },
+  "images/illustrations/hero-article.jpg": {
+    "file": "img/image/hero-article.jpg",
+    "src": "images/illustrations/hero-article.jpg"
+  },
+  "images/illustrations/hero-contacts.jpg": {
+    "file": "img/image/hero-contacts.jpg",
+    "src": "images/illustrations/hero-contacts.jpg"
+  },
+  "images/illustrations/hero-hub-foundation.jpg": {
+    "file": "img/image/hero-hub-foundation.jpg",
+    "src": "images/illustrations/hero-hub-foundation.jpg"
+  },
+  "images/illustrations/hero-methodology.jpg": {
+    "file": "img/image/hero-methodology.jpg",
+    "src": "images/illustrations/hero-methodology.jpg"
+  },
+  "images/illustrations/hero-privacy.jpg": {
+    "file": "img/image/hero-privacy.jpg",
+    "src": "images/illustrations/hero-privacy.jpg"
+  },
+  "images/illustrations/task-build-house.svg": {
+    "file": "img/image/task-build-house.svg",
+    "src": "images/illustrations/task-build-house.svg"
+  },
+  "images/illustrations/task-landscaping.svg": {
+    "file": "img/image/task-landscaping.svg",
+    "src": "images/illustrations/task-landscaping.svg"
+  },
+  "images/illustrations/task-renovate-apartment.svg": {
+    "file": "img/image/task-renovate-apartment.svg",
+    "src": "images/illustrations/task-renovate-apartment.svg"
+  },
+  "images/illustrations/task-renovate-room.svg": {
+    "file": "img/image/task-renovate-room.svg",
+    "src": "images/illustrations/task-renovate-room.svg"
+  },
+  "images/logo_footer.png": {
+    "file": "img/image/logo_footer.png",
+    "src": "images/logo_footer.png"
+  },
+  "images/logo_header.png": {
+    "file": "img/image/logo_header.png",
+    "src": "images/logo_header.png"
+  },
+  "pages/about/index.html": {
+    "file": "css/about.css",
+    "src": "pages/about/index.html"
+  },
+  "pages/archive/index.html": {
+    "file": "css/archive.css",
+    "src": "pages/archive/index.html"
+  },
+  "pages/article/index.html": {
+    "file": "css/article.css",
+    "src": "pages/article/index.html"
+  },
+  "pages/calculator/index.html": {
+    "file": "js/calculator.js",
+    "name": "calculator",
+    "src": "pages/calculator/index.html",
     "isEntry": true,
+    "imports": [
+      "_modulepreload-polyfill.js",
+      "common.scss"
+    ],
     "css": [
-      "assets/main-CWk-rtwB.css"
+      "css/calculator.css"
+    ],
+    "assets": [
+      "img/image/logo_header.png",
+      "img/image/logo_footer.png"
+    ]
+  },
+  "pages/contacts/index.html": {
+    "file": "css/contacts.css",
+    "src": "pages/contacts/index.html"
+  },
+  "pages/home/index.html": {
+    "file": "css/home.css",
+    "src": "pages/home/index.html"
+  },
+  "pages/hub/index.html": {
+    "file": "css/hub.css",
+    "src": "pages/hub/index.html"
+  },
+  "pages/methodology/index.html": {
+    "file": "css/methodology.css",
+    "src": "pages/methodology/index.html"
+  },
+  "pages/privacy/index.html": {
+    "file": "css/privacy.css",
+    "src": "pages/privacy/index.html"
+  },
+  "pages/ui-kit/index.html": {
+    "file": "js/ui-kit.js",
+    "name": "ui-kit",
+    "src": "pages/ui-kit/index.html",
+    "isEntry": true,
+    "imports": [
+      "_modulepreload-polyfill.js",
+      "common.scss"
+    ],
+    "assets": [
+      "img/image/_placeholder.svg",
+      "img/image/logo_header.png",
+      "img/image/logo_footer.png"
     ]
   }
 }

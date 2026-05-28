@@ -1,45 +1,104 @@
-# Сборка фронтенда темы Brigmaster
+# brigmaster-theme — assets-v2
 
-Каталог `assets/` — это **Vite-проект**: исходники в `src/`, готовые файлы попадают в `dist/`. Тема WordPress подключает бандлы по манифесту `dist/.vite/manifest.json` (см. `inc/class-constructly-assets.php`: хэндлы стилей/скриптов с префиксом `bm-`, например `bm-theme`).
+Новая дизайн-система и фронтенд темы Brigmaster. Сейчас это отдельная папка новой версии. Целевая ручная миграция: старую `assets/` временно переименовать в `assets-old/`, затем `assets-v2/` переименовать в `assets/`. После проверки и подтверждения ненужности legacy-файлов `assets-old/` удаляется. См. `docs/design/AGENT_HANDOFF.md` и `docs/design/NEW_DESIGN_SYSTEM.md`.
 
-## Требования
+## Стек
 
-- Node.js **18+** (рекомендуется LTS)
-- npm
+- Vite 6 (multi-page build)
+- SCSS (Dart Sass через sass-embedded)
+- vanilla ES modules
+- Stylelint + ESLint + Prettier
 
-## Установка зависимостей
+## Команды
 
 ```bash
-cd wp-content/themes/brigmaster-theme/assets
-npm install
+npm install        # один раз
+npm run dev        # dev-сервер с HMR (http://localhost:5173)
+npm run build      # production build в ./dist
+npm run preview    # отдать ./dist локально
+npm run sprite     # пересобрать SVG-спрайт из src/icons/sprite/*
+npm run lint       # stylelint + eslint
+npm run format     # prettier --write
 ```
 
-## Скрипты
+`npm run build` автоматически вызывает `npm run sprite` перед сборкой.
 
-| Команда        | Назначение |
-|----------------|------------|
-| `npm run build` | Однократная production-сборка в `dist/` |
-| `npm run dev`   | Сборка в watch-режиме (`vite build --watch`) — удобно при правках CSS/JS |
+## Как правильно открывать собранный HTML
 
-После изменений в `src/` на проде или перед коммитом обычно выполняют **`npm run build`**, чтобы обновились хешированные файлы в `dist/` и манифест.
+Не открывай `dist/.../index.html` двойным кликом (протокол `file://`), иначе модульные `js/css` ассеты блокируются браузером по CORS/MIME, и стили «пропадают».
 
-## Точки входа (Vite)
+Используй один из двух вариантов:
 
-Задаются в `vite.config.mjs`:
+1. Через Vite preview:
+   - `npm run preview`
+   - открыть URL из терминала (обычно `http://localhost:4173/pages/ui-kit/`)
+2. Через Local WP (HTTP, не file://):
+   - `http://constructly.local/wp-content/themes/brigmaster-theme/assets-v2/dist/html/ui-kit.html`
 
-- `src/main.js` — основной фронт темы (стили страницы, общий JS)
-- `src/editor.js` — стили/скрипты для редактора блоков
-- `src/js/bm-custom-select.js` — виджет кастомного селекта
-- `src/js/rank-math-faq.js` — оформление FAQ Rank Math
+## Структура
 
-## Структура `src/` (ориентир)
+```
+src/
+  main.scss              общие токены + base + utilities (импортится из common)
+  common.scss            точка сборки общих стилей (импортит main.scss + global components)
+  common.js              bootstrap инициализации компонентов на каждой странице
+  styles/
+    tokens/              дизайн-токены (colors, spacing, typography, radii, ...)
+    abstracts/           SCSS-only утилиты (mixins, functions, media)
+    base/                reset, root, fonts, typography, utilities
+    layout/              header, footer, container, section, grid
+    components/          UI-компоненты (button, input, card, ...)
+    pages/               специфичные стили страниц
+  pages/
+    <name>/              одна папка = одна точка входа Vite
+      index.html
+      <name>.js          импортит common + page-specific
+      <name>.scss
+  js/
+    core/                базовая инфраструктура (bootstrap, dom helpers)
+    components/          поведенческие компоненты (dropdown, accordion, ...)
+  icons/
+    sprite/              отдельные SVG-иконки, собираются в _sprite.svg
+    _sprite.svg          собранный спрайт (генерируется, в git не коммитим)
+  images/
+    illustrations/       SVG/PNG иллюстрации
+  fonts/
+    inter/               Inter Regular/Medium/SemiBold/Bold WOFF2
+scripts/
+  build-sprite.mjs       сборка SVG-спрайта
+```
 
-- `src/css/` — модульные стили (импортируются из `main.js` / `editor.js`)
-- `src/js/` — отдельные скрипты, подключаемые как отдельные entry
+## Multi-page build
 
-## Результат сборки
+Каждая папка в `src/pages/` с `index.html` автоматически становится точкой входа. Vite кладёт результат в `dist/<name>.html` + `dist/assets/<chunk>-[hash].{js,css}` + `dist/.vite/manifest.json` для интеграции в WordPress.
 
-- **`dist/assets/`** — JS/CSS с хешами в именах
-- **`dist/.vite/manifest.json`** — карта входов → файлов; без актуального манифеста PHP не сможет корректно подключить стили и скрипты
+Общий код (`src/common.*`, `src/styles/*`, `src/js/core/*`, `src/js/components/*`) выделяется в отдельный `common` chunk и подключается ко всем страницам.
 
-При первом развёртывании темы без готового `dist/` выполните `npm install` и `npm run build` в этом каталоге.
+## Шрифты
+
+Положить файлы Inter в `src/fonts/inter/`:
+
+- `Inter-Regular.woff2`
+- `Inter-Medium.woff2`
+- `Inter-SemiBold.woff2`
+- `Inter-Bold.woff2`
+
+Источник: https://rsms.me/inter/ → Download → внутри архива папка `Inter Web/` содержит нужные файлы.
+
+`.woff` (legacy fallback) не нужен — все целевые браузеры поддерживают WOFF2.
+
+## Подключение к теме
+
+Текущий PHP-класс ассетов темы читает manifest из `assets/dist/.vite/manifest.json`. После ручного переименования `assets-v2/` в `assets/` этот контракт подключения ассетов должен сохраниться.
+
+Безопасный порядок ручной миграции:
+
+1. Закрыть IDE, dev-server, watchers и процессы, которые могут держать папки.
+2. Проверить содержимое старой `assets/`.
+3. Переименовать старую `assets/` в `assets-old/`.
+4. Переименовать `assets-v2/` в `assets/`.
+5. Проверить наличие `assets/dist/.vite/manifest.json`.
+6. Проверить ключевые страницы сайта.
+7. Удалить `assets-old/` только после полной проверки сайта.
+
+См. `docs/design/AGENT_HANDOFF.md`.
