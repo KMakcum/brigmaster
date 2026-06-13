@@ -1,0 +1,97 @@
+<?php
+declare(strict_types=1);
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+$shortcode_tag = sanitize_key((string) ($attributes['shortcodeTag'] ?? ''));
+$shortcode_title = (string) ($attributes['shortcodeTitle'] ?? '');
+$info_title = (string) ($attributes['infoTitle'] ?? '');
+$info_text = (string) ($attributes['infoText'] ?? '');
+$method_title = (string) ($attributes['methodTitle'] ?? '');
+$method_items = is_array($attributes['methodItems'] ?? null) ? $attributes['methodItems'] : [];
+$note_text = (string) ($attributes['noteText'] ?? '');
+$note_link_label = (string) ($attributes['noteLinkLabel'] ?? '');
+$note_link_url = (string) ($attributes['noteLinkUrl'] ?? '');
+$result_title = (string) ($attributes['resultTitle'] ?? '');
+$result_status = (string) ($attributes['resultStatus'] ?? '');
+$result_text = (string) ($attributes['resultText'] ?? '');
+?>
+<section class="bm-section bm-section--muted" aria-label="Форма расчёта">
+    <div class="bm-container">
+        <div class="bm-calculator-layout">
+            <div class="bm-calculator-layout__main">
+                <?php if ($shortcode_tag !== '') : ?>
+                    <?php echo do_shortcode(sprintf('[%s title="%s"]', $shortcode_tag, esc_attr($shortcode_title))); ?>
+                <?php endif; ?>
+
+                <section class="bm-calculator-info-card" aria-labelledby="how-calculator-works-title">
+                    <?php if ($info_title !== '') : ?>
+                        <h2 id="how-calculator-works-title" class="bm-calculator-info-card__title"><?php echo esc_html($info_title); ?></h2>
+                    <?php endif; ?>
+                    <?php if ($info_text !== '') : ?>
+                        <p><?php echo esc_html($info_text); ?></p>
+                    <?php endif; ?>
+                    <?php if ($method_title !== '') : ?>
+                        <h3><?php echo esc_html($method_title); ?></h3>
+                    <?php endif; ?>
+                    <?php if ($method_items !== []) : ?>
+                        <ol>
+                            <?php foreach ($method_items as $item) : ?>
+                                <?php
+                                $item_text = is_array($item) ? (string) ($item['text'] ?? '') : (string) $item;
+                                ?>
+                                <?php if ($item_text !== '') : ?>
+                                    <li><?php echo esc_html($item_text); ?></li>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </ol>
+                    <?php endif; ?>
+                    <?php if ($note_text !== '' || ($note_link_label !== '' && $note_link_url !== '')) : ?>
+                        <aside class="bm-info-block">
+                            <span class="bm-info-block__icon" aria-hidden="true">
+                                <svg class="bm-icon bm-info-block__icon-svg">
+                                    <use href="#bm-icon-info-circle"></use>
+                                </svg>
+                            </span>
+                            <p class="bm-info-block__text">
+                                <?php if ($note_text !== '') : ?>
+                                    <strong><?php echo esc_html($note_text); ?></strong>
+                                <?php endif; ?>
+                                <?php if ($note_link_label !== '' && $note_link_url !== '') : ?>
+                                    <a class="bm-link bm-link--arrow" href="<?php echo constructly_esc_block_href($note_link_url); ?>"><?php echo esc_html($note_link_label); ?></a>
+                                <?php endif; ?>
+                            </p>
+                        </aside>
+                    <?php endif; ?>
+                </section>
+            </div>
+
+            <?php if ($result_title !== '' || $result_text !== '') : ?>
+                <aside id="calculator-result-panel" class="bm-calculator-layout__aside" aria-labelledby="calculator-result-title" data-result-panel>
+                    <div class="bm-calculator-result">
+                        <div class="bm-calculator-result__head">
+                            <?php if ($result_title !== '') : ?>
+                                <h2 id="calculator-result-title" class="bm-calculator-result__title"><?php echo esc_html($result_title); ?></h2>
+                            <?php endif; ?>
+                            <?php if ($result_status !== '') : ?>
+                                <span class="bm-calculator-result__status"><?php echo esc_html($result_status); ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <?php if ($result_text !== '') : ?>
+                            <div class="bm-calculator-result__note">
+                                <span class="bm-calculator-result__note-icon" aria-hidden="true">
+                                    <svg class="bm-icon">
+                                        <use href="#bm-icon-info-circle"></use>
+                                    </svg>
+                                </span>
+                                <span class="bm-calculator-result__note-content"><?php echo esc_html($result_text); ?></span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </aside>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
