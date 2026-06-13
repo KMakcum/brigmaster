@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 final class Constructly_Blocks
 {
     /**
-     * @return array<string, array<string, string>>
+     * @return array<string, array<string, mixed>>
      */
     private static function definitions(): array
     {
@@ -16,74 +16,92 @@ final class Constructly_Blocks
             'hero' => [
                 'name' => 'constructly/home-hero',
                 'title' => 'Constructly Hero',
-                'style' => 'hero',
                 'template' => 'hero',
             ],
             'how-it-works' => [
                 'name' => 'constructly/how-it-works',
                 'title' => 'Constructly How It Works',
-                'style' => 'how-it-works',
                 'template' => 'how-it-works',
             ],
             'popular-calculators' => [
                 'name' => 'constructly/popular-calculators',
                 'title' => 'Constructly Popular Calculators',
-                'style' => 'popular-calculators',
                 'template' => 'popular-calculators',
+            ],
+            'tasks' => [
+                'name' => 'constructly/tasks',
+                'title' => 'Constructly Tasks',
+                'template' => 'tasks',
             ],
             'why-brigmaster' => [
                 'name' => 'constructly/why-brigmaster',
                 'title' => 'Constructly Why Brigmaster',
-                'style' => 'why-brigmaster',
                 'template' => 'why-brigmaster',
             ],
             'trust' => [
                 'name' => 'constructly/trust',
                 'title' => 'Constructly Trust',
-                'style' => 'trust',
                 'template' => 'trust',
             ],
             'who-its-for' => [
                 'name' => 'constructly/who-its-for',
                 'title' => 'Constructly Who It Is For',
-                'style' => 'who-its-for',
                 'template' => 'who-its-for',
             ],
             'how-calculations-work' => [
                 'name' => 'constructly/how-calculations-work',
                 'title' => 'Constructly How Calculations Work',
-                'style' => 'how-calculations-work',
                 'template' => 'how-calculations-work',
             ],
             'final-cta' => [
                 'name' => 'constructly/final-cta',
                 'title' => 'Constructly Final CTA',
-                'style' => 'final-cta',
                 'template' => 'final-cta',
+            ],
+            'articles' => [
+                'name' => 'constructly/articles',
+                'title' => 'Constructly Articles',
+                'template' => 'articles',
+            ],
+            'faq' => [
+                'name' => 'constructly/faq',
+                'title' => 'Constructly FAQ',
+                'template' => 'faq',
+            ],
+            'legacy-home-tasks' => [
+                'name' => 'constructly/home-tasks',
+                'title' => 'Constructly Tasks',
+                'template' => 'tasks',
+            ],
+            'legacy-home-articles' => [
+                'name' => 'constructly/home-articles',
+                'title' => 'Constructly Articles',
+                'template' => 'articles',
+            ],
+            'legacy-home-faq' => [
+                'name' => 'constructly/home-faq',
+                'title' => 'Constructly FAQ',
+                'template' => 'faq',
             ],
             'foundation-hub-hero' => [
                 'name' => 'constructly/foundation-hub-hero',
-                'title' => 'Constructly Foundation Hub — Hero',
-                'style' => 'foundation-hub',
+                'title' => 'Constructly Foundation Hub Hero',
                 'template' => 'foundation-hub-hero',
             ],
             'foundation-hub-type-cards' => [
                 'name' => 'constructly/foundation-hub-type-cards',
-                'title' => 'Constructly Foundation Hub — Types',
-                'style' => 'foundation-hub',
+                'title' => 'Constructly Foundation Hub Types',
                 'template' => 'foundation-hub-type-cards',
             ],
-            'foundation-hub-criteria' => [
-                'name' => 'constructly/foundation-hub-criteria',
-                'title' => 'Constructly Foundation Hub — Criteria',
-                'style' => 'foundation-hub',
-                'template' => 'foundation-hub-criteria',
+            'calculator-hero' => [
+                'name' => 'constructly/calculator-hero',
+                'title' => 'Constructly Calculator Hero',
+                'template' => 'calculator-hero',
             ],
-            'foundation-hub-links' => [
-                'name' => 'constructly/foundation-hub-links',
-                'title' => 'Constructly Foundation Hub — Links',
-                'style' => 'foundation-hub',
-                'template' => 'foundation-hub-links',
+            'calculator-estimator' => [
+                'name' => 'constructly/calculator-estimator',
+                'title' => 'Constructly Calculator Estimator',
+                'template' => 'calculator-estimator',
             ],
         ];
     }
@@ -93,7 +111,6 @@ final class Constructly_Blocks
         add_action('init', [self::class, 'register_assets']);
         add_action('init', [self::class, 'register_blocks']);
         add_filter('block_categories_all', [self::class, 'register_category']);
-        add_filter('constructly_render_foundation_hub', [self::class, 'filter_render_foundation_hub'], 10, 1);
     }
 
     /**
@@ -113,10 +130,27 @@ final class Constructly_Blocks
 
     public static function register_assets(): void
     {
+        Constructly_Assets::register_editor_preview_styles();
+
+        $editor_bundle = Constructly_Assets::get_registered_script_bundle('editor.js');
+
+        if ($editor_bundle !== null) {
+            wp_register_script(
+                'bm-editor-blocks',
+                $editor_bundle['src'],
+                ['wp-blocks', 'wp-block-editor', 'wp-components', 'wp-element', 'wp-i18n', 'wp-server-side-render'],
+                $editor_bundle['ver'],
+                true
+            );
+            wp_script_add_data('bm-editor-blocks', 'type', 'module');
+
+            return;
+        }
+
         wp_register_script(
             'bm-editor-blocks',
-            CONSTRUCTLY_THEME_URL . '/assets/editor/js/blocks.js',
-            ['wp-blocks', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-element', 'wp-i18n'],
+            false,
+            ['wp-blocks', 'wp-block-editor', 'wp-components', 'wp-element', 'wp-i18n', 'wp-server-side-render'],
             CONSTRUCTLY_THEME_VERSION,
             true
         );
@@ -124,12 +158,17 @@ final class Constructly_Blocks
 
     public static function register_blocks(): void
     {
+        $attributes = self::block_attributes();
+
         foreach (self::definitions() as $definition) {
             register_block_type($definition['name'], [
                 'api_version' => 3,
+                'title' => __($definition['title'], 'brigmaster-theme'),
+                'category' => 'constructly',
+                'attributes' => $attributes,
                 'editor_script' => 'bm-editor-blocks',
                 'style' => 'bm-theme',
-                'editor_style' => 'bm-theme-editor',
+                'editor_style' => ['bm-theme-editor', 'bm-theme-editor-home', 'bm-theme-editor-hub'],
                 'supports' => [
                     'anchor' => false,
                     'customClassName' => false,
@@ -141,47 +180,84 @@ final class Constructly_Blocks
                 },
             ]);
         }
+    }
 
-        register_block_type('constructly/foundation-hub', [
-            'api_version' => 3,
-            'title' => __('Constructly Foundation Hub', 'brigmaster-theme'),
-            'category' => 'constructly',
-            'editor_script' => 'bm-editor-blocks',
-            'style' => 'bm-theme',
-            'editor_style' => 'bm-theme-editor',
-            'supports' => [
-                'anchor' => false,
-                'customClassName' => false,
-                'html' => false,
-                'align' => false,
+    /**
+     * @return array<string, array<string, mixed>>
+     */
+    private static function block_attributes(): array
+    {
+        return [
+            'title' => ['type' => 'string'],
+            'lead' => ['type' => 'string'],
+            'subtitle' => ['type' => 'string'],
+            'text' => ['type' => 'string'],
+            'anchor' => ['type' => 'string'],
+            'anchorId' => ['type' => 'string'],
+            'sectionId' => ['type' => 'string'],
+            'sectionTitle' => ['type' => 'string'],
+            'titleId' => ['type' => 'string'],
+            'variant' => ['type' => 'string'],
+            'primaryLabel' => ['type' => 'string'],
+            'primaryUrl' => ['type' => 'string'],
+            'secondaryLabel' => ['type' => 'string'],
+            'secondaryUrl' => ['type' => 'string'],
+            'linkLabel' => ['type' => 'string'],
+            'linkUrl' => ['type' => 'string'],
+            'buttonLabel' => ['type' => 'string'],
+            'buttonUrl' => ['type' => 'string'],
+            'image' => ['type' => 'string'],
+            'note' => ['type' => 'string'],
+            'quickLinksLabel' => ['type' => 'string'],
+            'themeVariant' => ['type' => 'string'],
+            'ctaLabel' => ['type' => 'string'],
+            'ctaUrl' => ['type' => 'string'],
+            'aside' => ['type' => 'string'],
+            'shortcode' => ['type' => 'string'],
+            'shortcodeTag' => ['type' => 'string'],
+            'shortcodeTitle' => ['type' => 'string'],
+            'infoTitle' => ['type' => 'string'],
+            'infoText' => ['type' => 'string'],
+            'methodTitle' => ['type' => 'string'],
+            'noteText' => ['type' => 'string'],
+            'noteLinkLabel' => ['type' => 'string'],
+            'noteLinkUrl' => ['type' => 'string'],
+            'resultTitle' => ['type' => 'string'],
+            'resultStatus' => ['type' => 'string'],
+            'resultText' => ['type' => 'string'],
+            'features' => [
+                'type' => 'array',
+                'default' => [],
             ],
-            'render_callback' => static function (array $attributes, string $content, WP_Block $block): string {
-                return self::render_foundation_hub_markup();
-            },
-        ]);
-    }
-
-    public static function render_foundation_hub_markup(): string
-    {
-        $template_path = CONSTRUCTLY_THEME_PATH . '/templates/blocks/foundation-hub.php';
-
-        if (!is_readable($template_path)) {
-            return '';
-        }
-
-        ob_start();
-        require $template_path;
-
-        return (string) ob_get_clean();
-    }
-
-    public static function filter_render_foundation_hub(string $html): string
-    {
-        if ($html !== '') {
-            return $html;
-        }
-
-        return self::render_foundation_hub_markup();
+            'breadcrumbs' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'cards' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'items' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'steps' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'methodItems' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'quickLinks' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'demo' => [
+                'type' => 'object',
+                'default' => [],
+            ],
+        ];
     }
 
     public static function render_template(string $template, array $attributes, string $content, WP_Block $block): string

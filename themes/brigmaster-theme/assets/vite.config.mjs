@@ -213,6 +213,7 @@ function collectPageInputs() {
   const pagesDir = path.resolve(__dirname, 'src/pages');
   const inputs = {
     common: path.resolve(__dirname, 'src/common.scss'),
+    editor: path.resolve(__dirname, 'src/editor.js'),
   };
 
   if (!existsSync(pagesDir)) return inputs;

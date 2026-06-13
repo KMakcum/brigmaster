@@ -72,6 +72,21 @@ function constructly_esc_block_href(string $url): string
     return esc_url(constructly_normalize_internal_url($url));
 }
 
+function constructly_esc_block_image_src(string $src): string
+{
+    $src = trim($src);
+
+    if ($src === '') {
+        return '';
+    }
+
+    if (str_starts_with($src, 'http://') || str_starts_with($src, 'https://') || str_starts_with($src, '/')) {
+        return esc_url($src);
+    }
+
+    return esc_url(get_theme_file_uri($src));
+}
+
 require_once __DIR__ . '/class-constructly-assets.php';
 require_once __DIR__ . '/class-constructly-theme-setup.php';
 require_once __DIR__ . '/template-tags.php';
@@ -79,20 +94,9 @@ require_once __DIR__ . '/bm-estimator-shortcodes.php';
 require_once __DIR__ . '/frontend/class-constructly-frontend.php';
 require_once __DIR__ . '/editor/class-constructly-blocks.php';
 require_once __DIR__ . '/content/migrations/class-constructly-migration-helpers.php';
-require_once __DIR__ . '/content/migrations/class-constructly-rank-math-faq-migration.php';
-require_once __DIR__ . '/content/migrations/core-pages/trait-constructly-core-page-blocks.php';
-require_once __DIR__ . '/content/migrations/core-pages/interface-constructly-core-page-migration.php';
-require_once __DIR__ . '/content/migrations/core-pages/page-kalkulyatory-kirpich.php';
-require_once __DIR__ . '/content/migrations/core-pages/page-kalkulyatory-styazhka.php';
-require_once __DIR__ . '/content/migrations/core-pages/page-kalkulyatory-gipsokarton.php';
-require_once __DIR__ . '/content/migrations/core-pages/page-kalkulyatory-plitka.php';
-require_once __DIR__ . '/content/migrations/core-pages/page-o-proekte.php';
-require_once __DIR__ . '/content/migrations/core-pages/page-kontakty.php';
-require_once __DIR__ . '/content/migrations/core-pages/page-metodologiya.php';
 require_once __DIR__ . '/content/migrations/page-home.php';
 require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament.php';
-require_once __DIR__ . '/content/migrations/class-constructly-core-pages-migration.php';
-require_once __DIR__ . '/content/migrations/class-constructly-legacy-content-migration.php';
+require_once __DIR__ . '/content/migrations/page-kalkulyatory-fundament-lentochnyj.php';
 require_once __DIR__ . '/content/class-constructly-content-migrations.php';
 require_once __DIR__ . '/content/class-constructly-content-cli.php';
 

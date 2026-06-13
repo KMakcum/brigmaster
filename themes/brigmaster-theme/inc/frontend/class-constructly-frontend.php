@@ -64,15 +64,6 @@ final class Constructly_Frontend
                 }
             }
         }
-
-        if (is_singular() && has_block('rank-math/faq-block', get_the_ID())) {
-            Constructly_Assets::enqueue_script_entry(
-                Constructly_Assets::entry_key_rank_math_faq(),
-                'bm-rank-math-faq',
-                [],
-                true
-            );
-        }
     }
 
     private static function post_content_needs_foundation_hub_styles(string $content): bool
@@ -82,11 +73,8 @@ final class Constructly_Frontend
         }
 
         $blocks = [
-            'constructly/foundation-hub',
             'constructly/foundation-hub-hero',
             'constructly/foundation-hub-type-cards',
-            'constructly/foundation-hub-criteria',
-            'constructly/foundation-hub-links',
         ];
 
         foreach ($blocks as $block_name) {

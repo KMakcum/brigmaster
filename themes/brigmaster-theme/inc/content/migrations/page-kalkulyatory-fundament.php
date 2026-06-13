@@ -7,6 +7,8 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Foundation_Hub_Migration
 {
+    private const MIGRATION_VERSION = 'foundation-hub-v1';
+
     /**
      * @return array{post_id:int, content:string, migration:string}
      */
@@ -18,258 +20,236 @@ final class Constructly_Foundation_Hub_Migration
             throw new InvalidArgumentException('Foundation hub page not found.');
         }
 
-        $original = (string) $page->post_content;
-        $working = Constructly_Legacy_Content_Migration::transform_legacy_content($original);
-        $next = self::replace_foundation_hub_mono_block_with_sections($working);
-
-        if ($next === $working) {
-            if (str_contains($working, 'constructly/foundation-hub-hero')) {
-                self::apply_foundation_hub_page_meta($page_id);
-
-                return [
-                    'post_id' => $page_id,
-                    'content' => $working,
-                    'migration' => 'foundation-hub-v3',
-                ];
-            }
-
-            if (self::should_rebuild_foundation_hub_from_scratch($page, $working)) {
-                $next = self::build_foundation_hub_page_content();
-            } else {
-                throw new InvalidArgumentException('No constructly/foundation-hub block found to replace.');
-            }
-        }
+        $content = self::build_foundation_hub_page_content();
 
         wp_update_post([
             'ID' => $page_id,
-            'post_content' => $next,
+            'post_content' => $content,
         ]);
 
-        self::apply_foundation_hub_page_meta($page_id);
+        update_post_meta($page_id, '_constructly_content_migration', self::MIGRATION_VERSION);
 
         return [
             'post_id' => $page_id,
-            'content' => $next,
-            'migration' => 'foundation-hub-v3',
+            'content' => $content,
+            'migration' => self::MIGRATION_VERSION,
         ];
-    }
-
-    private static function apply_foundation_hub_page_meta(int $page_id): void
-    {
-        update_post_meta($page_id, 'rank_math_title', 'Калькулятор фундамента Brigmaster: выбрать тип расчета');
-        update_post_meta(
-            $page_id,
-            'rank_math_description',
-            'Хаб Brigmaster для перехода к калькулятору плиты, ленты или свай. Помогает выбрать нужный сценарий расчета, но не подбирает тип фундамента автоматически.'
-        );
-        update_post_meta($page_id, '_constructly_content_migration', 'foundation-hub-v3');
-    }
-
-    private static function should_rebuild_foundation_hub_from_scratch(WP_Post $page, string $content): bool
-    {
-        if (in_array($page->post_name, ['kalkulyator-fundamenta', 'fundament'], true)) {
-            return true;
-        }
-
-        if (str_contains($content, 'brigmaster-foundation-hub')) {
-            return true;
-        }
-
-        if (str_contains($content, 'wp:constructly/foundation-hub') && !str_contains($content, 'constructly/foundation-hub-hero')) {
-            return true;
-        }
-
-        return false;
     }
 
     public static function build_foundation_hub_page_content(): string
     {
-        $links = Constructly_Migration_Helpers::default_foundation_hub_links();
-
         $blocks = [
             Constructly_Migration_Helpers::block('constructly/foundation-hub-hero', [
-                'title' => 'Калькулятор фундамента',
-                'lead' => 'Три типа фундамента — три отдельных калькулятора. Эта страница помогает выбрать нужный сценарий и перейти к соответствующей форме, '
-                    . 'но не определяет тип основания автоматически. Если вы не уверены в конструкции, сначала уточните тип фундамента по геологии, нагрузкам и проекту, '
-                    . 'а уже потом используйте нужный калькулятор для предварительной оценки материалов.',
-                'ctaLabel' => 'К типам фундамента',
-                'ctaUrl' => '#foundation-types',
+                'image' => 'assets/src/images/illustrations/hero-hub-foundation.jpg',
+                'breadcrumbs' => [
+                    ['label' => 'Главная', 'url' => '/'],
+                    ['label' => 'Калькуляторы', 'url' => '/kalkulyatory/'],
+                    ['label' => 'Фундамент'],
+                ],
+                'title' => 'Расчёт фундамента',
+                'lead' => 'Подберите подходящий тип фундамента, рассчитайте количество материалов и получите ориентировочные параметры для вашего проекта.',
+                'features' => [
+                    ['icon' => 'calculator', 'title' => 'Точные расчёты', 'text' => 'на основе форм и формул'],
+                    ['icon' => 'book', 'title' => 'Прозрачная методика', 'text' => 'понятная логика расчётов'],
+                    ['icon' => 'clock-check', 'title' => 'Быстрый результат', 'text' => 'за несколько минут'],
+                ],
+            ]),
+            Constructly_Migration_Helpers::block('constructly/tasks', [
+                'anchor' => 'foundation-tasks',
+                'titleId' => 'foundation-tasks-title',
+                'variant' => 'compact',
+                'title' => 'Выберите свою задачу',
+                'items' => [
+                    [
+                        'icon' => 'briefcase',
+                        'title' => 'Строю дом с нуля',
+                        'text' => 'Нужен надёжный фундамент для нового дома',
+                        'label' => 'Подобрать и рассчитать',
+                        'url' => '#hub-calculators',
+                    ],
+                    [
+                        'icon' => 'reload',
+                        'title' => 'Реконструкция дома',
+                        'text' => 'Хочу усилить или заменить существующий фундамент',
+                        'label' => 'Подобрать и рассчитать',
+                        'url' => '#hub-calculators',
+                    ],
+                    [
+                        'icon' => 'measurement',
+                        'title' => 'Сложный грунт',
+                        'text' => 'Участок с высоким УГВ, пучинистые или слабые грунты',
+                        'label' => 'Подобрать и рассчитать',
+                        'url' => '#hub-calculators',
+                    ],
+                    [
+                        'icon' => 'calculator',
+                        'title' => 'Сравнить варианты',
+                        'text' => 'Сравню разные типы фундаментов по параметрам и материалам',
+                        'label' => 'Подобрать и рассчитать',
+                        'url' => '#hub-calculators',
+                    ],
+                ],
             ]),
             Constructly_Migration_Helpers::block('constructly/foundation-hub-type-cards', [
-                'sectionTitle' => 'Выберите тип фундамента',
-                'anchorId' => 'foundation-types',
+                'anchorId' => 'hub-calculators',
+                'titleId' => 'hub-calculators-title',
+                'sectionTitle' => 'Калькуляторы фундаментов',
+                'subtitle' => 'Выберите тип фундамента и выполните расчёт',
+                'linkLabel' => 'Все калькуляторы →',
+                'linkUrl' => '/kalkulyatory/',
                 'cards' => [
                     [
-                        'title' => 'Плитный фундамент',
-                        'thesis' => 'Монолитная плита на весь контур. Калькулятор считает бетон, а при нужных режимах показывает арматуру и опалубку.',
-                        'buttonLabel' => 'Открыть калькулятор плиты',
-                        'buttonUrl' => $links['slab'],
-                        'icon' => 'slab',
-                    ],
-                    [
+                        'image' => 'assets/src/images/cards/calc-cover-strip.svg',
                         'title' => 'Ленточный фундамент',
-                        'thesis' => 'Лента под несущими стенами. Калькулятор работает по длине и сечению, а также поддерживает режим по участкам.',
-                        'buttonLabel' => 'Открыть калькулятор ленты',
-                        'buttonUrl' => $links['strip'],
-                        'icon' => 'strip',
+                        'text' => 'Расчёт размеров ленты, объёма бетона и количества материалов',
+                        'href' => '/kalkulyatory/fundament/lentochnyj/',
+                        'cta' => 'Рассчитать',
                     ],
                     [
+                        'image' => 'assets/src/images/cards/calc-cover-pile.svg',
                         'title' => 'Свайный фундамент',
-                        'thesis' => 'Сваи и ростверк. Калькулятор помогает оценить материалы, но несущая способность и выбор схемы всё равно подтверждаются проектом.',
-                        'buttonLabel' => 'Открыть калькулятор свай',
-                        'buttonUrl' => $links['pile'],
-                        'icon' => 'pile',
+                        'text' => 'Количество свай, длина, шаг и объём материалов',
+                        'href' => '/kalkulyatory/fundament/svajnyj/',
+                        'cta' => 'Рассчитать',
+                    ],
+                    [
+                        'image' => 'assets/src/images/cards/calc-cover-slab.svg',
+                        'title' => 'Плитный фундамент',
+                        'text' => 'Толщина плиты, объём бетона, арматура и материалы',
+                        'href' => '/kalkulyatory/fundament/plitnyj/',
+                        'cta' => 'Рассчитать',
+                    ],
+                    [
+                        'image' => 'assets/src/images/cards/calc-cover-pier.svg',
+                        'title' => 'Буронабивные сваи',
+                        'text' => 'Расчёт количества и объёма буронабивных свай',
+                        'href' => '/kalkulyatory/fundament/buronabivnye/',
+                        'cta' => 'Рассчитать',
                     ],
                 ],
             ]),
-            Constructly_Migration_Helpers::block('constructly/foundation-hub-criteria', [
-                'sectionTitle' => 'Как выбрать тип фундамента',
+            Constructly_Migration_Helpers::block('constructly/trust', [
+                'anchor' => 'hub-choose-guide',
+                'titleId' => 'hub-choose-guide-title',
+                'themeVariant' => 'bg',
+                'title' => 'Как выбрать фундамент?',
+                'subtitle' => 'Краткие рекомендации по выбору типа фундамента',
+                'linkLabel' => 'Подробнее о выборе фундамента',
+                'linkUrl' => '/stati/fundament/',
                 'items' => [
-                    'Проверьте тип грунта и уровень грунтовых вод на участке.',
-                    'Оцените вес дома, этажность и тип стеновых материалов.',
-                    'Сравните бюджет и сроки реализации разных решений.',
-                    'Учитывайте рельеф, перепады высот и особенности участка.',
-                    'Не используйте этот хаб как инструмент автоматического выбора фундамента: он только направляет к нужному калькулятору.',
-                    'Согласуйте итоговый вариант с проектировщиком.',
+                    [
+                        'icon' => 'measurement',
+                        'title' => 'Тип грунта',
+                        'text' => 'На слабых и пучинистых грунтах лучше применять свайные или плитные фундаменты.',
+                    ],
+                    [
+                        'icon' => 'info-circle',
+                        'title' => 'Уровень грунтовых вод',
+                        'text' => 'Высокий УГВ требует утепления, дренажа и использования специальных решений.',
+                    ],
+                    [
+                        'icon' => 'briefcase',
+                        'title' => 'Бюджет и сроки',
+                        'text' => 'Ленточный — оптимален по цене, плитный — дороже, но быстрее, свайный — компромиссный вариант.',
+                    ],
+                    [
+                        'icon' => 'target',
+                        'title' => 'Нагрузка от здания',
+                        'text' => 'Чем тяжелее конструкция, тем массивнее и надёжнее должен быть фундамент.',
+                    ],
                 ],
             ]),
-            self::faq_block(),
-            Constructly_Migration_Helpers::block('constructly/foundation-hub-links', [
-                'sectionTitle' => 'Полезные ссылки',
-                'primaryLinks' => [
-                    ['label' => 'Калькулятор плитного фундамента', 'url' => $links['slab']],
-                    ['label' => 'Калькулятор ленточного фундамента', 'url' => $links['strip']],
-                    ['label' => 'Калькулятор свайного фундамента', 'url' => $links['pile']],
+            Constructly_Migration_Helpers::block('constructly/articles', [
+                'title' => 'Полезные статьи',
+                'linkLabel' => 'Все статьи →',
+                'linkUrl' => '/stati/',
+                'items' => [
+                    [
+                        'url' => '/stati/fundament/vybor-tipa/',
+                        'image' => 'assets/src/images/illustrations/article-cover-1.svg',
+                        'imageAlt' => '',
+                        'tag' => 'Фундамент',
+                        'title' => 'Как выбрать тип фундамента для частного дома',
+                        'text' => 'Разбираем основные типы фундаментов и критерии выбора под разные условия.',
+                        'readTime' => '12 мин',
+                        'date' => '15.04.2024',
+                    ],
+                    [
+                        'url' => '/stati/fundament/armirovanie/',
+                        'image' => 'assets/src/images/illustrations/article-cover-2.svg',
+                        'imageAlt' => '',
+                        'tag' => 'Фундамент',
+                        'title' => 'Армирование фундамента: полное руководство',
+                        'text' => 'Схемы армирования, выбор арматуры и правила вязки каркаса.',
+                        'readTime' => '10 мин',
+                        'date' => '12.04.2024',
+                    ],
+                    [
+                        'url' => '/stati/styazhka/tolshchina/',
+                        'image' => 'assets/src/images/illustrations/article-cover-3.svg',
+                        'imageAlt' => '',
+                        'tag' => 'Стяжка пола',
+                        'title' => 'Толщина стяжки пола: как не ошибиться',
+                        'text' => 'От чего зависит толщина стяжки и как рассчитать оптимальный слой.',
+                        'readTime' => '8 мин',
+                        'date' => '10.04.2024',
+                    ],
+                    [
+                        'url' => '/stati/plitka/ukladka-pola/',
+                        'image' => 'assets/src/images/illustrations/article-cover-4.svg',
+                        'imageAlt' => '',
+                        'tag' => 'Плитка',
+                        'title' => 'Укладка плитки на пол: пошаговая инструкция',
+                        'text' => 'Подготовка основания, выбор клея и технология укладки плитки.',
+                        'readTime' => '15 мин',
+                        'date' => '08.04.2024',
+                    ],
                 ],
-                'secondaryLinks' => [
-                    ['label' => 'Калькулятор кирпича', 'url' => $links['brick']],
-                    ['label' => 'Калькулятор стяжки', 'url' => $links['screed']],
-                    ['label' => 'Калькулятор плитки', 'url' => $links['tile']],
+            ]),
+            Constructly_Migration_Helpers::block('constructly/faq', [
+                'sectionId' => 'hub-faq',
+                'titleId' => 'hub-faq-title',
+                'title' => 'Часто задаваемые вопросы',
+                'linkLabel' => 'Все вопросы →',
+                'linkUrl' => '/faq/',
+                'items' => [
+                    [
+                        'question' => 'Какой фундамент лучше для частного дома?',
+                        'answer' => 'Зависит от грунта, этажности и бюджета. Для лёгких домов на устойчивых грунтах часто выбирают ленточный, на слабых — плитный или свайный.',
+                    ],
+                    [
+                        'question' => 'На какую глубину закладывать фундамент?',
+                        'answer' => 'Глубина определяется уровнем промерзания и несущей способностью грунта. Калькулятор даёт ориентир по выбранному типу и параметрам участка.',
+                    ],
+                    [
+                        'question' => 'Нужно ли армировать фундамент?',
+                        'answer' => 'Для большинства частных домов армирование обязательно. Схема и диаметр арматуры зависят от типа фундамента и нагрузки.',
+                    ],
+                    [
+                        'question' => 'Какой бетон выбрать для фундамента?',
+                        'answer' => 'Обычно используют марки B20–B25 для малоэтажного строительства. Точный выбор зависит от проекта и рекомендаций проектировщика.',
+                    ],
+                    [
+                        'question' => 'Что влияет на стоимость фундамента?',
+                        'answer' => 'Тип фундамента, объём бетона и арматуры, глубина заложения, подготовка основания и доставка материалов.',
+                    ],
+                    [
+                        'question' => 'Как часто обновляются данные?',
+                        'answer' => 'Мы регулярно обновляем справочные данные и проверяем расчётную логику по мере развития сервиса.',
+                    ],
                 ],
+            ]),
+            Constructly_Migration_Helpers::block('constructly/final-cta', [
+                'titleId' => 'hub-cta-title',
+                'variant' => 'soft',
+                'title' => 'Не знаете, с чего начать?',
+                'text' => 'Ответьте на несколько вопросов — подберём оптимальный тип фундамента и откроем нужный калькулятор.',
+                'buttonLabel' => 'Подобрать фундамент',
+                'buttonUrl' => '#hub-calculators',
+                'image' => '',
             ]),
         ];
 
         return implode("\n\n", $blocks);
-    }
-
-    public static function replace_foundation_hub_mono_block_with_sections(string $content): string
-    {
-        $replacement = self::build_foundation_hub_page_content();
-
-        $wrapped_shortcodes = [
-            "<!-- wp:shortcode -->\n[brigmaster_foundation_hub]\n<!-- /wp:shortcode -->",
-            "<!-- wp:shortcode -->\r\n[brigmaster_foundation_hub]\r\n<!-- /wp:shortcode -->",
-        ];
-
-        foreach ($wrapped_shortcodes as $needle) {
-            if (str_contains($content, $needle)) {
-                $next = str_replace($needle, $replacement, $content);
-                if ($next !== $content) {
-                    return $next;
-                }
-            }
-        }
-
-        if (str_contains($content, '[brigmaster_foundation_hub]')) {
-            $next = str_replace('[brigmaster_foundation_hub]', $replacement, $content);
-            if ($next !== $content) {
-                return $next;
-            }
-        }
-
-        $regex_replaced = preg_replace_callback(
-            '/<!--\s*wp:constructly\/foundation-hub(?:\s[^\/]*?)?\s*\/-->/s',
-            static function () use ($replacement): string {
-                return $replacement;
-            },
-            $content,
-            1
-        );
-
-        if (is_string($regex_replaced) && $regex_replaced !== $content) {
-            return $regex_replaced;
-        }
-
-        $blocks = parse_blocks($content);
-        if ($blocks !== []) {
-            $out = [];
-            $found = false;
-
-            foreach ($blocks as $block) {
-                if (!is_array($block)) {
-                    continue;
-                }
-
-                $name = $block['blockName'] ?? null;
-                if ($name === null || $name === '') {
-                    $out[] = $block;
-                    continue;
-                }
-
-                if ($name === 'constructly/foundation-hub') {
-                    $found = true;
-                    foreach (parse_blocks($replacement) as $piece) {
-                        if (is_array($piece)) {
-                            $out[] = $piece;
-                        }
-                    }
-
-                    continue;
-                }
-
-                $out[] = $block;
-            }
-
-            if ($found) {
-                return serialize_blocks($out);
-            }
-        }
-
-        $pattern = '/<!--\s*wp:constructly\/foundation-hub(?:\s[^\/]*?)?\s*\/-->/s';
-
-        $next = preg_replace_callback(
-            $pattern,
-            static function () use ($replacement): string {
-                return $replacement;
-            },
-            $content,
-            1
-        );
-
-        return is_string($next) ? $next : $content;
-    }
-
-    private static function faq_block(): string
-    {
-        return Constructly_Rank_Math_Faq_Migration::section_heading_block() . "\n\n" . Constructly_Rank_Math_Faq_Migration::serialize_block([
-            'titleWrapper' => 'h3',
-            'questions' => [
-                [
-                    'id' => 'foundation-hub-faq-1',
-                    'title' => 'Что делает этот раздел, а что не делает?',
-                    'content' => '<p>Хаб помогает перейти к нужному фундаментному калькулятору, но не выбирает тип основания автоматически и не заменяет решение проектировщика.</p>',
-                    'visible' => true,
-                ],
-                [
-                    'id' => 'foundation-hub-faq-2',
-                    'title' => 'Можно ли ориентироваться только на онлайн-калькулятор?',
-                    'content' => '<p>Нет. Каждый фундаментный калькулятор дает предварительную оценку материалов, но не заменяет проект, геологию и проверку несущей способности.</p>',
-                    'visible' => true,
-                ],
-                [
-                    'id' => 'foundation-hub-faq-3',
-                    'title' => 'Как выбрать между плитой, лентой и сваями?',
-                    'content' => '<p>Сначала определите конструктивную схему по грунту, нагрузкам и условиям участка. После этого используйте соответствующий калькулятор, чтобы оценить материалы внутри выбранного варианта.</p>',
-                    'visible' => true,
-                ],
-                [
-                    'id' => 'foundation-hub-faq-4',
-                    'title' => 'Почему результаты на разных страницах отличаются?',
-                    'content' => '<p>Плитный, ленточный и свайный фундамент рассчитываются по разным моделям и с разным набором полей, поэтому итоговые показатели не совпадают между собой.</p>',
-                    'visible' => true,
-                ],
-            ],
-            'className' => 'bm-rank-math-faq',
-        ]);
     }
 }

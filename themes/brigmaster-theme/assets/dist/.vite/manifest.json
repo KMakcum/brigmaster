@@ -19,6 +19,12 @@
       "img/icons/chevron-down.svg"
     ]
   },
+  "editor.js": {
+    "file": "js/editor.js",
+    "name": "editor",
+    "src": "editor.js",
+    "isEntry": true
+  },
   "fonts/inter/Inter-Bold.woff2": {
     "file": "fonts/Inter-Bold.woff2",
     "src": "fonts/inter/Inter-Bold.woff2"
