@@ -9,9 +9,17 @@ function slugify(text) {
     .replace(/-+/g, '-');
 }
 
+// Content headings only — exclude the feedback widget's heading ("Статья была
+// полезна?"), which lives inside the prose column but is not part of the article.
+function contentHeadings(prose, selector) {
+  return Array.from(prose.querySelectorAll(selector)).filter(
+    (h) => !h.closest('.bm-article-feedback'),
+  );
+}
+
 function ensureHeadingIds(prose) {
   const used = new Set();
-  prose.querySelectorAll('h2, h3').forEach((heading) => {
+  contentHeadings(prose, 'h2, h3').forEach((heading) => {
     if (heading.id) {
       used.add(heading.id);
       return;
@@ -62,9 +70,35 @@ function bindTocLink(link) {
   });
 }
 
+// Builds the TOC list from the prose's top-level (h2) headings. Only runs when
+// the list is present and empty, so a statically-authored TOC (e.g. the article
+// page) is left untouched. Heading ids are guaranteed by ensureHeadingIds first.
+function buildTocList(root, prose) {
+  if (!prose) return;
+  const list = root.querySelector('.bm-toc__list');
+  if (!list || list.children.length > 0) return;
+
+  contentHeadings(prose, 'h2[id]').forEach((heading) => {
+    const item = document.createElement('li');
+    item.className = 'bm-toc__item';
+    const link = document.createElement('a');
+    link.className = 'bm-toc__link';
+    link.href = `#${heading.id}`;
+    link.textContent = (heading.textContent || '').trim();
+    item.appendChild(link);
+    list.appendChild(item);
+  });
+
+  // No content headings → no table of contents: drop the whole TOC block.
+  if (list.children.length === 0) {
+    root.remove();
+  }
+}
+
 function initTocRoot(root) {
   const prose = getProseRoot();
   if (prose) ensureHeadingIds(prose);
+  buildTocList(root, prose);
 
   if (root.classList.contains('bm-toc--collapsible')) {
     const toggle = root.querySelector('.bm-toc__toggle');
