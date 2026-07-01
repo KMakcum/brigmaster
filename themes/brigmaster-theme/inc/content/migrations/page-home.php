@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Homepage_Migration
 {
-    private const MIGRATION_VERSION = 'homepage-v7';
+    private const MIGRATION_VERSION = 'homepage-v9';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -22,9 +22,12 @@ final class Constructly_Homepage_Migration
 
         $content = self::build_homepage_content();
 
+        // Block attribute JSON escapes < > " & to \uXXXX; wp_update_post() runs
+        // wp_unslash() which would strip those backslashes and corrupt the markup.
+        // Slash the content so the escaping survives.
         wp_update_post([
             'ID' => $page_id,
-            'post_content' => $content,
+            'post_content' => wp_slash($content),
         ]);
 
         update_post_meta($page_id, 'rank_math_title', 'Строительные калькуляторы онлайн Brigmaster');
@@ -48,7 +51,7 @@ final class Constructly_Homepage_Migration
 
         $blocks = [
             Constructly_Migration_Helpers::block('constructly/home-hero', [
-                'title' => 'Рассчитайте материалы для строительства и ремонта за минуты',
+                'title' => 'Онлайн-калькуляторы материалов для строительства и ремонта',
                 'lead' => 'Точные ориентировочные расчёты по проверенным формулам. Понятная логика, прозрачные допущения и результаты, которым можно доверять.',
                 'primaryLabel' => 'Открыть калькуляторы',
                 'primaryUrl' => '#calculators',
@@ -58,17 +61,17 @@ final class Constructly_Homepage_Migration
                     [
                         'icon' => 'clock-check',
                         'title' => 'Быстро',
-                        'text' => 'Результат за несколько минут',
+                        'text' => 'Результат за <br> несколько минут',
                     ],
                     [
                         'icon' => 'interface',
                         'title' => 'Понятно',
-                        'text' => 'Простой интерфейс без лишнего',
+                        'text' => 'Простой интерфейс <br> без лишнего',
                     ],
                     [
                         'icon' => 'briefcase',
                         'title' => 'Практично',
-                        'text' => 'Для частных и профессиональных задач',
+                        'text' => 'Для частных и <br>проф. задач',
                     ],
                 ],
                 'demo' => [
@@ -94,11 +97,11 @@ final class Constructly_Homepage_Migration
                     'moreLabel' => 'Дополнительные параметры',
                     'resultLabel' => 'Результат',
                     'resultSummary' => 'Объём стяжки',
-                    'resultValue' => '2.25 м³',
+                    'resultValue' => '≈2.25 м³',
                     'resultItems' => [
-                        ['name' => 'Цемент', 'amount' => '360 кг'],
-                        ['name' => 'Песок', 'amount' => '1.35 м³'],
-                        ['name' => 'Вода', 'amount' => '180 л'],
+                        ['name' => 'Цемент', 'amount' => '≈1297 кг'],
+                        ['name' => 'Песок', 'amount' => '≈2.0 м³'],
+                        ['name' => 'Вода', 'amount' => '≈648 л'],
                     ],
                 ],
                 'note' => 'Используются проверенные строительные нормы и справочные данные',
@@ -116,6 +119,7 @@ final class Constructly_Homepage_Migration
                         'buttonLabel' => 'Рассчитать',
                         'buttonUrl' => $links['foundation'],
                         'icon' => 'measurement',
+                        'image' => 'assets/src/images/calculators/icon-foundation.jpg',
                     ],
                     [
                         'title' => 'Стяжка пола',
@@ -123,6 +127,7 @@ final class Constructly_Homepage_Migration
                         'buttonLabel' => 'Рассчитать',
                         'buttonUrl' => $links['screed'],
                         'icon' => 'data-table',
+                        'image' => 'assets/src/images/calculators/icon-screed.jpg',
                     ],
                     [
                         'title' => 'Кирпич',
@@ -130,6 +135,7 @@ final class Constructly_Homepage_Migration
                         'buttonLabel' => 'Рассчитать',
                         'buttonUrl' => $links['brick'],
                         'icon' => 'calculator',
+                        'image' => 'assets/src/images/calculators/icon-brick.jpg',
                     ],
                     [
                         'title' => 'Плитка',
@@ -137,6 +143,7 @@ final class Constructly_Homepage_Migration
                         'buttonLabel' => 'Рассчитать',
                         'buttonUrl' => $links['tile'],
                         'icon' => 'interface',
+                        'image' => 'assets/src/images/calculators/icon-tile.jpg',
                     ],
                     [
                         'title' => 'Гипсокартон',
@@ -144,6 +151,7 @@ final class Constructly_Homepage_Migration
                         'buttonLabel' => 'Рассчитать',
                         'buttonUrl' => $links['drywall'],
                         'icon' => 'document-plus',
+                        'image' => 'assets/src/images/calculators/icon-drywall.jpg',
                     ],
                 ],
             ]),
@@ -156,28 +164,21 @@ final class Constructly_Homepage_Migration
                         'text' => 'Рассчитайте материалы для фундамента, стен, перекрытий и кровли.',
                         'url' => '#calculators',
                         'label' => 'Подобрать расчёты',
-                        'image' => 'assets/src/images/illustrations/task-build-house.svg',
+                        'image' => 'assets/src/images/illustrations/task-build-house.jpg',
                     ],
                     [
                         'title' => 'Делаю ремонт в квартире',
                         'text' => 'Расчёт стяжки, штукатурки, плитки, отделки и электромонтажа.',
                         'url' => '#calculators',
                         'label' => 'Подобрать расчёты',
-                        'image' => 'assets/src/images/illustrations/task-renovate-apartment.svg',
+                        'image' => 'assets/src/images/illustrations/task-renovate-apartment.jpg',
                     ],
                     [
                         'title' => 'Ремонт в комнате',
                         'text' => 'Рассчитайте материалы для пола, стен, потолка и отделки.',
                         'url' => '#calculators',
                         'label' => 'Подобрать расчёты',
-                        'image' => 'assets/src/images/illustrations/task-renovate-room.svg',
-                    ],
-                    [
-                        'title' => 'Благоустройство',
-                        'text' => 'Плитка, бордюры, отмостка, забор и другие уличные конструкции.',
-                        'url' => '#calculators',
-                        'label' => 'Подобрать расчёты',
-                        'image' => 'assets/src/images/illustrations/task-landscaping.svg',
+                        'image' => 'assets/src/images/illustrations/task-renovate-room.jpg',
                     ],
                 ],
             ]),

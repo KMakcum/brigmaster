@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 
 final class Constructly_Privacy_Migration
 {
-    private const MIGRATION_VERSION = 'privacy-v4';
+    private const MIGRATION_VERSION = 'privacy-v8';
 
     /**
      * @return array{post_id:int, content:string, migration:string}
@@ -84,6 +84,10 @@ final class Constructly_Privacy_Migration
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
+<p>Оператор сайта — частное лицо. Реквизиты юридического лица не публикуются, поскольку деятельность ведётся без его образования.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
 <p>Используя сайт, вы соглашаетесь с условиями обработки данных, описанными в этом документе. Если вы не согласны с условиями, пожалуйста, не отправляйте данные через формы сайта.</p>
 <!-- /wp:paragraph -->
 
@@ -96,8 +100,12 @@ final class Constructly_Privacy_Migration
 <!-- /wp:paragraph -->
 
 <!-- wp:list -->
-<ul class="wp-block-list"><!-- wp:list-item --><li>имя и контактные данные, если вы отправляете сообщение через форму;</li><!-- /wp:list-item --><!-- wp:list-item --><li>технические данные: IP-адрес, тип браузера, устройство и действия на сайте;</li><!-- /wp:list-item --><!-- wp:list-item --><li>данные, которые вы вводите в калькуляторы для выполнения расчёта;</li><!-- /wp:list-item --><!-- wp:list-item --><li>cookies и похожие технологии, если они включены в вашем браузере.</li><!-- /wp:list-item --></ul>
+<ul class="wp-block-list"><!-- wp:list-item --><li>данные, переданные через форму обратной связи: имя, адрес электронной почты (email) и текст сообщения;</li><!-- /wp:list-item --><!-- wp:list-item --><li>технические данные: IP-адрес, тип браузера, устройство и действия на сайте;</li><!-- /wp:list-item --><!-- wp:list-item --><li>данные, которые вы вводите в калькуляторы для выполнения расчёта;</li><!-- /wp:list-item --><!-- wp:list-item --><li>cookies и похожие технологии, если они включены в вашем браузере.</li><!-- /wp:list-item --></ul>
 <!-- /wp:list -->
+
+<!-- wp:paragraph -->
+<p>Данные формы обратной связи (имя, адрес электронной почты, текст сообщения) собираются исключительно с целью ответа на ваше обращение. Мы не передаём эти данные третьим лицам и не продаём их. Для удаления ваших данных направьте запрос на <a href="mailto:info@brigmaster.ru">info@brigmaster.ru</a> — данные будут удалены в разумный срок.</p>
+<!-- /wp:paragraph -->
 
 <!-- wp:heading {"anchor":"privacy-use"} -->
 <h2 class="wp-block-heading" id="privacy-use">3. Как мы используем данные</h2>
@@ -167,12 +175,8 @@ final class Constructly_Privacy_Migration
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p>Если у вас есть вопросы по данным или условиям Политики конфиденциальности, свяжитесь с нами.</p>
+<p>По вопросам обработки персональных данных, а также для запроса доступа или удаления данных свяжитесь по электронной почте: <a href="mailto:info@brigmaster.ru">info@brigmaster.ru</a>. Это единственный канал связи для обращений по данной теме.</p>
 <!-- /wp:paragraph -->
-
-<!-- wp:list -->
-<ul class="wp-block-list"><!-- wp:list-item --><li>Email: info@brigmaster.ru</li><!-- /wp:list-item --><!-- wp:list-item --><li>Telegram: @brigmaster_support</li><!-- /wp:list-item --></ul>
-<!-- /wp:list -->
 HTML;
     }
 }

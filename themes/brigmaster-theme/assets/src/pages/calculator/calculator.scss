@@ -6,6 +6,7 @@
 @use '../../styles/components/card-grid';
 @use '../../styles/components/faq-grid';
 @use '../../styles/components/accordion';
+@use '../../styles/components/context-intro';
 @use '../../styles/components/info-block';
 @use '../../styles/components/link';
 @use '../../styles/components/section-toolbar';
@@ -61,8 +62,8 @@
 }
 
 .bm-calculator-hero__meta-item .bm-icon {
-  width: 1rem;
-  height: 1rem;
+  width: 2rem;
+  height: 2rem;
   color: currentcolor;
 }
 
@@ -144,12 +145,20 @@
 .brigmaster-estimator__field-grid {
   display: grid;
   gap: var(--bm-space-5);
+  align-items: start;
 }
 
 .brigmaster-estimator__field {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--bm-space-2);
   min-width: 0;
+
+  > label,
+  > .brigmaster-estimator__label-row {
+    min-height: calc(1.35 * 1em);
+    line-height: 1.35;
+  }
 }
 
 .brigmaster-estimator__label-row {
@@ -219,6 +228,7 @@
 
 .brigmaster-estimator__toggle {
   display: flex;
+  flex-direction: row;
   gap: var(--bm-space-3);
   align-items: center;
   min-height: 2.75rem;
@@ -334,6 +344,15 @@
   interpolate-size: allow-keywords;
 }
 
+/* Dropdown escape: JS adds this class when a custom select opens inside */
+.brigmaster-estimator__accordion.has-open-select {
+  overflow: visible;
+}
+
+.brigmaster-estimator__accordion.has-open-select::details-content {
+  overflow: visible;
+}
+
 .brigmaster-estimator__accordion-summary {
   display: flex;
   gap: var(--bm-space-3);
@@ -374,6 +393,15 @@
   gap: var(--bm-space-5);
   padding: var(--bm-space-5);
   border-top: 1px solid var(--bm-color-border);
+}
+
+.brigmaster-estimator__repeatable-group {
+  display: grid;
+  gap: var(--bm-space-4);
+}
+
+.brigmaster-estimator__repeatable-group + .brigmaster-estimator__repeatable-group {
+  margin-top: var(--bm-space-6);
 }
 
 /* Smooth open/close for the native <details> accordions (progressive enhancement). */
@@ -431,6 +459,15 @@
   display: inline-flex;
 }
 
+/* Mode-lock tooltip anchors: hidden by default, shown only when row is locked (area mode) */
+.brigmaster-estimator__tooltip-anchor--mode-lock {
+  display: none;
+}
+
+.is-disabled .brigmaster-estimator__tooltip-anchor--mode-lock {
+  display: inline-flex;
+}
+
 .brigmaster-estimator__tooltip-trigger {
   display: inline-flex;
   align-items: center;
@@ -473,6 +510,11 @@
   background: var(--bm-color-cta-dark);
   box-shadow: var(--bm-shadow-md);
   transform: translateX(-50%);
+
+  &.is-open {
+    bottom: auto;
+    transform: none;
+  }
 }
 
 .brigmaster-estimator__tooltip-backdrop {
@@ -483,7 +525,7 @@
 
 .brigmaster-estimator__segment-list {
   display: grid;
-  gap: var(--bm-space-5);
+  gap: var(--bm-space-3);
 }
 
 .brigmaster-estimator__segment-card {
@@ -570,6 +612,20 @@
   font-size: var(--bm-text-sm);
   color: var(--bm-color-warning);
   background: var(--bm-color-warning-soft);
+}
+
+[data-result].is-stale .bm-calculator-result__sections,
+[data-result].is-stale .bm-calculator-result__head,
+[data-result].is-stale .bm-calculator-result__note,
+[data-result].is-stale .bm-calculator-result__actions,
+[data-result].is-stale .bm-calculator-result__save {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+[data-result].is-stale .brigmaster-estimator__result-grid {
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .brigmaster-estimator__result-grid {
@@ -685,6 +741,11 @@
   border-top: 1px solid var(--bm-color-border);
 }
 
+.bm-calculator-result__breakdown[hidden],
+.bm-calculator-result__sections[hidden] {
+  display: none;
+}
+
 .bm-calculator-result__head + .bm-calculator-result__breakdown {
   padding-top: 0;
   border-top: 0;
@@ -715,6 +776,10 @@
   color: var(--bm-color-text-strong);
 }
 
+.bm-calculator-result__material-head > span:first-child {
+  max-width: 250px;
+}
+
 .bm-calculator-result__material-head strong {
   font-weight: var(--bm-font-bold);
 }
@@ -728,6 +793,12 @@
 
 .bm-calculator-result__material-cost {
   padding-top: var(--bm-space-1);
+}
+
+.bm-result-with-reserve {
+  font-size: 0.625rem; /* 10px at 16px base */
+  font-weight: var(--bm-font-regular);
+  opacity: 0.75;
 }
 
 /* Self-mix components (cement / sand / gravel): separate each block with an underline
@@ -747,6 +818,57 @@
   line-height: 1.5;
   color: var(--bm-color-text-muted);
   background: var(--bm-color-surface-muted);
+}
+
+.bm-result-info {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bm-space-1);
+}
+
+.bm-result-info__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: 1px solid var(--bm-color-border-strong);
+  border-radius: var(--bm-radius-full);
+  font-size: 0.625rem;
+  font-weight: var(--bm-font-bold);
+  line-height: 1;
+  color: var(--bm-color-text-muted);
+  cursor: help;
+  background: var(--bm-color-surface);
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.bm-result-info__popup {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + var(--bm-space-2));
+  left: 50%;
+  z-index: 20;
+  width: max-content;
+  max-width: 14rem;
+  padding: var(--bm-space-3) var(--bm-space-4);
+  border-radius: var(--bm-radius-md);
+  font-size: var(--bm-text-xs);
+  font-weight: var(--bm-font-regular);
+  line-height: 1.45;
+  color: var(--bm-color-surface);
+  background: var(--bm-color-cta-dark);
+  box-shadow: var(--bm-shadow-md);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.bm-result-info__trigger:hover + .bm-result-info__popup,
+.bm-result-info__trigger:focus + .bm-result-info__popup {
+  display: block;
 }
 
 .bm-calculator-result__note-icon {
@@ -936,25 +1058,56 @@
 }
 
 .bm-calculator-info-card__title {
-  font-size: var(--bm-text-xl);
+  font-size: var(--bm-text-2xl);
 }
 
 .bm-calculator-info-card h3 {
-  font-size: var(--bm-text-base);
+  font-size: var(--bm-text-lg);
+  margin: var(--bm-space-4) 0 var(--bm-space-2);
 }
 
 .bm-calculator-info-card p,
-.bm-calculator-info-card ol {
+.bm-calculator-info-card ol,
+.bm-calculator-info-card ul {
   margin: 0;
-  font-size: var(--bm-text-sm);
+  font-size: var(--bm-text-base);
   line-height: 1.6;
   color: var(--bm-color-text-muted);
 }
 
-.bm-calculator-info-card ol {
+.bm-calculator-info-card ol,
+.bm-calculator-info-card ul {
   display: grid;
   gap: var(--bm-space-3);
   padding-left: var(--bm-space-5);
+}
+
+.bm-calculator-info-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bm-calculator-info-card th,
+.bm-calculator-info-card td {
+  padding: var(--bm-space-3) var(--bm-space-4);
+  border: 1px solid var(--bm-color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.bm-calculator-info-card th {
+  font-weight: var(--bm-font-semibold);
+  color: var(--bm-color-text-strong);
+  background: var(--bm-color-surface-muted);
+}
+
+.bm-calculator-info-card td .bm-tooltip {
+  display: inline;
+  width: auto;
+  height: auto;
+  color: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
 }
 
 .bm-calculator-info-card .bm-info-block {
@@ -1158,8 +1311,6 @@
   }
 
   .bm-calculator-layout__aside {
-    position: sticky;
-    top: calc(var(--bm-header-height, 4.5rem) + var(--bm-space-4));
     align-self: start;
   }
 }
@@ -1334,8 +1485,26 @@
 }
 
 /* On-screen snapshot state used by the html2canvas-based "Скачать результат" PDF export. */
+/* The body-level resets must be on body.bm-pdf-export directly — nested body { } inside
+   .bm-pdf-export { } would compile to .bm-pdf-export body { } which never matches since
+   body cannot be a descendant of itself. */
+body.bm-pdf-export {
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+}
+
 .bm-pdf-export {
   @include estimate-print-layout;
+
+  .bm-section {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .bm-result-info__trigger {
+    display: none !important;
+  }
 
   /* html2canvas cannot resolve <use href="#sprite"> SVG icons, so the note's info-circle
      renders blank in the PDF. Hide it and drop the leading gap so the text is not indented.
